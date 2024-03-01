@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -20,7 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.startActivity
+import com.mjkj.listit.Composable.ButtonFilled
+import com.mjkj.listit.Composable.ButtonTonalFilled
 
 class MainActivity : ComponentActivity() {
 
@@ -49,27 +48,13 @@ class MainActivity : ComponentActivity() {
                     ButtonFilled("Log In", onClick = {
                         val intent = Intent(this@MainActivity, LogInActivity::class.java)
                         startActivity(intent)})
-
+                    Spacer(modifier = Modifier.padding(5.dp))
                     ButtonTonalFilled("Sign Up") {
                         //TODO: Add Sign In Logic
                     }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun ButtonFilled(label: String,onClick: () -> Unit) {
-    Button(onClick = { onClick() }) {
-        Text(label,fontSize = 25.sp)
-    }
-}
-
-@Composable
-fun ButtonTonalFilled(label:String,onClick: () -> Unit) {
-    FilledTonalButton(onClick = { onClick() }) {
-        Text(label,fontSize = 25.sp)
     }
 }
 
@@ -95,7 +80,7 @@ fun GreetingPreview() {
 
             ButtonFilled("Log In") {
             }
-            Spacer(modifier = Modifier.padding(10.dp))
+            Spacer(modifier = Modifier.padding(5.dp))
             ButtonTonalFilled("Sign Up") {
                 //TODO: Add Sign In Logic
             }
