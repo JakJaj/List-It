@@ -31,31 +31,27 @@ class MainActivity : ComponentActivity() {
 
             Surface (modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background) {
-                Column {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
 
+                    Text(
+                        text = "List It",
+                        style = MaterialTheme.typography.displayLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = 120.sp
+                    )
 
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
+                    Spacer(modifier = Modifier.padding(100.dp))
 
-                        Text(
-                            text = "List It",
-                            style = MaterialTheme.typography.displayLarge,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontSize = 120.sp
-                        )
+                    ButtonFilled("Log In", onClick = {
+                        val intent = Intent(this@MainActivity, LogInActivity::class.java)
+                        startActivity(intent)})
 
-                        Spacer(modifier = Modifier.padding(100.dp))
-
-                        ButtonFilled("Log In", onClick = {
-                            val intent = Intent(this@MainActivity, LogInActivity::class.java)
-                            startActivity(intent)})
-
-                        ButtonTonalFilled("Sign Up") {
-                            //TODO: Add Sign In Logic
-                        }
+                    ButtonTonalFilled("Sign Up") {
+                        //TODO: Add Sign In Logic
                     }
                 }
             }
@@ -82,30 +78,26 @@ fun ButtonTonalFilled(label:String,onClick: () -> Unit) {
 fun GreetingPreview() {
     Surface (modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background) {
-        Column {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
 
+            Text(
+                text = "List It",
+                style = MaterialTheme.typography.displayLarge,
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 120.sp
+            )
 
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
+            Spacer(modifier = Modifier.padding(100.dp))
 
-                Text(
-                    text = "List It",
-                    style = MaterialTheme.typography.displayLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = 120.sp
-                )
+            ButtonFilled("Log In") {
 
-                Spacer(modifier = Modifier.padding(100.dp))
-
-                ButtonFilled("Log In") {
-
-                }
-                ButtonTonalFilled("Sign Up") {
-                    //TODO: Add Sign In Logic
-                }
+            }
+            ButtonTonalFilled("Sign Up") {
+                //TODO: Add Sign In Logic
             }
         }
     }
