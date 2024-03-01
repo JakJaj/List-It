@@ -45,9 +45,10 @@ class MainActivity : ComponentActivity() {
 
                     Spacer(modifier = Modifier.padding(100.dp))
 
-                    ButtonFilled("Log in", onClick = {
+                    ButtonFilled("Log in"){
                         val intent = Intent(this@MainActivity, LogInActivity::class.java)
-                        startActivity(intent)})
+                        startActivity(intent)
+                    }
 
                     Spacer(modifier = Modifier.padding(5.dp))
 
