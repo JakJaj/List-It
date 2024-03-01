@@ -1,5 +1,6 @@
 package com.mjkj.listit.Activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -41,11 +42,19 @@ class LogInActivity: ComponentActivity(){
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center){
 
-                        FilledTonalButton(onClick = { /*TODO*/ }) {
+                        OutlinedTextField("Username")
+                        Spacer(modifier = Modifier.padding(10.dp))
+                        OutlinedTextField("Password")
 
+                        Spacer(modifier = Modifier.padding(60.dp))
+
+                        ButtonFilled("Log in") {
+                            //TODO: Handle login
                         }
-                        ButtonFilled(label = "Go back"){
-
+                        ButtonTonalFilled(label = "Go back"){
+                            //TODO: Handle going back to main screen
+                            val intent = Intent(this@LogInActivity, MainActivity::class.java)
+                            startActivity(intent)
                         }
                     }
                 }
