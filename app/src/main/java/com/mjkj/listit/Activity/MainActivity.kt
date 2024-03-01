@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import android.content.Intent
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +46,8 @@ class MainActivity : ComponentActivity() {
                             //TODO: Add Login Logic
                         }
                         ButtonTonalFilled("Sign Up") {
-                            //TODO: Add Sign In Logic
+                            val Intent = Intent(this@MainActivity, SignUpActivity::class.java)
+                            startActivity(Intent)
                         }
                     }
                 }
