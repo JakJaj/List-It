@@ -61,14 +61,14 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ButtonFilled(label: String,onClick: () -> Unit) {
-    Button(modifier = Modifier.padding(bottom = 5.dp), onClick = { onClick() }) {
+    Button(onClick = { onClick() }) {
         Text(label,fontSize = 25.sp)
     }
 }
 
 @Composable
 fun ButtonTonalFilled(label:String,onClick: () -> Unit) {
-    FilledTonalButton(modifier = Modifier.padding(5.dp),onClick = { onClick() }) {
+    FilledTonalButton(onClick = { onClick() }) {
         Text(label,fontSize = 25.sp)
     }
 }
@@ -94,8 +94,8 @@ fun GreetingPreview() {
             Spacer(modifier = Modifier.padding(100.dp))
 
             ButtonFilled("Log In") {
-
             }
+            Spacer(modifier = Modifier.padding(10.dp))
             ButtonTonalFilled("Sign Up") {
                 //TODO: Add Sign In Logic
             }
