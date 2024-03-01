@@ -1,10 +1,12 @@
 package com.mjkj.listit.Activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -18,14 +20,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 
 class MainActivity : ComponentActivity() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
 
             Surface (modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background){
+                color = MaterialTheme.colorScheme.background) {
                 Column {
 
 
@@ -38,12 +43,16 @@ class MainActivity : ComponentActivity() {
                         Text(
                             text = "List It",
                             style = MaterialTheme.typography.displayLarge,
-                            color = MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = 120.sp
                         )
 
-                        ButtonFilled("Log In") {
-                            //TODO: Add Login Logic
-                        }
+                        Spacer(modifier = Modifier.padding(100.dp))
+
+                        ButtonFilled("Log In", onClick = {
+                            val intent = Intent(this@MainActivity, LogInActivity::class.java)
+                            startActivity(intent)})
+
                         ButtonTonalFilled("Sign Up") {
                             //TODO: Add Sign In Logic
                         }
@@ -56,7 +65,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ButtonFilled(label: String,onClick: () -> Unit) {
-    Button(modifier = Modifier.padding(bottom = 5.dp, top = 200.dp), onClick = { onClick() }) {
+    Button(modifier = Modifier.padding(bottom = 5.dp), onClick = { onClick() }) {
         Text(label,fontSize = 25.sp)
     }
 }
@@ -72,7 +81,7 @@ fun ButtonTonalFilled(label:String,onClick: () -> Unit) {
 @Composable
 fun GreetingPreview() {
     Surface (modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background){
+        color = MaterialTheme.colorScheme.background) {
         Column {
 
 
@@ -86,11 +95,13 @@ fun GreetingPreview() {
                     text = "List It",
                     style = MaterialTheme.typography.displayLarge,
                     color = MaterialTheme.colorScheme.primary,
-                    fontSize = 100.sp
+                    fontSize = 120.sp
                 )
 
+                Spacer(modifier = Modifier.padding(100.dp))
+
                 ButtonFilled("Log In") {
-                    //TODO: Add Login Logic
+
                 }
                 ButtonTonalFilled("Sign Up") {
                     //TODO: Add Sign In Logic
