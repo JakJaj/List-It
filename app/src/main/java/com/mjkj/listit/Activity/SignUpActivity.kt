@@ -38,7 +38,7 @@ class SignUpActivity : ComponentActivity() {
 
                         Spacer(modifier = Modifier.padding(60.dp))
 
-                        ButtonFilled("Sign Up") {
+                        ButtonFilled("Register") {
                             //TODO: Handle registration
                         }
                         Spacer(modifier = Modifier.padding(5.dp))
