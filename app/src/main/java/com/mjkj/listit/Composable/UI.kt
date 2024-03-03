@@ -68,7 +68,7 @@ fun OutlinedTextField(label:String) {
 }
 
 @Composable
-        /** This is an AppBar function that creastes an AppBar on top of the screen.
+        /** This is an AppBar function that creates an AppBar on top of the screen.
          *
          *
          */
