@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mjkj.listit.Composable.*
+import com.mjkj.listit.Activity.*
 
 class LogInActivity: ComponentActivity(){
 
@@ -41,7 +42,9 @@ class LogInActivity: ComponentActivity(){
                         Spacer(modifier = Modifier.padding(60.dp))
 
                         ButtonFilled("Log in") {
-                            //TODO: Handle login
+                            //TODO: Verify login using firebaseS
+                            val intent = Intent(this@LogInActivity, ListsActivity::class.java)
+                            startActivity(intent)
                         }
                         Spacer(modifier = Modifier.padding(5.dp))
                         ButtonTonalFilled(label = "Go back"){
