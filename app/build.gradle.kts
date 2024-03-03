@@ -59,6 +59,9 @@ dependencies {
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("com.google.firebase:firebase-storage:20.3.0")
+    implementation("com.google.firebase:firebase-firestore-ktx:24.10.3")
+    implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
     val material3_version = "1.2.0"
     implementation ("androidx.compose.material3:material3:$material3_version")
     testImplementation("junit:junit:4.13.2")
