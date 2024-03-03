@@ -1,29 +1,23 @@
 package com.mjkj.listit.Model
 
-class User {
+class User(
     /**
      * The name of the user
      */
-    private var name: String
+    private var name: String,
     /**
      * The email of the user
      */
-    private var email: String
+    private var email: String,
     /**
      * The password of the user
      */
-    private var password: String
+    private var password: String,
     /**
      * The lists of the user
      */
     private var lists: MutableList<ListOfTasks>?
-
-    constructor(name: String, email: String, password: String, lists: MutableList<ListOfTasks>?) {
-        this.name = name
-        this.email = email
-        this.password = password
-        this.lists = lists
-    }
+) {
 
     fun getName(): String {
         return name
