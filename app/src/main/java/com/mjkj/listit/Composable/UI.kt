@@ -1,13 +1,29 @@
 package com.mjkj.listit.Composable
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 @Composable
         /** This is a composable function that creates a button WITH a filled background and a label
@@ -48,4 +64,47 @@ fun OutlinedTextField(label:String) {
         onValueChange = { text = it },
         label = { Text(label) }
     )
+}
+
+@Composable
+        /** This is an AppBar function that creastes an AppBar on top of the screen.
+         *
+         *
+         */
+fun ListAppBar() {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = MaterialTheme.colorScheme.primary
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = { /* TODO: Handle hamburger side bar */ }) {
+                Icon(
+                    imageVector = Icons.Filled.Menu,
+                    contentDescription = "Menu",
+                    tint = Color.White
+                )
+            }
+            Text(
+                text = "List-it",
+                modifier = Modifier
+                    .padding(horizontal = 16.dp),
+                textAlign = TextAlign.Center,
+                color = Color.White,
+                fontSize = 30.sp
+            )
+            IconButton(onClick = { /* TODO: Handle plus icon click */ }) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Add",
+                    tint = Color.White
+                )
+            }
+        }
+    }
 }
