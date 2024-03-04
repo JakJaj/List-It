@@ -255,7 +255,7 @@ fun CreateListContent(){
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
         /** This is a composable function that creates a dropdown menu
-        *
+        * @param items: Array<String> - The items to be displayed in the dropdown menu
         * */
 fun DropdownMenuBox(items: Array<String>) {
     val context = LocalContext.current
