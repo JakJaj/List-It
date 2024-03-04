@@ -226,6 +226,7 @@ fun JoinListContent(){
      *
      * */
 fun CreateListContent(){
+    val colorArray = arrayOf("Red", "Blue", "Green", "Yellow", "Purple", "Orange", "Pink", "Brown", "Black", "White")
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -240,10 +241,12 @@ fun CreateListContent(){
 
         Spacer(modifier = Modifier.padding(5.dp))
         OutlinedTextField("Short Description ")
-        Demo_ExposedDropdownMenuBox()
-        Spacer(modifier = Modifier.padding(5.dp))
+        Spacer(modifier = Modifier.padding(15.dp))
+        Text(text = "Choose a color for your list",fontSize = 14.sp)
+        DropdownMenuBox(colorArray)
+        Spacer(modifier = Modifier.padding(15.dp))
         HorizontalDivider(modifier = Modifier.height(5.dp))
-        Spacer(modifier = Modifier.padding(40.dp))
+        Spacer(modifier = Modifier.padding(10.dp))
         ButtonFilled("Create") {
 
         }
@@ -252,18 +255,17 @@ fun CreateListContent(){
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
         /** This is a composable function that creates a dropdown menu
-        *
+        * @param items: Array<String> - The items to be displayed in the dropdown menu
         * */
-fun Demo_ExposedDropdownMenuBox() {
+fun DropdownMenuBox(items: Array<String>) {
     val context = LocalContext.current
-    val colors = arrayOf("Red", "Blue", "Green", "Orange", "Grey")
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(colors[0]) }
+    var selectedText by remember { mutableStateOf(items[0]) }
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(32.dp)
+            .padding(10.dp)
     ) {
         ExposedDropdownMenuBox(
             expanded = expanded,
@@ -283,7 +285,7 @@ fun Demo_ExposedDropdownMenuBox() {
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                colors.forEach { item ->
+                items.forEach { item ->
                     DropdownMenuItem(
                         text = { Text(text = item) },
                         onClick = {
