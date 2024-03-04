@@ -181,7 +181,7 @@ fun Dialog(onDismissRequest: () -> Unit) {
                 }
             }
             HorizontalDivider()
-            if(!showCreateListContent){
+            if(showCreateListContent){
                 CreateListContent()
             }else{
                 JoinListContent()
@@ -244,7 +244,7 @@ fun CreateListContent(){
         Spacer(modifier = Modifier.padding(15.dp))
         Text(text = "Choose a color for your list",fontSize = 14.sp)
         DropdownMenuBox(colorArray)
-
+        Spacer(modifier = Modifier.padding(15.dp))
         HorizontalDivider(modifier = Modifier.height(5.dp))
         Spacer(modifier = Modifier.padding(10.dp))
         ButtonFilled("Create") {
