@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -90,35 +91,68 @@ class ListsActivity : ComponentActivity() {
                 ModalNavigationDrawer(
                     drawerContent = {
                         ModalDrawerSheet {
-                            Spacer(modifier = Modifier.height(16.dp))
-                            items.forEachIndexed { index, item ->
-                                NavigationDrawerItem(
-                                    label = {
-                                        Text(text = item.title)
-                                    },
-                                    selected = index == 0,
-                                    onClick = {
-                                        showDialog = false
-                                        scope.launch {
-                                            drawerState.close()
-                                        }
-                                    },
-                                    icon = {
-                                        Icon(
-                                            imageVector = if (index == 0) {
-                                                item.selectedIcon
-                                            } else item.unselectedIcon,
-                                            contentDescription = item.title
-                                        )
-                                    },
-                                    badge = {
-                                        item.badgeCount?.let {
-                                            Text(text = item.badgeCount.toString())
-                                        }
-                                    },
+                            Column(
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                // Górna sekcja z tekstem "List it"
+                                Box(
                                     modifier = Modifier
-                                        .padding(NavigationDrawerItemDefaults.ItemPadding)
-                                )
+                                        .fillMaxWidth()
+                                        .height(100.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "List it",
+                                        fontSize = 30.sp
+                                    )
+                                }
+                                // Środkowa sekcja z elementami nawigacji
+                                Column(
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                    items.forEachIndexed { index, item ->
+                                        NavigationDrawerItem(
+                                            label = {
+                                                Text(text = item.title)
+                                            },
+                                            selected = index == 0,
+                                            onClick = {
+                                                showDialog = false
+                                                scope.launch {
+                                                    drawerState.close()
+                                                }
+                                            },
+                                            icon = {
+                                                Icon(
+                                                    imageVector = if (index == 0) {
+                                                        item.selectedIcon
+                                                    } else item.unselectedIcon,
+                                                    contentDescription = item.title
+                                                )
+                                            },
+                                            badge = {
+                                                item.badgeCount?.let {
+                                                    Text(text = item.badgeCount.toString())
+                                                }
+                                            },
+                                            modifier = Modifier
+                                                .padding(NavigationDrawerItemDefaults.ItemPadding)
+                                        )
+                                    }
+                                }
+                                // Dolna sekcja z tekstem "Log out"
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(100.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "Log out",
+                                        fontSize = 24.sp
+                                    )
+                                }
                             }
                         }
                     },
