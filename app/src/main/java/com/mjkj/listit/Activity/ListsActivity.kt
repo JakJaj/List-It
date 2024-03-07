@@ -1,6 +1,7 @@
 package com.mjkj.listit.Activity
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -46,6 +47,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mjkj.listit.Composable.ButtonTonalFilled
 import kotlinx.coroutines.launch
 
 data class NavigationItem(
@@ -148,10 +150,10 @@ class ListsActivity : ComponentActivity() {
                                         .height(100.dp),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    Text(
-                                        text = "Log out",
-                                        fontSize = 24.sp
-                                    )
+                                    ButtonTonalFilled(label = "Log out") {
+                                        val intent = Intent(this@ListsActivity, MainActivity::class.java)
+                                        startActivity(intent)
+                                    }
                                 }
                             }
                         }
