@@ -9,11 +9,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -96,7 +97,7 @@ class ListsActivity : ComponentActivity() {
                             Column(
                                 modifier = Modifier.fillMaxSize()
                             ) {
-                                // Górna sekcja z tekstem "List it"
+                                // Top section with the text "List it"
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -108,17 +109,16 @@ class ListsActivity : ComponentActivity() {
                                         fontSize = 30.sp
                                     )
                                 }
-                                // Środkowa sekcja z elementami nawigacji
-                                Column(
+                                // Middle section with ListView
+                                LazyColumn(
                                     modifier = Modifier.weight(1f)
                                 ) {
-                                    Spacer(modifier = Modifier.height(16.dp))
-                                    items.forEachIndexed { index, item ->
+                                    items(items) { item ->
                                         NavigationDrawerItem(
                                             label = {
                                                 Text(text = item.title)
                                             },
-                                            selected = index == 0,
+                                            selected = items.indexOf(item) == 0,
                                             onClick = {
                                                 showDialog = false
                                                 scope.launch {
@@ -127,7 +127,7 @@ class ListsActivity : ComponentActivity() {
                                             },
                                             icon = {
                                                 Icon(
-                                                    imageVector = if (index == 0) {
+                                                    imageVector = if (items.indexOf(item) == 0) {
                                                         item.selectedIcon
                                                     } else item.unselectedIcon,
                                                     contentDescription = item.title
@@ -143,7 +143,7 @@ class ListsActivity : ComponentActivity() {
                                         )
                                     }
                                 }
-                                // Dolna sekcja z tekstem "Log out"
+                                // Bottom section with the text "Log out"
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -184,7 +184,7 @@ class ListsActivity : ComponentActivity() {
                                 textAlign = TextAlign.Center,
                                 color = Color.Gray,
                                 fontSize = 25.sp,
-                                modifier = Modifier.padding(15.dp) // Padding dla zawartości
+                                modifier = Modifier.padding(15.dp) // Padding for content
                             )
                         }
                     }
