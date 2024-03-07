@@ -1,7 +1,6 @@
 package com.mjkj.listit.Activity
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,6 +27,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import com.mjkj.listit.Composable.ButtonTonalFilled
 import com.mjkj.listit.Composable.ListAppBar
 import kotlinx.coroutines.launch
+import com.mjkj.listit.Composable.*
 
 data class NavigationItem(
     val title: String,
@@ -50,7 +51,6 @@ data class NavigationItem(
     val unselectedIcon: ImageVector,
     val badgeCount: Int? = null
 )
-
 
 class ListsActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -86,70 +86,11 @@ class ListsActivity : ComponentActivity() {
 
                 ModalNavigationDrawer(
                     drawerContent = {
-                        ModalDrawerSheet {
-                            Column(
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                // Top section with the text "List it"
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(100.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = "List it",
-                                        fontSize = 30.sp
-                                    )
-                                }
-                                // Middle section with ListView
-                                LazyColumn(
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    items(items) { item ->
-                                        NavigationDrawerItem(
-                                            label = {
-                                                Text(text = item.title)
-                                            },
-                                            selected = items.indexOf(item) == 0,
-                                            onClick = {
-                                                showDialog = false
-                                                scope.launch {
-                                                    drawerState.close()
-                                                }
-                                            },
-                                            icon = {
-                                                Icon(
-                                                    imageVector = if (items.indexOf(item) == 0) {
-                                                        item.selectedIcon
-                                                    } else item.unselectedIcon,
-                                                    contentDescription = item.title
-                                                )
-                                            },
-                                            badge = {
-                                                item.badgeCount?.let {
-                                                    Text(text = item.badgeCount.toString())
-                                                }
-                                            },
-                                            modifier = Modifier
-                                                .padding(NavigationDrawerItemDefaults.ItemPadding)
-                                        )
-                                    }
-                                }
-                                // Bottom section with the text "Log out"
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(100.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    ButtonTonalFilled(label = "Log out") {
-                                        val intent = Intent(this@ListsActivity, MainActivity::class.java)
-                                        startActivity(intent)
-                                    }
-                                }
-                            }
-                        }
+                        NavDrawer(
+                            items = items,
+                            showDialog = showDialog,
+                            onShowDialogChange = { showDialog = it }
+                        )
                     },
                     drawerState = drawerState
                 ) {
@@ -184,3 +125,4 @@ class ListsActivity : ComponentActivity() {
         }
     }
 }
+
