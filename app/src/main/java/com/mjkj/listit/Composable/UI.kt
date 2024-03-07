@@ -86,16 +86,23 @@ fun OutlinedTextField(label:String) {
 }
 
 @Composable
-        /** This is an AppBar function that creates an AppBar on top of the screen.
+        /**
+         * Composable function to display an app bar for a list screen.
          *
-         *
+         * @param activity The title of the activity associated with the app bar.
+         * @param onMenuClicked Callback function invoked when the menu icon is clicked.
+         * @param onAddClicked Callback function invoked when the add icon is clicked.
          */
-fun ListAppBar(activity:String) {
+fun ListAppBar(
+    activity: String,
+    onMenuClicked: () -> Unit = {},
+    onAddClicked: () -> Unit = {}
+) {
     val showDialog = remember {
         mutableStateOf(false)
     }
 
-    if(activity == "ListActivity" && showDialog.value){
+    if (activity == "ListActivity" && showDialog.value) {
         Dialog(onDismissRequest = { showDialog.value = false })
     }
 
@@ -111,7 +118,7 @@ fun ListAppBar(activity:String) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { /* TODO: Handle hamburger side bar */ }) {
+            IconButton(onClick = { onMenuClicked() }) {
                 Icon(
                     imageVector = Icons.Filled.Menu,
                     contentDescription = "Menu",
@@ -121,12 +128,13 @@ fun ListAppBar(activity:String) {
             Text(
                 text = "List-it",
                 modifier = Modifier
+                    .weight(1f)
                     .padding(horizontal = 16.dp),
                 textAlign = TextAlign.Center,
                 color = Color.White,
                 fontSize = 30.sp
             )
-            IconButton(onClick = {showDialog.value = true}) {
+            IconButton(onClick = { onAddClicked() }) {
                 Icon(
                     imageVector = Icons.Filled.Add,
                     contentDescription = "Add",
