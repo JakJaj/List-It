@@ -75,6 +75,7 @@ fun ButtonTonalFilled(label:String,onClick: () -> Unit) {
         /** This is a composable function that creates a text field with an outlined border
          *
          *  @param label: String - The text to be displayed on the label
+         *  @return text: String - The text entered into the text field
          * */
 fun OutlinedTextField(label:String): String {
     var text by remember { mutableStateOf("") }
@@ -262,7 +263,8 @@ fun CreateListContent(){
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
         /** This is a composable function that creates a dropdown menu
-        * @param items: Array<String> - The items to be displayed in the dropdown menu
+         *@param items: Array<String> - The items to be displayed in the dropdown menu
+         *@return selectedText: String - The selected item from the dropdown menu
         * */
 fun DropdownMenuBox(items: Array<String>):String {
     val context = LocalContext.current
