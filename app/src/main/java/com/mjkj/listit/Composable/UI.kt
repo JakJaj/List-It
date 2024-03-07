@@ -96,7 +96,6 @@ fun OutlinedTextField(label:String) {
 fun ListAppBar(
     activity: String,
     onMenuClicked: () -> Unit = {},
-    onAddClicked: () -> Unit = {}
 ) {
     val showDialog = remember {
         mutableStateOf(false)
@@ -134,7 +133,7 @@ fun ListAppBar(
                 color = Color.White,
                 fontSize = 30.sp
             )
-            IconButton(onClick = { onAddClicked() }) {
+            IconButton(onClick = { showDialog.value = true }) {
                 Icon(
                     imageVector = Icons.Filled.Add,
                     contentDescription = "Add",

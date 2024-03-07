@@ -156,15 +156,12 @@ class ListsActivity : ComponentActivity() {
                     Scaffold(
                         topBar = {
                             ListAppBar(
-                                activity = "MainActivity",
+                                activity = "ListActivity",
                                 onMenuClicked = {
                                     scope.launch {
                                         drawerState.open()
                                     }
                                 },
-                                onAddClicked = {
-                                    showDialog = true
-                                }
                             )
                         }
                     ) {
