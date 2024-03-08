@@ -10,6 +10,24 @@ class ListOfTasksTest {
 
 
     @Test
+    fun createListTest() {
+        //Arrange
+        var user: User = User("user1", "test@gmail.com", "123456789", null)
+        //Act
+        var testList: ListOfTasks = ListOfTasks.createList("testList", user, "#FFFFFFFF", "testDescription")
+        //Assert
+        assertNotNull(testList)
+        assertEquals(testList.getListName(), "testList")
+        assertNotNull(testList.getCode())
+        assertNotNull(testList.getTasks())
+        assertNotNull(testList.getMembers())
+        assertTrue(testList.getMembers()!!.size == 1)
+        assertEquals(testList.getMembers()!![0], user)
+        assertEquals(testList.getColor(), "#FFFFFFFF")
+        assertEquals(testList.getDescription(), "testDescription")
+        assertEquals(testList.getCreator(), user)
+    }
+    @Test
     fun createCodeTest(){
         //Arrange
         var code:String = ""
@@ -36,5 +54,5 @@ class ListOfTasksTest {
         assertTrue(testList.getMembers()!!.size == 1)
         assertEquals(testList.getMembers()!![0], user)
     }
-    
+
 }

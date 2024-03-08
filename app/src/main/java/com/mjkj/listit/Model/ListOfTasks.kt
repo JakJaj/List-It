@@ -43,6 +43,18 @@ class ListOfTasks(
             }
             return code
         }
+
+        /**
+         * Static function to create a list
+         * @param listName the name of the list
+         * @param creator the creator of the list
+         * @param color the color of the list
+         * @param description the description of the list
+         * @return a new list
+         */
+        fun createList(listName: String, creator: User, color:String, description: String?): ListOfTasks{
+            return ListOfTasks(listName, createCode(), mutableListOf(), mutableListOf(creator), color, description, creator)
+        }
     }
     /**
      * Function to add a user to the list

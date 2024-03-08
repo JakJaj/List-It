@@ -259,8 +259,9 @@ fun CreateListContent(){
             Log.d("D", "ShortDescription: $shortDescription")
             Log.d("D", "Color: $item")
             if(listName.isNotEmpty()){
-                var newList:ListOfTasks = ListOfTasks(listName,ListOfTasks.createCode(),null,null,item,shortDescription,null)
+                //TODO: CREATE LIST FUNCTIONALITY
             }
+
         }
     }
 }
