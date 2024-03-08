@@ -16,7 +16,7 @@ class ListOfTasks(
     /**
      * The members of the list
      */
-    private var members: MutableList<String>?,
+    private var members: MutableList<User>?,
     /**
      * The color of the list
      */
@@ -44,6 +44,17 @@ class ListOfTasks(
             return code
         }
     }
+    /**
+     * Function to add a user to the list
+     * @param user the user to add
+     */
+    fun addUsers(user: User){
+        if(members == null){
+            members = mutableListOf()
+        }
+        members!!.add(user)
+    }
+
     fun getListName(): String {
         return listName
     }
@@ -68,11 +79,11 @@ class ListOfTasks(
         this.tasks = tasks
     }
 
-    fun getMembers(): MutableList<String>? {
+    fun getMembers(): MutableList<User>? {
         return members
     }
 
-    fun setMembers(members: MutableList<String>?) {
+    fun setMembers(members: MutableList<User>?) {
         this.members = members
     }
 
