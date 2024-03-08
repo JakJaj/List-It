@@ -12,9 +12,9 @@ class ListOfTasksTest {
     @Test
     fun createListTest() {
         //Arrange
-        var user: User = User("user1", "test@gmail.com", "123456789", null)
+        val user = User("user1", "test@gmail.com", "123456789", null)
         //Act
-        var testList: ListOfTasks = ListOfTasks.createList("testList", user, "#FFFFFFFF", "testDescription")
+        val testList: ListOfTasks = ListOfTasks.createList("testList", user, "#FFFFFFFF", "testDescription")
         //Assert
         assertNotNull(testList)
         assertEquals(testList.getListName(), "testList")
@@ -26,12 +26,13 @@ class ListOfTasksTest {
         assertEquals(testList.getColor(), "#FFFFFFFF")
         assertEquals(testList.getDescription(), "testDescription")
         assertEquals(testList.getCreator(), user)
+        assertEquals(testList, user.getLists()!![0])
     }
     @Test
     fun createCodeTest(){
         //Arrange
-        var code:String = ""
-        var code2:String = ""
+        var code = ""
+        var code2 = ""
         //Act
         code = ListOfTasks.createCode()
         code2 = ListOfTasks.createCode()
@@ -45,14 +46,16 @@ class ListOfTasksTest {
     @Test
     fun addUsersToListTest(){
         //Arrange
-        var user:User =  User("user1", "test@gmail.com", "123456789", null)
-        var testList:ListOfTasks = ListOfTasks("testList", ListOfTasks.createCode(), mutableListOf(), null, "#FFFFFFFF", null, null)
+        val creator =  User("creator", "creator@test.com", "123456789", null)
+        val user =  User("user", "user@test.com", "987654321", null)
+        val testList = ListOfTasks.createList("testList", creator, "#FFFFFFFF", "testDescription")
         //Act
         testList.addUsers(user)
         //Assert
         assertNotNull(testList.getMembers())
-        assertTrue(testList.getMembers()!!.size == 1)
-        assertEquals(testList.getMembers()!![0], user)
+        assertTrue(testList.getMembers()!!.size == 2)
+        assertEquals(testList.getMembers()!![0], creator)
+        assertEquals(testList.getMembers()!![1], user)
     }
 
 }

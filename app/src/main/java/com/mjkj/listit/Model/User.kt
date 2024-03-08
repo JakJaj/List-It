@@ -50,4 +50,17 @@ class User(
     fun setLists(lists: MutableList<ListOfTasks>?) {
         this.lists = lists
     }
+
+    /**
+     * Function to add a list to the user
+     * @param newList the list to add
+     * @return the lists of the user
+     */
+    fun addList(newList: ListOfTasks): MutableList<ListOfTasks>? {
+        if(lists == null) {
+            lists = mutableListOf()
+        }
+        lists?.add(newList)
+        return lists
+    }
 }

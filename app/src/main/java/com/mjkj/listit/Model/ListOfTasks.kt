@@ -53,7 +53,9 @@ class ListOfTasks(
          * @return a new list
          */
         fun createList(listName: String, creator: User, color:String, description: String?): ListOfTasks{
-            return ListOfTasks(listName, createCode(), mutableListOf(), mutableListOf(creator), color, description, creator)
+            val newList = ListOfTasks(listName, createCode(), mutableListOf(), mutableListOf(creator), color, description, creator)
+            creator.addList(newList)
+            return newList
         }
     }
     /**
