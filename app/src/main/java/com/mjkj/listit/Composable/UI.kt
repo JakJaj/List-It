@@ -51,7 +51,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.mjkj.listit.Activity.NavigationItem
 import kotlinx.coroutines.launch
-import com.mjkj.listit.Activity.ListsActivity
 
 @Composable
         /** This is a composable function that creates a button WITH a filled background and a label
@@ -99,14 +98,15 @@ fun OutlinedTextField(label:String) {
          * Composable function to display an app bar for a list screen.
          *
          * @param activity The title of the activity associated with the app bar.
-         * @param onMenuClicked Callback function invoked when the menu icon is clicked.
-         * @param onAddClicked Callback function invoked when the add icon is clicked.
          */
 fun ListAppBar(
     activity: String,
-    onMenuClicked: () -> Unit = {},
 ) {
     val showDialog = remember {
+        mutableStateOf(false)
+    }
+
+    val showNavDrawer = remember {
         mutableStateOf(false)
     }
 
@@ -126,7 +126,7 @@ fun ListAppBar(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { onMenuClicked() }) {
+            IconButton(onClick = {  }) {
                 Icon(
                     imageVector = Icons.Filled.Menu,
                     contentDescription = "Menu",
@@ -319,7 +319,7 @@ fun DropdownMenuBox(items: Array<String>) {
 @Composable
 fun NavDrawer(
     items: List<NavigationItem>,
-    showDialog: Boolean,
+    showNavDrawer: Boolean,
     onShowDialogChange: (Boolean) -> Unit
 ) {
     val scope = rememberCoroutineScope()
