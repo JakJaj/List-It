@@ -68,7 +68,16 @@ class ListOfTasks(
         }
         members!!.add(user)
     }
-
+    /**
+     * Function to add a task to the list
+     * @param task the task to add
+     */
+    fun addTask(task: Task){
+        if(tasks == null){
+            tasks = mutableListOf()
+        }
+        tasks!!.add(task)
+    }
     fun getListName(): String {
         return listName
     }

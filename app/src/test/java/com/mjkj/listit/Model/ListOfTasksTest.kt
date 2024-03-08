@@ -57,5 +57,18 @@ class ListOfTasksTest {
         assertEquals(testList.getMembers()!![0], creator)
         assertEquals(testList.getMembers()!![1], user)
     }
-
+    @Test
+    fun addTaskToListTest() {
+        //Arrange
+        val creator = User("creator", "creator@test.com", "123456789", null)
+        val testList = ListOfTasks.createList("testList", creator, "#FFFFFFFF", "testDescription")
+        val task = Task.createTask("testTask", creator, "testDescription")
+        //Act
+        testList.addTask(task)
+        //Assert
+        assertNotNull(testList.getTasks())
+        assertTrue(testList.getTasks()!!.size == 1)
+        assertEquals(testList.getTasks()!![0], task)
+        assertEquals(testList.getTasks()!![0].getCreator(), creator)
+    }
 }
