@@ -18,7 +18,31 @@ class User(
      */
     private var lists: MutableList<ListOfTasks>?
 ) {
+    companion object{
+        /**
+         * Static function to create a user
+         * @param name the name of the user
+         * @param email the email of the user
+         * @param password the password of the user
+         * @return a new user
+         */
+        fun createUser(name: String, email: String, password: String): User{
+            return User(name, email, password, null)
+        }
+    }
 
+    /**
+     * Function to add a list to the user
+     * @param newList the list to add
+     * @return the lists of the user
+     */
+    fun addList(newList: ListOfTasks): MutableList<ListOfTasks>? {
+        if(lists == null) {
+            lists = mutableListOf()
+        }
+        lists?.add(newList)
+        return lists
+    }
     fun getName(): String {
         return name
     }
@@ -49,18 +73,5 @@ class User(
 
     fun setLists(lists: MutableList<ListOfTasks>?) {
         this.lists = lists
-    }
-
-    /**
-     * Function to add a list to the user
-     * @param newList the list to add
-     * @return the lists of the user
-     */
-    fun addList(newList: ListOfTasks): MutableList<ListOfTasks>? {
-        if(lists == null) {
-            lists = mutableListOf()
-        }
-        lists?.add(newList)
-        return lists
     }
 }
