@@ -1,28 +1,37 @@
 package com.mjkj.listit.Model
 
 class Task(
-    taskName: String,
-    /**
-     * The description of the task
-     */
-    private var description: String?, color: String, creator: User?, list: ListOfTasks?
-) {
     /**
      * The name of the task
      */
-    private var title: String = taskName
-
+    private var taskName: String,
+    /**
+     * The description of the task
+     */
+    private var description: String?,
     /**
      * The creator of the task
      */
-    private var author: User? = creator
-
+    private var creator: User?
+) {
+    companion object{
+        /**
+         * Static function to create a task
+         * @param taskName the name of the task
+         * @param creator the creator of the task
+         * @param description the description of the task
+         * @return a new task
+         */
+        fun createTask(taskName: String, creator: User, description: String?): Task{
+            return Task(taskName, description, creator)
+        }
+    }
     fun getTaskName(): String {
-        return title
+        return taskName
     }
 
     fun setTaskName(taskName: String) {
-        this.title = taskName
+        this.taskName = taskName
     }
 
     fun getDescription(): String? {
@@ -34,10 +43,11 @@ class Task(
     }
 
     fun getCreator(): User? {
-        return author
+        return creator
     }
 
     fun setCreator(creator: User?) {
-        this.author = creator
+        this.creator = creator
     }
+
 }
