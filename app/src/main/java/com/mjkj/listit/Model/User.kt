@@ -43,6 +43,16 @@ class User(
         lists?.add(newList)
         return lists
     }
+    /**
+     * Function to remove a list from the user
+     * @param list the list to remove
+     * @return the lists of the user
+     */
+    fun removeList(list: ListOfTasks): MutableList<ListOfTasks>? {
+        lists?.remove(list)
+        return lists
+    }
+
     fun getName(): String {
         return name
     }

@@ -24,12 +24,33 @@ class UserTest {
     @Test
     fun addListTest(){
         //Arrange
-        val user = User("testUser", "user@test.com", "test123", null)
+        val user = User.createUser("testUser", "user@test.com", "test123")
         val list = ListOfTasks("testList", "testCode", mutableListOf(), mutableListOf(), "#FFFFFFFF", "testDescription", user)
         //Act
         user.addList(list)
         //Assert
         assertTrue(user.getLists()!!.size == 1)
         assertTrue(user.getLists()!![0] == list)
+    }
+
+    @Test
+    fun removeListTest() {
+        //Arrange
+        val user = User.createUser("testUser", "user@test.com", "test123")
+        val list = ListOfTasks(
+            "testList",
+            "testCode",
+            mutableListOf(),
+            mutableListOf(),
+            "#FFFFFFFF",
+            "testDescription",
+            user
+        )
+        user.addList(list)
+        //Act
+        user.removeList(list)
+        //Assert
+        assertTrue(user.getLists()!!.isEmpty())
+        assertEquals(0, user.getLists()!!.size)
     }
 }
