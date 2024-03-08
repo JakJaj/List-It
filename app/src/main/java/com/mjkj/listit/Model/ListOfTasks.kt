@@ -30,7 +30,20 @@ class ListOfTasks(
      */
     private var creator: User?
 ) {
-
+    companion object{
+        /**
+         * Static function to create a random code
+         * @return a pseudorandom code for a list creation
+         */
+        fun createCode():String{
+            val characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+            var code = ""
+            for (i in 0..5) {
+                code += characters[Math.floor(Math.random() * characters.length).toInt()]
+            }
+            return code
+        }
+    }
     fun getListName(): String {
         return listName
     }
