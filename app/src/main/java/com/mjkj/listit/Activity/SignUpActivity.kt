@@ -45,11 +45,13 @@ class SignUpActivity : ComponentActivity() {
                             //TODO: Register user using Firebase
                             val intent = Intent(this@SignUpActivity, ListsActivity::class.java)
                             startActivity(intent)
+                            finish()
                         }
                         Spacer(modifier = Modifier.padding(5.dp))
                         ButtonTonalFilled(label = "Go back"){
                             val intent = Intent(this@SignUpActivity, MainActivity::class.java)
                             startActivity(intent)
+                            finish()
                         }
                     }
                 }

@@ -32,44 +32,34 @@ class ListsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            var showNavDrawer by remember { mutableStateOf(false) }
-            rememberCoroutineScope()
 
             Surface(
                 modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
-            ) {
-                val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-
-                ModalNavigationDrawer(
-                    drawerContent = {
-
-                    },
-                    drawerState = drawerState
+                color = MaterialTheme.colorScheme.background)
+            {
+                Scaffold(
+                    topBar = {
+                        ListAppBar(
+                            activity = "ListActivity",
+                            this
+                        )
+                    }
                 ) {
-                    Scaffold(
-                        topBar = {
-                            ListAppBar(
-                                activity = "ListActivity",
-                            )
-                        }
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "Press the + to join a list or to create a new one \n",
-                                textAlign = TextAlign.Center,
-                                color = Color.Gray,
-                                fontSize = 25.sp,
-                                modifier = Modifier.padding(15.dp)
-                            )
-                        }
+                        Text(
+                            text = "Press the + to join a list or to create a new one \n",
+                            textAlign = TextAlign.Center,
+                            color = Color.Gray,
+                            fontSize = 25.sp,
+                            modifier = Modifier.padding(15.dp)
+                        )
                     }
                 }
             }
-
         }
+
     }
 }

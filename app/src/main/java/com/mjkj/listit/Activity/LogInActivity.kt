@@ -48,11 +48,13 @@ class LogInActivity: ComponentActivity(){
                             //TODO: Verify login using firebase
                             val intent = Intent(this@LogInActivity, ListsActivity::class.java)
                             startActivity(intent)
+                            finish()
                         }
                         Spacer(modifier = Modifier.padding(5.dp))
                         ButtonTonalFilled(label = "Go back"){
                             val intent = Intent(this@LogInActivity, MainActivity::class.java)
                             startActivity(intent)
+                            finish()
                         }
                     }
                 }

@@ -1,5 +1,8 @@
 package com.mjkj.listit.Composable
 
+import android.app.Activity
+import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,10 +41,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,10 +52,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.core.content.ContextCompat.startActivity
+import com.mjkj.listit.Activity.MainActivity
 
 @Composable
         /** This is a composable function that creates a button WITH a filled background and a label
@@ -103,6 +107,7 @@ fun OutlinedTextField(label:String) {
          */
 fun ListAppBar(
     activity: String,
+    test: Activity
 ) {
     val showDialog = remember {
         mutableStateOf(false)
@@ -112,12 +117,12 @@ fun ListAppBar(
         mutableStateOf(false)
     }
 
-    if (activity == "ListActivity" && showDialog.value) {
+    if ( activity == "ListActivity"  && showDialog.value) {
         Dialog(onDismissRequest = { showDialog.value = false })
     }
-
+    
     if (activity == "ListActivity" && showNavDrawer.value) {
-        NavDrawer(onDismissDrawerRequest = { showNavDrawer.value = false })
+        NavDrawer(test)
     }
 
     Surface(
@@ -132,10 +137,10 @@ fun ListAppBar(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { showNavDrawer.value = true }) {
+            IconButton(onClick = {showNavDrawer.value = changeState(showNavDrawer) }) {
                 Icon(
                     imageVector = Icons.Filled.Menu,
-                    contentDescription = "Menu",
+                    contentDescription = "Home",
                     tint = Color.White
                 )
             }
@@ -148,7 +153,7 @@ fun ListAppBar(
                 color = Color.White,
                 fontSize = 30.sp
             )
-            IconButton(onClick = { showDialog.value = true }) {
+            IconButton(onClick = { showDialog.value = changeState(showDialog) }) {
                 Icon(
                     imageVector = Icons.Filled.Add,
                     contentDescription = "Add",
@@ -159,15 +164,9 @@ fun ListAppBar(
     }
 }
 
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Surface (modifier = Modifier.fillMaxSize()){
-        Text(text = "List It",fontSize = 120.sp)
-        Dialog {
-        }
-    }
+fun changeState(state: MutableState<Boolean>): Boolean{
+    state.value = !state.value
+    return state.value
 }
 
 @Composable
@@ -208,7 +207,6 @@ fun Dialog(onDismissRequest: () -> Unit) {
             }else{
                 JoinListContent()
             }
-
         }
         }
     }
@@ -329,10 +327,9 @@ data class NavigationItem(
     val badgeCount: Int? = null
 )
 @Composable
-fun NavDrawer(onDismissDrawerRequest: () -> Unit) {
-    val scope = rememberCoroutineScope()
+fun NavDrawer(parentActivity: Activity) {
 
-    ModalDrawerSheet( onDismissDrawerRequest = { onDismissDrawerRequest() }) {
+    ModalDrawerSheet() {
         val items = remember {
             listOf(
                 NavigationItem(
@@ -358,17 +355,7 @@ fun NavDrawer(onDismissDrawerRequest: () -> Unit) {
             modifier = Modifier.fillMaxSize()
         ) {
             // Top section with the text "List it"
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "List it",
-                    fontSize = 30.sp
-                )
-            }
+            Spacer(modifier = Modifier.height(100.dp))
             // Middle section with ListView
             LazyColumn(
                 modifier = Modifier.weight(1f)
@@ -406,6 +393,10 @@ fun NavDrawer(onDismissDrawerRequest: () -> Unit) {
                 contentAlignment = Alignment.Center
             ) {
                 ButtonTonalFilled(label = "Log out") {
+                    //TODO: Implement log out
+                    val intent = Intent(parentActivity, MainActivity::class.java)
+                    startActivity(parentActivity, intent, null)
+                    parentActivity.finish()
                 }
             }
         }
