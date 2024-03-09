@@ -15,7 +15,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.key.Key.Companion.D
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.firebase.firestore.ktx.firestore
@@ -50,7 +49,7 @@ class LogInActivity: ComponentActivity(){
                         ButtonFilled("Log in") {
                             //TODO: Verify login using firebase
 
-                            val intent = Intent(this@LogInActivity, ListsActivity::class.java)
+                            val intent = Intent(this@LogInActivity, ScrollListsActivity::class.java)
                             startActivity(intent)
                             Log.d("D", "Username: $username")
                             Log.d("D", "Password: $password")
