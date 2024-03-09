@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -57,7 +58,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat.startActivity
 import com.mjkj.listit.Activity.MainActivity
-import com.mjkj.listit.Model.ListOfTasks
 
 @Composable
         /** This is a composable function that creates a button WITH a filled background and a label
@@ -66,9 +66,9 @@ import com.mjkj.listit.Model.ListOfTasks
          * @param label: String - The text to be displayed on the button
          * @param onClick: () -> Unit - The action to be performed when the button is clicked
          * */
-fun ButtonFilled(label: String,onClick: () -> Unit) {
+fun ButtonFilled(label: String, onClick: () -> Unit) {
     Button(onClick = { onClick() }) {
-        Text(label,fontSize = 25.sp)
+        Text(label, fontSize = 25.sp)
     }
 }
 
@@ -79,9 +79,9 @@ fun ButtonFilled(label: String,onClick: () -> Unit) {
          * @param label: String - The text to be displayed on the button
          * @param onClick: () -> Unit - The action to be performed when the button is clicked
          **/
-fun ButtonTonalFilled(label:String,onClick: () -> Unit) {
+fun ButtonTonalFilled(label: String, onClick: () -> Unit) {
     FilledTonalButton(onClick = { onClick() }) {
-        Text(label,fontSize = 25.sp)
+        Text(label, fontSize = 25.sp)
     }
 }
 
@@ -91,7 +91,7 @@ fun ButtonTonalFilled(label:String,onClick: () -> Unit) {
          *  @param label: String - The text to be displayed on the label
          *  @return text: String - The text entered into the text field
          * */
-fun OutlinedTextField(label:String): String {
+fun OutlinedTextField(label: String): String {
     var text by remember { mutableStateOf("") }
 
     androidx.compose.material3.OutlinedTextField(
@@ -121,10 +121,10 @@ fun ListAppBar(
         mutableStateOf(false)
     }
 
-    if ( activity == "ListActivity"  && showDialog.value) {
+    if (activity == "ListActivity" && showDialog.value) {
         Dialog(onDismissRequest = { showDialog.value = false })
     }
-    
+
     if (activity == "ListActivity" && showNavDrawer.value) {
         NavDrawer(test)
     }
@@ -141,7 +141,7 @@ fun ListAppBar(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = {showNavDrawer.value = changeState(showNavDrawer) }) {
+            IconButton(onClick = { showNavDrawer.value = changeState(showNavDrawer) }) {
                 Icon(
                     imageVector = Icons.Filled.Menu,
                     contentDescription = "Home",
@@ -168,7 +168,7 @@ fun ListAppBar(
     }
 }
 
-fun changeState(state: MutableState<Boolean>): Boolean{
+fun changeState(state: MutableState<Boolean>): Boolean {
     state.value = !state.value
     return state.value
 }
@@ -189,29 +189,29 @@ fun Dialog(onDismissRequest: () -> Unit) {
                 .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
         ) {
-        Column {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(25.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            Column {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(25.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
 
-            ) {
-                TextButton(onClick = {showCreateListContent = false}){
-                    Text(text = "Join List")
+                ) {
+                    TextButton(onClick = { showCreateListContent = false }) {
+                        Text(text = "Join List")
+                    }
+                    TextButton(onClick = { showCreateListContent = true }) {
+                        Text(text = "Create List")
+                    }
                 }
-                TextButton(onClick = {showCreateListContent = true}) {
-                    Text(text = "Create List")
+                HorizontalDivider()
+                if (showCreateListContent) {
+                    CreateListContent()
+                } else {
+                    JoinListContent()
                 }
             }
-            HorizontalDivider()
-            if(showCreateListContent){
-                CreateListContent()
-            }else{
-                JoinListContent()
-            }
-        }
         }
     }
 }
@@ -220,7 +220,7 @@ fun Dialog(onDismissRequest: () -> Unit) {
         /** This is a composable function that joins to an existing a new list
          *
          * */
-fun JoinListContent(){
+fun JoinListContent() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -229,13 +229,13 @@ fun JoinListContent(){
         verticalArrangement = Arrangement.Center
     ) {
         Spacer(modifier = Modifier.padding(5.dp))
-        Text(text = "Join an existing list",fontSize = 20.sp)
+        Text(text = "Join an existing list", fontSize = 20.sp)
         Spacer(modifier = Modifier.padding(25.dp))
-        var listCode:String = OutlinedTextField("List Code")
+        var listCode: String = OutlinedTextField("List Code")
         Spacer(modifier = Modifier.padding(20.dp))
 
 
-        Text(text = "Enter the code of the list you want to join",fontSize = 14.sp)
+        Text(text = "Enter the code of the list you want to join", fontSize = 14.sp)
         Spacer(modifier = Modifier.padding(20.dp))
         HorizontalDivider(modifier = Modifier.height(5.dp))
         Spacer(modifier = Modifier.padding(75.dp))
@@ -247,11 +247,22 @@ fun JoinListContent(){
 }
 
 @Composable
-    /** This is a composable function that creates submenu for creating a new list
-     *
-     * */
-fun CreateListContent(){
-    val colorArray = arrayOf("Red", "Blue", "Green", "Yellow", "Purple", "Orange", "Pink", "Brown", "Black", "White")
+        /** This is a composable function that creates submenu for creating a new list
+         *
+         * */
+fun CreateListContent() {
+    val colorArray = arrayOf(
+        "Red",
+        "Blue",
+        "Green",
+        "Yellow",
+        "Purple",
+        "Orange",
+        "Pink",
+        "Brown",
+        "Black",
+        "White"
+    )
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -260,15 +271,15 @@ fun CreateListContent(){
         verticalArrangement = Arrangement.Center
     ) {
         Spacer(modifier = Modifier.padding(5.dp))
-        Text(text = "Create a new list",fontSize = 20.sp)
+        Text(text = "Create a new list", fontSize = 20.sp)
         Spacer(modifier = Modifier.padding(20.dp))
-        val listName:String = OutlinedTextField("List Name (Required)")
+        val listName: String = OutlinedTextField("List Name (Required)")
 
         Spacer(modifier = Modifier.padding(5.dp))
-        val shortDescription:String = OutlinedTextField("Short Description ")
+        val shortDescription: String = OutlinedTextField("Short Description ")
         Spacer(modifier = Modifier.padding(15.dp))
-        Text(text = "Choose a color for your list",fontSize = 14.sp)
-        val item:String = DropdownMenuBox(colorArray)
+        Text(text = "Choose a color for your list", fontSize = 14.sp)
+        val item: String = DropdownMenuBox(colorArray)
         Spacer(modifier = Modifier.padding(15.dp))
         HorizontalDivider(modifier = Modifier.height(5.dp))
         Spacer(modifier = Modifier.padding(10.dp))
@@ -277,20 +288,21 @@ fun CreateListContent(){
             Log.d("D", "ListName: $listName")
             Log.d("D", "ShortDescription: $shortDescription")
             Log.d("D", "Color: $item")
-            if(listName.isNotEmpty()){
+            if (listName.isNotEmpty()) {
                 //TODO: CREATE LIST FUNCTIONALITY
             }
 
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
         /** This is a composable function that creates a dropdown menu
          *@param items: Array<String> - The items to be displayed in the dropdown menu
          *@return selectedText: String - The selected item from the dropdown menu
-        * */
-fun DropdownMenuBox(items: Array<String>):String {
+         * */
+fun DropdownMenuBox(items: Array<String>): String {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf(items[0]) }
@@ -331,7 +343,7 @@ fun DropdownMenuBox(items: Array<String>):String {
             }
         }
     }
-return selectedText
+    return selectedText
 }
 
 data class NavigationItem(
@@ -340,6 +352,7 @@ data class NavigationItem(
     val unselectedIcon: ImageVector,
     val badgeCount: Int? = null
 )
+
 @Composable
 fun NavDrawer(parentActivity: Activity) {
 
@@ -413,6 +426,32 @@ fun NavDrawer(parentActivity: Activity) {
                     parentActivity.finish()
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun ListItem(title: String, description: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
+        ) {
+            Text(
+                text = title,
+                color = Color.Black,
+                fontSize = 25.sp
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = description,
+                color = Color.Black,
+                fontSize = 16.sp
+            )
         }
     }
 }
