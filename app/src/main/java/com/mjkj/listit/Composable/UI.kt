@@ -58,8 +58,11 @@ import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat.startActivity
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
+import com.mjkj.listit.Activity.ListsActivity
 import com.mjkj.listit.Activity.MainActivity
 import com.mjkj.listit.Model.ListOfTasks
+import com.mjkj.listit.Model.User
 
 @Composable
         /** This is a composable function that creates a button WITH a filled background and a label
@@ -124,7 +127,7 @@ fun ListAppBar(
     }
 
     if ( activity == "ListActivity"  && showDialog.value) {
-        Dialog(onDismissRequest = { showDialog.value = false })
+        Dialog(onDismissRequest = { showDialog.value = false },test)
     }
     
     if (activity == "ListActivity" && showNavDrawer.value) {
@@ -180,7 +183,7 @@ fun changeState(state: MutableState<Boolean>): Boolean{
          *
          * @param onDismissRequest: () -> Unit - The action to be performed when the dialog is dismissed
          * */
-fun Dialog(onDismissRequest: () -> Unit) {
+fun Dialog(onDismissRequest: () -> Unit, parentActivity: Activity) {
     var showCreateListContent by remember { mutableStateOf(false) }
 
     Dialog(onDismissRequest = { onDismissRequest() }) {
@@ -209,20 +212,23 @@ fun Dialog(onDismissRequest: () -> Unit) {
             }
             HorizontalDivider()
             if(showCreateListContent){
-                CreateListContent()
+                CreateListContent(parentActivity)
+
             }else{
-                JoinListContent()
+                JoinListContent(parentActivity)
+
             }
         }
         }
     }
+
 }
 
 @Composable
         /** This is a composable function that joins to an existing a new list
          *
          * */
-fun JoinListContent(){
+fun JoinListContent(parentActivity: Activity){
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -246,14 +252,16 @@ fun JoinListContent(){
             Log.d("D", "JoinListCode: $listCode")
         }
     }
+
 }
 
 @Composable
     /** This is a composable function that creates submenu for creating a new list
      *
      * */
-fun CreateListContent(){
+fun CreateListContent(parentActivity: Activity){
     val colorArray = arrayOf("Red", "Blue", "Green", "Yellow", "Purple", "Orange", "Pink", "Brown", "Black", "White")
+    val db = Firebase.firestore
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -279,10 +287,26 @@ fun CreateListContent(){
             Log.d("D", "ListName: $listName")
             Log.d("D", "ShortDescription: $shortDescription")
             Log.d("D", "Color: $item")
-            if(listName.isNotEmpty()){
+            if(listName != ""){
                 //TODO: CREATE LIST FUNCTIONALITY
+                val user = User.createUser(Firebase.auth.currentUser?.uid,Firebase.auth.currentUser?.displayName.toString(),Firebase.auth.currentUser?.email.toString())
+                val list = ListOfTasks.createList(listName, user, item, shortDescription)
+                Log.d("D", "User: $user id: ${user.getId()} name: ${user.getName()} email: ${user.getEmail()} lists: ${user.getLists()}")
+                val newList = hashMapOf(
+                    "listName" to listName,
+                    "code" to list.getCode(),
+                    "color" to item,
+                    "description" to shortDescription,
+                    "creator" to user.getId()
+                )
+                db.collection("lists").document(list.getCode()).set(newList)
+                val intent = Intent(parentActivity, ListsActivity::class.java)
+                startActivity(parentActivity, intent, null)
+                parentActivity.finish()
             }
-
+            else{
+                Toast.makeText(parentActivity, "List name is required", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

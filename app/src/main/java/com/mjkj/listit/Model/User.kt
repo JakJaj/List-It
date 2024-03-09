@@ -2,6 +2,10 @@ package com.mjkj.listit.Model
 
 class User(
     /**
+     * The id of the user
+     */
+    private var id: String?,
+    /**
      * The name of the user
      */
     private var name: String,
@@ -9,10 +13,6 @@ class User(
      * The email of the user
      */
     private var email: String,
-    /**
-     * The password of the user
-     */
-    private var password: String,
     /**
      * The lists of the user
      */
@@ -26,8 +26,8 @@ class User(
          * @param password the password of the user
          * @return a new user
          */
-        fun createUser(name: String, email: String, password: String): User{
-            return User(name, email, password, null)
+        fun createUser(id:String?, name: String, email: String): User{
+            return User(id, name, email, null)
         }
     }
 
@@ -68,20 +68,17 @@ class User(
     fun setEmail(email: String) {
         this.email = email
     }
-
-    fun getPassword(): String {
-        return password
-    }
-
-    fun setPassword(password: String) {
-        this.password = password
-    }
-
     fun getLists(): MutableList<ListOfTasks>? {
         return lists
     }
 
     fun setLists(lists: MutableList<ListOfTasks>?) {
         this.lists = lists
+    }
+    fun getId(): String? {
+        return id
+    }
+    fun setId(id: String) {
+        this.id = id
     }
 }
