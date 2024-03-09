@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -430,28 +429,4 @@ fun NavDrawer(parentActivity: Activity) {
     }
 }
 
-@Composable
-fun ListItem(title: String, description: String) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
-    ) {
-        Column(
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
-        ) {
-            Text(
-                text = title,
-                color = Color.Black,
-                fontSize = 25.sp
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = description,
-                color = Color.Black,
-                fontSize = 16.sp
-            )
-        }
-    }
-}
+
