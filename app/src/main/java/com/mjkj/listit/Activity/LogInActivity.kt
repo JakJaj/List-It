@@ -18,8 +18,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.mjkj.listit.Composable.*
-import com.mjkj.listit.Activity.*
+import com.mjkj.listit.Composable.ButtonFilled
+import com.mjkj.listit.Composable.ButtonTonalFilled
+import com.mjkj.listit.Composable.OutlinedTextField
 
 class LogInActivity: ComponentActivity(){
     val db = Firebase.firestore
