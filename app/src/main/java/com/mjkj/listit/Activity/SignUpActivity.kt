@@ -75,7 +75,8 @@ class SignUpActivity : ComponentActivity() {
                                 Toast.makeText(this@SignUpActivity, "Password must be at least 6 characters long", Toast.LENGTH_SHORT).show()
                             }
                             else{
-                                auth.createUserWithEmailAndPassword(email, password)
+                                //TODO ODKOMENTOWAC KIEDY BEDZIE POTRZEBA REJESTRACJI
+                                /*auth.createUserWithEmailAndPassword(email, password)
                                     .addOnCompleteListener(this@SignUpActivity){ task ->
                                         if(task.isSuccessful){
                                             Log.d("SignUpActivity", "User created successfully")
@@ -84,16 +85,17 @@ class SignUpActivity : ComponentActivity() {
                                                 "email" to email,
                                                 "lists" to null
                                             )
-                                            db.collection("users").document(auth.currentUser!!.uid)
+                                            db.collection("users").document("${auth.currentUser?.uid}")
                                                 .set(user)
                                                 .addOnSuccessListener { Log.d("SignUpActivity", "DocumentSnapshot successfully written!") }
                                                 .addOnFailureListener { e -> Log.w("SignUpActivity", "Error writing document", e) }
+
                                         }
                                         else{
                                             Log.d("SignUpActivity", "User creation failed")
                                             Toast.makeText(this@SignUpActivity, "User creation failed", Toast.LENGTH_SHORT).show()
                                         }
-                                    }
+                                    }*/
                                 val intent = Intent(this@SignUpActivity, ListsActivity::class.java)
                                 startActivity(intent)
                             }
