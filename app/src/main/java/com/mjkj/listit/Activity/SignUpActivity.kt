@@ -76,7 +76,7 @@ class SignUpActivity : ComponentActivity() {
                             }
                             else{
                                 //TODO ODKOMENTOWAC KIEDY BEDZIE POTRZEBA REJESTRACJI
-                                /*auth.createUserWithEmailAndPassword(email, password)
+                                auth.createUserWithEmailAndPassword(email, password)
                                     .addOnCompleteListener(this@SignUpActivity){ task ->
                                         if(task.isSuccessful){
                                             Log.d("SignUpActivity", "User created successfully")
@@ -89,15 +89,14 @@ class SignUpActivity : ComponentActivity() {
                                                 .set(user)
                                                 .addOnSuccessListener { Log.d("SignUpActivity", "DocumentSnapshot successfully written!") }
                                                 .addOnFailureListener { e -> Log.w("SignUpActivity", "Error writing document", e) }
-
+                                            val intent = Intent(this@SignUpActivity, ListsActivity::class.java)
+                                            startActivity(intent)
                                         }
                                         else{
                                             Log.d("SignUpActivity", "User creation failed")
                                             Toast.makeText(this@SignUpActivity, "User creation failed", Toast.LENGTH_SHORT).show()
                                         }
-                                    }*/
-                                val intent = Intent(this@SignUpActivity, ListsActivity::class.java)
-                                startActivity(intent)
+                                    }
                             }
                         }
                         Spacer(modifier = Modifier.padding(5.dp))
