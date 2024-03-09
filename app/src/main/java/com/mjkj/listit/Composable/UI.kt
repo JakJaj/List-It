@@ -44,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.mjkj.listit.Model.ListOfTasks
 
 @Composable
         /** This is a composable function that creates a button WITH a filled background and a label
@@ -257,6 +258,10 @@ fun CreateListContent(){
             Log.d("D", "ListName: $listName")
             Log.d("D", "ShortDescription: $shortDescription")
             Log.d("D", "Color: $item")
+            if(listName.isNotEmpty()){
+                //TODO: CREATE LIST FUNCTIONALITY
+            }
+
         }
     }
 }
