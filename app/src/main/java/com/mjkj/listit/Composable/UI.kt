@@ -58,6 +58,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat.startActivity
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.firestore
 import com.mjkj.listit.Activity.ListsActivity
 import com.mjkj.listit.Activity.MainActivity
@@ -250,6 +251,40 @@ fun JoinListContent(parentActivity: Activity){
         ButtonFilled("Join") {
             //TODO: JOINING LIST FUNCTIONALITY
             Log.d("D", "JoinListCode: $listCode")
+            if(listCode.length != 6){
+                Toast.makeText(parentActivity, "Codes contain 6 symbols", Toast.LENGTH_SHORT).show()
+            }
+            else{
+                val db = Firebase.firestore
+                val user = User.createUser(Firebase.auth.currentUser?.uid,Firebase.auth.currentUser?.displayName.toString(),Firebase.auth.currentUser?.email.toString())
+                db.collection("lists").document(listCode).get().addOnSuccessListener { document ->
+                    if (document != null) {
+
+                        db.collection("users").document(Firebase.auth.currentUser!!.uid).get()
+                            .addOnSuccessListener { document ->
+                                if (document != null) {
+                                    val currentList = document.data?.get("lists")
+                                    if(currentList == null){
+                                        val currentList = mutableListOf<String>()
+                                        currentList.add(listCode)
+                                        db.collection("users").document(Firebase.auth.currentUser!!.uid).update("lists", currentList)
+                                    }
+                                    else{
+                                        val currentList = document.data?.get("lists") as MutableList<String>
+                                        currentList.add(listCode)
+                                        db.collection("users").document(Firebase.auth.currentUser!!.uid).update("lists", currentList)
+                                    }
+                                }
+                            }
+                        val intent = Intent(parentActivity, ListsActivity::class.java)
+                        startActivity(parentActivity, intent, null)
+                        parentActivity.finish()
+                    } else {
+                        Toast.makeText(parentActivity, "List not found", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+            }
         }
     }
 
@@ -292,14 +327,32 @@ fun CreateListContent(parentActivity: Activity){
                 val user = User.createUser(Firebase.auth.currentUser?.uid,Firebase.auth.currentUser?.displayName.toString(),Firebase.auth.currentUser?.email.toString())
                 val list = ListOfTasks.createList(listName, user, item, shortDescription)
                 Log.d("D", "User: $user id: ${user.getId()} name: ${user.getName()} email: ${user.getEmail()} lists: ${user.getLists()}")
-                val newList = hashMapOf(
+                val hashList = hashMapOf(
                     "listName" to listName,
                     "code" to list.getCode(),
                     "color" to item,
                     "description" to shortDescription,
                     "creator" to user.getId()
                 )
-                db.collection("lists").document(list.getCode()).set(newList)
+                db.collection("lists").document(list.getCode()).set(hashList)
+
+                db.collection("users").document(Firebase.auth.currentUser!!.uid).get()
+                    .addOnSuccessListener { document ->
+                        if (document != null) {
+                            val currentList = document.data?.get("lists")
+
+                            if(currentList == null){
+                                val currentList = mutableListOf<String>()
+                                currentList.add(list.getCode())
+                                db.collection("users").document(Firebase.auth.currentUser!!.uid).update("lists", currentList)
+                            }
+                            else{
+                                val currentList = document.data?.get("lists") as MutableList<String>
+                                currentList.add(list.getCode())
+                                db.collection("users").document(Firebase.auth.currentUser!!.uid).update("lists", currentList)
+                            }
+                        }
+                    }
                 val intent = Intent(parentActivity, ListsActivity::class.java)
                 startActivity(parentActivity, intent, null)
                 parentActivity.finish()
