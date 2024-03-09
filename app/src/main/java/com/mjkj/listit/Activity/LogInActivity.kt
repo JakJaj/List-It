@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.Key.Companion.D
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mjkj.listit.Composable.ButtonFilled
@@ -26,11 +27,18 @@ import com.mjkj.listit.Composable.OutlinedTextField
 
 class LogInActivity: ComponentActivity(){
     val db = Firebase.firestore
+    private lateinit var auth: FirebaseAuth
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
+            val currentUser = auth.currentUser
+            if(currentUser != null){
+                val intent = Intent(this@LogInActivity, ListsActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background) {

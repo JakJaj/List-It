@@ -3,6 +3,7 @@ package com.mjkj.listit.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +16,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mjkj.listit.Composable.ButtonFilled
@@ -22,11 +25,20 @@ import com.mjkj.listit.Composable.ButtonTonalFilled
 import com.mjkj.listit.Composable.OutlinedTextField
 
 class SignUpActivity : ComponentActivity() {
-    val db = Firebase.firestore
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
 
+        setContent {
+            val db = Firebase.firestore
+            val auth: FirebaseAuth = Firebase.auth
+
+            val currentUser = auth.currentUser
+            if(currentUser != null){
+                val intent = Intent(this@SignUpActivity, ListsActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background) {
@@ -49,15 +61,42 @@ class SignUpActivity : ComponentActivity() {
 
                         ButtonFilled("Register") {
                             //TODO: Register user using Firebase
-                            val intent = Intent(this@SignUpActivity, ListsActivity::class.java)
-                            startActivity(intent)
-                            Log.d("D", "Username: $username")
-                            Log.d("D", "Email: $email")
-                            Log.d("D", "Password: $password")
-                            Log.d("D", "Retyped password: $retypedPassword")
-                            finish()
 
-                            
+                            if(password != retypedPassword){
+                                Log.d("SignUpActivity", "Passwords do not match")
+                                Toast.makeText(this@SignUpActivity, "Passwords do not match", Toast.LENGTH_SHORT).show()
+                            }
+                            else if(username.isEmpty() || email.isEmpty() || password.isEmpty() || retypedPassword.isEmpty()){
+                                Log.d("SignUpActivity", "Please fill in all fields")
+                                Toast.makeText(this@SignUpActivity, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                            }
+                            else if(password.length < 6){
+                                Log.d("SignUpActivity", "Password must be at least 6 characters long")
+                                Toast.makeText(this@SignUpActivity, "Password must be at least 6 characters long", Toast.LENGTH_SHORT).show()
+                            }
+                            else{
+                                auth.createUserWithEmailAndPassword(email, password)
+                                    .addOnCompleteListener(this@SignUpActivity){ task ->
+                                        if(task.isSuccessful){
+                                            Log.d("SignUpActivity", "User created successfully")
+                                            val user = hashMapOf(
+                                                "username" to username,
+                                                "email" to email,
+                                                "lists" to null
+                                            )
+                                            db.collection("users").document(auth.currentUser!!.uid)
+                                                .set(user)
+                                                .addOnSuccessListener { Log.d("SignUpActivity", "DocumentSnapshot successfully written!") }
+                                                .addOnFailureListener { e -> Log.w("SignUpActivity", "Error writing document", e) }
+                                        }
+                                        else{
+                                            Log.d("SignUpActivity", "User creation failed")
+                                            Toast.makeText(this@SignUpActivity, "User creation failed", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                val intent = Intent(this@SignUpActivity, ListsActivity::class.java)
+                                startActivity(intent)
+                            }
                         }
                         Spacer(modifier = Modifier.padding(5.dp))
                         ButtonTonalFilled(label = "Go back"){

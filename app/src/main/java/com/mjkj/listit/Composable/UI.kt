@@ -56,6 +56,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat.startActivity
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.mjkj.listit.Activity.MainActivity
 import com.mjkj.listit.Model.ListOfTasks
 
@@ -410,6 +412,7 @@ fun NavDrawer(parentActivity: Activity) {
                     //TODO: Implement log out
                     val intent = Intent(parentActivity, MainActivity::class.java)
                     startActivity(parentActivity, intent, null)
+                    Firebase.auth.signOut()
                     parentActivity.finish()
                 }
             }
