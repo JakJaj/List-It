@@ -7,10 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
@@ -26,45 +22,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mjkj.listit.Composable.ListAppBar
-import com.mjkj.listit.Composable.NavDrawer
-
-data class NavigationItem(
-    val title: String,
-    val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector,
-    val badgeCount: Int? = null
-)
 
 class ListsActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val items = listOf(
-                NavigationItem(
-                    title = "All",
-                    selectedIcon = Icons.Filled.Home,
-                    unselectedIcon = Icons.Filled.Home,
-                ),
-                NavigationItem(
-                    title = "Urgent",
-                    selectedIcon = Icons.Filled.Info,
-                    unselectedIcon = Icons.Filled.Info,
-                    badgeCount = 45
-                ),
-                NavigationItem(
-                    title = "Settings",
-                    selectedIcon = Icons.Filled.Settings,
-                    unselectedIcon = Icons.Filled.Settings,
-                ),
-            )
             var showNavDrawer by remember { mutableStateOf(false) }
-            val scope = rememberCoroutineScope()
+            rememberCoroutineScope()
 
             Surface(
                 modifier = Modifier.fillMaxSize(),
@@ -74,11 +43,7 @@ class ListsActivity : ComponentActivity() {
 
                 ModalNavigationDrawer(
                     drawerContent = {
-                        NavDrawer(
-                            items = items,
-                            showNavDrawer = showNavDrawer,
-                            onShowDialogChange = { showNavDrawer = it }
-                        )
+
                     },
                     drawerState = drawerState
                 ) {
@@ -108,4 +73,3 @@ class ListsActivity : ComponentActivity() {
         }
     }
 }
-

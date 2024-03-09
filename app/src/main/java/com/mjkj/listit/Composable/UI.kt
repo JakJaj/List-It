@@ -15,7 +15,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenuItem
@@ -43,14 +46,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.mjkj.listit.Activity.NavigationItem
-import kotlinx.coroutines.launch
 
 @Composable
         /** This is a composable function that creates a button WITH a filled background and a label
@@ -114,6 +116,10 @@ fun ListAppBar(
         Dialog(onDismissRequest = { showDialog.value = false })
     }
 
+    if (activity == "ListActivity" && showNavDrawer.value) {
+        NavDrawer(onDismissDrawerRequest = { showNavDrawer.value = false })
+    }
+
     Surface(
         modifier = Modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.primary,
@@ -126,7 +132,7 @@ fun ListAppBar(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = {  }) {
+            IconButton(onClick = { showNavDrawer.value = true }) {
                 Icon(
                     imageVector = Icons.Filled.Menu,
                     contentDescription = "Menu",
@@ -316,15 +322,38 @@ fun DropdownMenuBox(items: Array<String>) {
     }
 }
 
+data class NavigationItem(
+    val title: String,
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector,
+    val badgeCount: Int? = null
+)
 @Composable
-fun NavDrawer(
-    items: List<NavigationItem>,
-    showNavDrawer: Boolean,
-    onShowDialogChange: (Boolean) -> Unit
-) {
+fun NavDrawer(onDismissDrawerRequest: () -> Unit) {
     val scope = rememberCoroutineScope()
 
-    ModalDrawerSheet {
+    ModalDrawerSheet( onDismissDrawerRequest = { onDismissDrawerRequest() }) {
+        val items = remember {
+            listOf(
+                NavigationItem(
+                    title = "All",
+                    selectedIcon = Icons.Default.Home,
+                    unselectedIcon = Icons.Default.Home,
+                ),
+                NavigationItem(
+                    title = "Urgent",
+                    selectedIcon = Icons.Default.Info,
+                    unselectedIcon = Icons.Default.Info,
+                    badgeCount = 45
+                ),
+                NavigationItem(
+                    title = "Settings",
+                    selectedIcon = Icons.Default.Settings,
+                    unselectedIcon = Icons.Default.Settings,
+                ),
+            )
+        }
+
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -351,12 +380,6 @@ fun NavDrawer(
                         },
                         selected = items.indexOf(item) == 0,
                         onClick = {
-                            onShowDialogChange(false)
-                            scope.launch {
-                                // Close the drawer
-                                // Ideally, you would want to pass the drawerState here
-                                // and close it from the caller side.
-                            }
                         },
                         icon = {
                             Icon(
@@ -371,8 +394,7 @@ fun NavDrawer(
                                 Text(text = item.badgeCount.toString())
                             }
                         },
-                        modifier = Modifier
-                            .padding(NavigationDrawerItemDefaults.ItemPadding)
+                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                     )
                 }
             }
