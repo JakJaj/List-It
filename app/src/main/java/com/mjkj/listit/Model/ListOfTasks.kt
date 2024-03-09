@@ -16,7 +16,7 @@ class ListOfTasks(
     /**
      * The members of the list
      */
-    private var members: MutableList<String>?,
+    private var members: MutableList<User>?,
     /**
      * The color of the list
      */
@@ -30,7 +30,54 @@ class ListOfTasks(
      */
     private var creator: User?
 ) {
+    companion object{
+        /**
+         * Static function to create a random code
+         * @return a pseudorandom code for a list creation
+         */
+        fun createCode():String{
+            val characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+            var code = ""
+            for (i in 0..5) {
+                code += characters[Math.floor(Math.random() * characters.length).toInt()]
+            }
+            return code
+        }
 
+        /**
+         * Static function to create a list
+         * @param listName the name of the list
+         * @param creator the creator of the list
+         * @param color the color of the list
+         * @param description the description of the list
+         * @return a new list
+         */
+        fun createList(listName: String, creator: User, color:String, description: String?): ListOfTasks{
+            val newList = ListOfTasks(listName, createCode(), mutableListOf(), mutableListOf(creator), color, description, creator)
+            creator.addList(newList)
+            return newList
+        }
+    }
+    /**
+     * Function to add a user to the list
+     * @param user the user to add
+     */
+    fun addUsers(user: User){
+        if(members == null){
+            members = mutableListOf()
+        }
+        members!!.add(user)
+    }
+    /**
+     * Function to add a task to the list
+     * @param task the task to add
+     */
+    fun addTask(task: Task){
+        if(tasks == null){
+            tasks = mutableListOf()
+        }
+        tasks!!.add(task)
+    }
     fun getListName(): String {
         return listName
     }
@@ -55,11 +102,11 @@ class ListOfTasks(
         this.tasks = tasks
     }
 
-    fun getMembers(): MutableList<String>? {
+    fun getMembers(): MutableList<User>? {
         return members
     }
 
-    fun setMembers(members: MutableList<String>?) {
+    fun setMembers(members: MutableList<User>?) {
         this.members = members
     }
 

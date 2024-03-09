@@ -2,6 +2,7 @@ package com.mjkj.listit.Activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +15,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.Key.Companion.D
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.firebase.firestore.ktx.firestore
@@ -39,17 +41,22 @@ class LogInActivity: ComponentActivity(){
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center){
 
-                        OutlinedTextField("Username")
+                        var username:String = OutlinedTextField("Username")
                         Spacer(modifier = Modifier.padding(10.dp))
-                        OutlinedTextField("Password")
+                        var password:String = OutlinedTextField("Password")
 
                         Spacer(modifier = Modifier.padding(60.dp))
 
                         ButtonFilled("Log in") {
                             //TODO: Verify login using firebase
+
                             val intent = Intent(this@LogInActivity, ListsActivity::class.java)
                             startActivity(intent)
+                            Log.d("D", "Username: $username")
+                            Log.d("D", "Password: $password")
                             finish()
+                            
+
                         }
                         Spacer(modifier = Modifier.padding(5.dp))
                         ButtonTonalFilled(label = "Go back"){

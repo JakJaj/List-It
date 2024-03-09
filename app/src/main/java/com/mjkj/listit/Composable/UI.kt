@@ -2,6 +2,7 @@ package com.mjkj.listit.Composable
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -56,6 +57,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat.startActivity
 import com.mjkj.listit.Activity.MainActivity
+import com.mjkj.listit.Model.ListOfTasks
 
 @Composable
         /** This is a composable function that creates a button WITH a filled background and a label
@@ -87,15 +89,18 @@ fun ButtonTonalFilled(label:String,onClick: () -> Unit) {
         /** This is a composable function that creates a text field with an outlined border
          *
          *  @param label: String - The text to be displayed on the label
+         *  @return text: String - The text entered into the text field
          * */
-fun OutlinedTextField(label:String) {
+fun OutlinedTextField(label:String): String {
     var text by remember { mutableStateOf("") }
 
     androidx.compose.material3.OutlinedTextField(
         value = text,
+        singleLine = true,
         onValueChange = { text = it },
         label = { Text(label) }
     )
+    return text
 }
 
 @Composable
@@ -226,7 +231,7 @@ fun JoinListContent(){
         Spacer(modifier = Modifier.padding(5.dp))
         Text(text = "Join an existing list",fontSize = 20.sp)
         Spacer(modifier = Modifier.padding(25.dp))
-        OutlinedTextField("List Code")
+        var listCode:String = OutlinedTextField("List Code")
         Spacer(modifier = Modifier.padding(20.dp))
 
 
@@ -235,7 +240,8 @@ fun JoinListContent(){
         HorizontalDivider(modifier = Modifier.height(5.dp))
         Spacer(modifier = Modifier.padding(75.dp))
         ButtonFilled("Join") {
-
+            //TODO: JOINING LIST FUNCTIONALITY
+            Log.d("D", "JoinListCode: $listCode")
         }
     }
 }
@@ -256,17 +262,24 @@ fun CreateListContent(){
         Spacer(modifier = Modifier.padding(5.dp))
         Text(text = "Create a new list",fontSize = 20.sp)
         Spacer(modifier = Modifier.padding(20.dp))
-        OutlinedTextField("List Name (Required)")
+        val listName:String = OutlinedTextField("List Name (Required)")
 
         Spacer(modifier = Modifier.padding(5.dp))
-        OutlinedTextField("Short Description ")
+        val shortDescription:String = OutlinedTextField("Short Description ")
         Spacer(modifier = Modifier.padding(15.dp))
         Text(text = "Choose a color for your list",fontSize = 14.sp)
-        DropdownMenuBox(colorArray)
+        val item:String = DropdownMenuBox(colorArray)
         Spacer(modifier = Modifier.padding(15.dp))
         HorizontalDivider(modifier = Modifier.height(5.dp))
         Spacer(modifier = Modifier.padding(10.dp))
         ButtonFilled("Create") {
+            //TODO: CREATING LIST FUNCTIONALITY
+            Log.d("D", "ListName: $listName")
+            Log.d("D", "ShortDescription: $shortDescription")
+            Log.d("D", "Color: $item")
+            if(listName.isNotEmpty()){
+                //TODO: CREATE LIST FUNCTIONALITY
+            }
 
         }
     }
@@ -274,9 +287,10 @@ fun CreateListContent(){
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
         /** This is a composable function that creates a dropdown menu
-        * @param items: Array<String> - The items to be displayed in the dropdown menu
+         *@param items: Array<String> - The items to be displayed in the dropdown menu
+         *@return selectedText: String - The selected item from the dropdown menu
         * */
-fun DropdownMenuBox(items: Array<String>) {
+fun DropdownMenuBox(items: Array<String>):String {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf(items[0]) }
@@ -317,6 +331,7 @@ fun DropdownMenuBox(items: Array<String>) {
             }
         }
     }
+return selectedText
 }
 
 data class NavigationItem(
