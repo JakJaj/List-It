@@ -1,5 +1,7 @@
 package com.mjkj.listit.Composable
 
+import android.app.Activity
+import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -11,10 +13,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenuItem
@@ -26,11 +33,15 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,12 +49,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.core.content.ContextCompat.startActivity
+import com.mjkj.listit.Activity.MainActivity
 import com.mjkj.listit.Model.ListOfTasks
 
 @Composable
@@ -91,17 +104,29 @@ fun OutlinedTextField(label:String): String {
 }
 
 @Composable
-        /** This is an AppBar function that creates an AppBar on top of the screen.
+        /**
+         * Composable function to display an app bar for a list screen.
          *
-         *
+         * @param activity The title of the activity associated with the app bar.
          */
-fun ListAppBar(activity:String) {
+fun ListAppBar(
+    activity: String,
+    test: Activity
+) {
     val showDialog = remember {
         mutableStateOf(false)
     }
 
-    if(activity == "ListActivity" && showDialog.value){
+    val showNavDrawer = remember {
+        mutableStateOf(false)
+    }
+
+    if ( activity == "ListActivity"  && showDialog.value) {
         Dialog(onDismissRequest = { showDialog.value = false })
+    }
+    
+    if (activity == "ListActivity" && showNavDrawer.value) {
+        NavDrawer(test)
     }
 
     Surface(
@@ -116,22 +141,23 @@ fun ListAppBar(activity:String) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { /* TODO: Handle hamburger side bar */ }) {
+            IconButton(onClick = {showNavDrawer.value = changeState(showNavDrawer) }) {
                 Icon(
                     imageVector = Icons.Filled.Menu,
-                    contentDescription = "Menu",
+                    contentDescription = "Home",
                     tint = Color.White
                 )
             }
             Text(
                 text = "List-it",
                 modifier = Modifier
+                    .weight(1f)
                     .padding(horizontal = 16.dp),
                 textAlign = TextAlign.Center,
                 color = Color.White,
                 fontSize = 30.sp
             )
-            IconButton(onClick = {showDialog.value = true}) {
+            IconButton(onClick = { showDialog.value = changeState(showDialog) }) {
                 Icon(
                     imageVector = Icons.Filled.Add,
                     contentDescription = "Add",
@@ -142,15 +168,9 @@ fun ListAppBar(activity:String) {
     }
 }
 
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Surface (modifier = Modifier.fillMaxSize()){
-        Text(text = "List It",fontSize = 120.sp)
-        Dialog {
-        }
-    }
+fun changeState(state: MutableState<Boolean>): Boolean{
+    state.value = !state.value
+    return state.value
 }
 
 @Composable
@@ -191,7 +211,6 @@ fun Dialog(onDismissRequest: () -> Unit) {
             }else{
                 JoinListContent()
             }
-
         }
         }
     }
@@ -312,5 +331,88 @@ fun DropdownMenuBox(items: Array<String>):String {
             }
         }
     }
-    return selectedText
+return selectedText
+}
+
+data class NavigationItem(
+    val title: String,
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector,
+    val badgeCount: Int? = null
+)
+@Composable
+fun NavDrawer(parentActivity: Activity) {
+
+    ModalDrawerSheet() {
+        val items = remember {
+            listOf(
+                NavigationItem(
+                    title = "All",
+                    selectedIcon = Icons.Default.Home,
+                    unselectedIcon = Icons.Default.Home,
+                ),
+                NavigationItem(
+                    title = "Urgent",
+                    selectedIcon = Icons.Default.Info,
+                    unselectedIcon = Icons.Default.Info,
+                    badgeCount = 45
+                ),
+                NavigationItem(
+                    title = "Settings",
+                    selectedIcon = Icons.Default.Settings,
+                    unselectedIcon = Icons.Default.Settings,
+                ),
+            )
+        }
+
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            // Top section with the text "List it"
+            Spacer(modifier = Modifier.height(100.dp))
+            // Middle section with ListView
+            LazyColumn(
+                modifier = Modifier.weight(1f)
+            ) {
+                items(items) { item ->
+                    NavigationDrawerItem(
+                        label = {
+                            Text(text = item.title)
+                        },
+                        selected = items.indexOf(item) == 0,
+                        onClick = {
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = if (items.indexOf(item) == 0) {
+                                    item.selectedIcon
+                                } else item.unselectedIcon,
+                                contentDescription = item.title
+                            )
+                        },
+                        badge = {
+                            item.badgeCount?.let {
+                                Text(text = item.badgeCount.toString())
+                            }
+                        },
+                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                    )
+                }
+            }
+            // Bottom section with the text "Log out"
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                ButtonTonalFilled(label = "Log out") {
+                    //TODO: Implement log out
+                    val intent = Intent(parentActivity, MainActivity::class.java)
+                    startActivity(parentActivity, intent, null)
+                    parentActivity.finish()
+                }
+            }
+        }
+    }
 }

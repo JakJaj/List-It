@@ -20,8 +20,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.mjkj.listit.Composable.*
-import com.mjkj.listit.Activity.*
+import com.mjkj.listit.Composable.ButtonFilled
+import com.mjkj.listit.Composable.ButtonTonalFilled
+import com.mjkj.listit.Composable.OutlinedTextField
 
 class LogInActivity: ComponentActivity(){
     val db = Firebase.firestore
@@ -53,11 +54,15 @@ class LogInActivity: ComponentActivity(){
                             startActivity(intent)
                             Log.d("D", "Username: $username")
                             Log.d("D", "Password: $password")
+                            finish()
+                            
+
                         }
                         Spacer(modifier = Modifier.padding(5.dp))
                         ButtonTonalFilled(label = "Go back"){
                             val intent = Intent(this@LogInActivity, MainActivity::class.java)
                             startActivity(intent)
+                            finish()
                         }
                     }
                 }
