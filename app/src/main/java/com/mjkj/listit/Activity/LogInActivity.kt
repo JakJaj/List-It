@@ -63,7 +63,27 @@ class LogInActivity: ComponentActivity(){
                             auth.signInWithEmailAndPassword(email, password)
                                 .addOnCompleteListener(this@LogInActivity){task ->
                                     if(task.isSuccessful){ //TODO: SPRAWDZANIE CZY MA LISTY CZY NIE!!!
-                                        
+                                        val currentUserId = auth.currentUser?.uid
+                                        val currentUserRef = db.collection("users").document(currentUserId!!)
+                                        currentUserRef.get().addOnSuccessListener { documentSnapchot ->
+
+                                            if(documentSnapchot.exists()){
+                                                Log.d("LogInActivity", "DocumentSnapshot data: ${documentSnapchot.data}")
+                                                if(documentSnapchot.data?.get("lists") == null){
+                                                    Log.d("LogInActivity", "No lists go to empty lists activity") //TODO: GO TO EMPTY LISTS ACTIVITY
+                                                }else{
+                                                    Log.d("LogInActivity", "Lists exist go to lists activity") //TODO: GO TO LISTS ACTIVITY
+                                                }
+
+                                            }
+                                            else{
+                                                Log.d("LogInActivity", "No such document")
+                                            }
+                                        }.addOnFailureListener { exception ->
+                                            Log.d("LogInActivity", "get failed with ", exception)
+                                        }
+
+
                                         val intent = Intent(this@LogInActivity, ListsActivity::class.java)
                                         startActivity(intent)
                                         finish()
