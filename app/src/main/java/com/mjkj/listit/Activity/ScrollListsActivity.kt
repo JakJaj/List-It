@@ -51,9 +51,13 @@ class ScrollListsActivity : ComponentActivity() {
                     ) {
                         Spacer(modifier = Modifier.height(100.dp))
                         LazyColumn {
-                            for (i in 1..3) {
+                            for (i in 1..10) {
                                 item {
-                                    ListItem(title = "Example ${i}", description = "Example${i}")
+                                    ListItem(
+                                        title = "Example ${i}",
+                                        description = "Example${i}",
+                                        color = ""
+                                    )
                                 }
                             }
                         }
@@ -65,12 +69,23 @@ class ScrollListsActivity : ComponentActivity() {
 }
 
 @Composable
-fun ListItem(title: String, description: String) {
+fun ListItem(title: String, description: String, color: String) {
+    val backgroundColor = when (color.lowercase()) {
+        "Red" -> Color.Red
+        "Blue" -> Color.Blue
+        "Green" -> Color.Green
+        "Yellow" -> Color.Yellow
+        "Cyan" -> Color.Cyan
+        "Pink" -> Color.Magenta
+        "White" -> Color.White
+        "Gray" -> Color.Gray
+        else -> Color.Transparent
+    }
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp)
-            .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
+            .background(backgroundColor, shape = RoundedCornerShape(8.dp))
     ) {
         Column(
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)

@@ -255,12 +255,10 @@ fun CreateListContent() {
         "Blue",
         "Green",
         "Yellow",
-        "Purple",
-        "Orange",
+        "Cyan",
         "Pink",
-        "Brown",
-        "Black",
-        "White"
+        "White",
+        "Gray",
     )
     Column(
         modifier = Modifier
