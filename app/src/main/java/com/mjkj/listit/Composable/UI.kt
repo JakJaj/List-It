@@ -65,6 +65,7 @@ import com.mjkj.listit.Activity.MainActivity
 import com.mjkj.listit.Model.ListOfTasks
 import com.mjkj.listit.Model.User
 
+
 @Composable
         /** This is a composable function that creates a button WITH a filled background and a label
          *  this button is used as a main action button
@@ -72,9 +73,9 @@ import com.mjkj.listit.Model.User
          * @param label: String - The text to be displayed on the button
          * @param onClick: () -> Unit - The action to be performed when the button is clicked
          * */
-fun ButtonFilled(label: String,onClick: () -> Unit) {
+fun ButtonFilled(label: String, onClick: () -> Unit) {
     Button(onClick = { onClick() }) {
-        Text(label,fontSize = 25.sp)
+        Text(label, fontSize = 25.sp)
     }
 }
 
@@ -85,9 +86,9 @@ fun ButtonFilled(label: String,onClick: () -> Unit) {
          * @param label: String - The text to be displayed on the button
          * @param onClick: () -> Unit - The action to be performed when the button is clicked
          **/
-fun ButtonTonalFilled(label:String,onClick: () -> Unit) {
+fun ButtonTonalFilled(label: String, onClick: () -> Unit) {
     FilledTonalButton(onClick = { onClick() }) {
-        Text(label,fontSize = 25.sp)
+        Text(label, fontSize = 25.sp)
     }
 }
 
@@ -97,7 +98,7 @@ fun ButtonTonalFilled(label:String,onClick: () -> Unit) {
          *  @param label: String - The text to be displayed on the label
          *  @return text: String - The text entered into the text field
          * */
-fun OutlinedTextField(label:String): String {
+fun OutlinedTextField(label: String): String {
     var text by remember { mutableStateOf("") }
 
     androidx.compose.material3.OutlinedTextField(
@@ -130,7 +131,7 @@ fun ListAppBar(
     if ( activity == "ListActivity"  && showDialog.value) {
         Dialog(onDismissRequest = { showDialog.value = false },test)
     }
-    
+
     if (activity == "ListActivity" && showNavDrawer.value) {
         NavDrawer(test)
     }
@@ -147,7 +148,7 @@ fun ListAppBar(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = {showNavDrawer.value = changeState(showNavDrawer) }) {
+            IconButton(onClick = { showNavDrawer.value = changeState(showNavDrawer) }) {
                 Icon(
                     imageVector = Icons.Filled.Menu,
                     contentDescription = "Home",
@@ -174,7 +175,7 @@ fun ListAppBar(
     }
 }
 
-fun changeState(state: MutableState<Boolean>): Boolean{
+fun changeState(state: MutableState<Boolean>): Boolean {
     state.value = !state.value
     return state.value
 }
@@ -195,31 +196,30 @@ fun Dialog(onDismissRequest: () -> Unit, parentActivity: Activity) {
                 .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
         ) {
-        Column {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(25.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            Column {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(25.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
 
-            ) {
-                TextButton(onClick = {showCreateListContent = false}){
-                    Text(text = "Join List")
+                ) {
+                    TextButton(onClick = { showCreateListContent = false }) {
+                        Text(text = "Join List")
+                    }
+                    TextButton(onClick = { showCreateListContent = true }) {
+                        Text(text = "Create List")
+                    }
                 }
-                TextButton(onClick = {showCreateListContent = true}) {
-                    Text(text = "Create List")
+                HorizontalDivider()
+                if(showCreateListContent){
+                    CreateListContent(parentActivity)
+
+                }else{
+                    JoinListContent(parentActivity)
                 }
             }
-            HorizontalDivider()
-            if(showCreateListContent){
-                CreateListContent(parentActivity)
-
-            }else{
-                JoinListContent(parentActivity)
-
-            }
-        }
         }
     }
 
@@ -229,6 +229,7 @@ fun Dialog(onDismissRequest: () -> Unit, parentActivity: Activity) {
         /** This is a composable function that joins to an existing a new list
          *
          * */
+
 fun JoinListContent(parentActivity: Activity){
     Column(
         modifier = Modifier
@@ -238,13 +239,13 @@ fun JoinListContent(parentActivity: Activity){
         verticalArrangement = Arrangement.Center
     ) {
         Spacer(modifier = Modifier.padding(5.dp))
-        Text(text = "Join an existing list",fontSize = 20.sp)
+        Text(text = "Join an existing list", fontSize = 20.sp)
         Spacer(modifier = Modifier.padding(25.dp))
-        var listCode:String = OutlinedTextField("List Code")
+        var listCode: String = OutlinedTextField("List Code")
         Spacer(modifier = Modifier.padding(20.dp))
 
 
-        Text(text = "Enter the code of the list you want to join",fontSize = 14.sp)
+        Text(text = "Enter the code of the list you want to join", fontSize = 14.sp)
         Spacer(modifier = Modifier.padding(20.dp))
         HorizontalDivider(modifier = Modifier.height(5.dp))
         Spacer(modifier = Modifier.padding(75.dp))
@@ -291,11 +292,20 @@ fun JoinListContent(parentActivity: Activity){
 }
 
 @Composable
-    /** This is a composable function that creates submenu for creating a new list
-     *
-     * */
+        /** This is a composable function that creates submenu for creating a new list
+         *
+         * */
 fun CreateListContent(parentActivity: Activity){
-    val colorArray = arrayOf("Red", "Blue", "Green", "Yellow", "Purple", "Orange", "Pink", "Brown", "Black", "White")
+    val colorArray = arrayOf(
+        "Red",
+        "Blue",
+        "Green",
+        "Yellow",
+        "Cyan",
+        "Pink",
+        "White",
+        "Gray",
+    )
     val db = Firebase.firestore
     Column(
         modifier = Modifier
@@ -305,15 +315,15 @@ fun CreateListContent(parentActivity: Activity){
         verticalArrangement = Arrangement.Center
     ) {
         Spacer(modifier = Modifier.padding(5.dp))
-        Text(text = "Create a new list",fontSize = 20.sp)
+        Text(text = "Create a new list", fontSize = 20.sp)
         Spacer(modifier = Modifier.padding(20.dp))
-        val listName:String = OutlinedTextField("List Name (Required)")
+        val listName: String = OutlinedTextField("List Name (Required)")
 
         Spacer(modifier = Modifier.padding(5.dp))
-        val shortDescription:String = OutlinedTextField("Short Description ")
+        val shortDescription: String = OutlinedTextField("Short Description ")
         Spacer(modifier = Modifier.padding(15.dp))
-        Text(text = "Choose a color for your list",fontSize = 14.sp)
-        val item:String = DropdownMenuBox(colorArray)
+        Text(text = "Choose a color for your list", fontSize = 14.sp)
+        val item: String = DropdownMenuBox(colorArray)
         Spacer(modifier = Modifier.padding(15.dp))
         HorizontalDivider(modifier = Modifier.height(5.dp))
         Spacer(modifier = Modifier.padding(10.dp))
@@ -363,13 +373,14 @@ fun CreateListContent(parentActivity: Activity){
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
         /** This is a composable function that creates a dropdown menu
          *@param items: Array<String> - The items to be displayed in the dropdown menu
          *@return selectedText: String - The selected item from the dropdown menu
-        * */
-fun DropdownMenuBox(items: Array<String>):String {
+         * */
+fun DropdownMenuBox(items: Array<String>): String {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf(items[0]) }
@@ -410,7 +421,7 @@ fun DropdownMenuBox(items: Array<String>):String {
             }
         }
     }
-return selectedText
+    return selectedText
 }
 
 data class NavigationItem(
@@ -419,6 +430,7 @@ data class NavigationItem(
     val unselectedIcon: ImageVector,
     val badgeCount: Int? = null
 )
+
 @Composable
 fun NavDrawer(parentActivity: Activity) {
 
@@ -496,3 +508,5 @@ fun NavDrawer(parentActivity: Activity) {
         }
     }
 }
+
+

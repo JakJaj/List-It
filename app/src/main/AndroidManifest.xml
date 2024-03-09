@@ -32,6 +32,9 @@
         <activity
             android:name=".Activity.ListsActivity">
         </activity>
+        <activity
+            android:name=".Activity.ScrollListsActivity">
+        </activity>
     </application>
 
 </manifest>
