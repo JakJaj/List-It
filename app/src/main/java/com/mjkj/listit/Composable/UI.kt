@@ -129,11 +129,11 @@ fun ListAppBar(
         mutableStateOf(false)
     }
 
-    if ( activity == "ListActivity"  && showDialog.value) {
+    if ( (activity == "ListActivity" || activity == "ScrollListActivity")  && showDialog.value) {
         Dialog(onDismissRequest = { showDialog.value = false },test)
     }
 
-    if (activity == "ListActivity" && showNavDrawer.value) {
+    if ((activity == "ListActivity" || activity == "ScrollListActivity") && showNavDrawer.value) {
         NavDrawer(test)
     }
 
@@ -258,37 +258,48 @@ fun JoinListContent(parentActivity: Activity){
             else{
                 val db = Firebase.firestore
                 val user = User.createUser(Firebase.auth.currentUser?.uid,Firebase.auth.currentUser?.displayName.toString(),Firebase.auth.currentUser?.email.toString())
-                db.collection("lists").document(listCode).get().addOnSuccessListener { document ->
-                    if (document != null) {
-
-                        db.collection("users").document(Firebase.auth.currentUser!!.uid).get()
-                            .addOnSuccessListener { document ->
-                                if (document != null) {
-                                    val currentList = document.data?.get("lists")
-                                    if(currentList == null){
-                                        val currentList = mutableListOf<String>()
-                                        currentList.add(listCode)
-                                        db.collection("users").document(Firebase.auth.currentUser!!.uid).update("lists", currentList)
+                db.collection("lists").document(listCode).get()
+                    .addOnSuccessListener { document ->
+                        if (document != null) {
+                                db.collection("users").document(Firebase.auth.currentUser!!.uid)
+                                    .get()
+                                    .addOnSuccessListener { document ->
+                                        if (document != null) {
+                                            val currentList = document.data?.get("lists")
+                                            if (currentList == null) {
+                                                val tempCurrentList = mutableListOf<String>()
+                                                tempCurrentList.add(listCode)
+                                                db.collection("users")
+                                                    .document(Firebase.auth.currentUser!!.uid)
+                                                    .update("lists", tempCurrentList)
+                                            } else {
+                                                val tempCurrentList =
+                                                    document.data?.get("lists") as MutableList<String>
+                                                if (!tempCurrentList.contains(listCode)) {
+                                                    tempCurrentList.add(listCode)
+                                                    db.collection("users")
+                                                        .document(Firebase.auth.currentUser!!.uid)
+                                                        .update("lists", tempCurrentList)
+                                                } else {
+                                                    Toast.makeText(
+                                                        parentActivity,
+                                                        "List already exists",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                            }
+                                        }
+                                        val intent = Intent(parentActivity, ScrollListsActivity::class.java)
+                                        startActivity(parentActivity, intent, null)
+                                        parentActivity.finish()
                                     }
-                                    else{
-                                        val currentList = document.data?.get("lists") as MutableList<String>
-                                        currentList.add(listCode)
-                                        db.collection("users").document(Firebase.auth.currentUser!!.uid).update("lists", currentList)
-                                    }
-                                }
-                            }
-                        val intent = Intent(parentActivity, ScrollListsActivity::class.java)
-                        startActivity(parentActivity, intent, null)
-                        parentActivity.finish()
                     } else {
                         Toast.makeText(parentActivity, "List not found", Toast.LENGTH_SHORT).show()
                     }
                 }
-
             }
         }
     }
-
 }
 
 @Composable
@@ -360,12 +371,10 @@ fun CreateListContent(parentActivity: Activity){
                                 currentList.add(list.getCode())
                                 db.collection("users").document(Firebase.auth.currentUser!!.uid).update("lists", currentList)
                             }
+                            val intent = Intent(parentActivity, ScrollListsActivity::class.java)
+                            startActivity(parentActivity, intent, null)
                         }
                     }
-                val intent = Intent(parentActivity, ScrollListsActivity::class.java)
-                startActivity(parentActivity, intent, null)
-                parentActivity.finish()
-                //TODO: PRZEJSCIE Z PUSTEJ DO Z LISTAMI CRASHUJE APKE!!!
             }
             else{
                 Toast.makeText(parentActivity, "List name is required", Toast.LENGTH_SHORT).show()

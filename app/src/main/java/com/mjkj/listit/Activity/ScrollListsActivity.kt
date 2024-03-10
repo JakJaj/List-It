@@ -36,6 +36,8 @@ import com.mjkj.listit.Composable.ListAppBar
 import kotlinx.coroutines.launch
 
 class ScrollListsActivity : ComponentActivity() {
+
+
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,8 +53,8 @@ class ScrollListsActivity : ComponentActivity() {
 
                     val currentUserId = auth.currentUser?.uid
                     val currentUserRef = db.collection("users").document(currentUserId!!)
-                    currentUserRef.get().addOnSuccessListener { document ->
-
+                    currentUserRef.get()
+                        .addOnSuccessListener { document ->
                         if (document.exists()) {
                             Log.d(
                                 "LogInActivity",
@@ -91,10 +93,28 @@ class ScrollListsActivity : ComponentActivity() {
                         } else {
                             Log.d("LogInActivity", "No such document")
                         }
+
                     }.addOnFailureListener { exception ->
                         Log.d("LogInActivity", "get failed with ", exception)
                     }
+                    currentUserRef.addSnapshotListener(this@ScrollListsActivity) { value, error ->
+                        if (error != null) {
+                            Log.w("LogInActivity", "Listen failed.", error)
+                            return@addSnapshotListener
+                        }
+                        val source = if (value != null && value.metadata.hasPendingWrites()) {
+                            "Local"
+                        } else {
+                            "Server"
+                        }
+                        if (value != null && value.exists()) {
+                            Log.d("LogInActivity", "$source data: ${value.data}")
+                        } else {
+                            Log.d("LogInActivity", "$source data: null")
+                        }
+                    }
                 }
+
             }
             Surface(
                 modifier = Modifier.fillMaxSize(),
@@ -103,7 +123,7 @@ class ScrollListsActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         ListAppBar(
-                            activity = "ListActivity",
+                            activity = "ScrollListActivity",
                             this
                         )
                     }
