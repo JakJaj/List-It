@@ -70,7 +70,7 @@ class LogInActivity: ComponentActivity(){
                             //TODO: Verify login using firebase
                             auth.signInWithEmailAndPassword(email, password)
                                 .addOnCompleteListener(this@LogInActivity){task ->
-                                    if(task.isSuccessful){ //TODO: SPRAWDZANIE CZY MA LISTY CZY NIE!!!
+                                    if(task.isSuccessful){
                                         val currentUserId = auth.currentUser?.uid
                                         val currentUserRef = db.collection("users").document(currentUserId!!)
                                         currentUserRef.get().addOnSuccessListener { documentSnapchot ->
@@ -80,12 +80,12 @@ class LogInActivity: ComponentActivity(){
                                                 val lists = documentSnapchot.get("lists") as? MutableList<String>
 
                                                 if(lists == null){
-                                                    Log.d("LogInActivity", "No lists go to empty lists activity") //TODO: GO TO EMPTY LISTS ACTIVITY
+                                                    Log.d("LogInActivity", "No lists go to empty lists activity")
                                                     val intent = Intent(this@LogInActivity, ListsActivity::class.java)
                                                     startActivity(intent)
                                                     finish()
                                                 }else{
-                                                    Log.d("LogInActivity", "Lists exist go to lists activity") //TODO: GO TO LISTS ACTIVITY
+                                                    Log.d("LogInActivity", "Lists exist go to lists activity")
                                                     val intent = Intent(this@LogInActivity, ScrollListsActivity::class.java)
                                                     startActivity(intent)
                                                     finish()

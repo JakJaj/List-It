@@ -251,7 +251,6 @@ fun JoinListContent(parentActivity: Activity){
         HorizontalDivider(modifier = Modifier.height(5.dp))
         Spacer(modifier = Modifier.padding(75.dp))
         ButtonFilled("Join") {
-            //TODO: JOINING LIST FUNCTIONALITY
             Log.d("D", "JoinListCode: $listCode")
             if(listCode.length != 6){
                 Toast.makeText(parentActivity, "Codes contain 6 symbols", Toast.LENGTH_SHORT).show()
@@ -334,7 +333,6 @@ fun CreateListContent(parentActivity: Activity){
             Log.d("D", "ShortDescription: $shortDescription")
             Log.d("D", "Color: $item")
             if(listName != ""){
-                //TODO: CREATE LIST FUNCTIONALITY
                 val user = User.createUser(Firebase.auth.currentUser?.uid,Firebase.auth.currentUser?.displayName.toString(),Firebase.auth.currentUser?.email.toString())
                 val list = ListOfTasks.createList(listName, user, item, shortDescription)
                 Log.d("D", "User: $user id: ${user.getId()} name: ${user.getName()} email: ${user.getEmail()} lists: ${user.getLists()}")
@@ -367,6 +365,7 @@ fun CreateListContent(parentActivity: Activity){
                 val intent = Intent(parentActivity, ScrollListsActivity::class.java)
                 startActivity(parentActivity, intent, null)
                 parentActivity.finish()
+                //TODO: PRZEJSCIE Z PUSTEJ DO Z LISTAMI CRASHUJE APKE!!!
             }
             else{
                 Toast.makeText(parentActivity, "List name is required", Toast.LENGTH_SHORT).show()

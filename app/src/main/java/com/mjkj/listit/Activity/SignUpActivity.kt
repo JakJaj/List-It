@@ -60,7 +60,6 @@ class SignUpActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.padding(60.dp))
 
                         ButtonFilled("Register") {
-                            //TODO: Register user using Firebase
 
                             if(password != retypedPassword){
                                 Log.d("SignUpActivity", "Passwords do not match")
@@ -75,7 +74,6 @@ class SignUpActivity : ComponentActivity() {
                                 Toast.makeText(this@SignUpActivity, "Password must be at least 6 characters long", Toast.LENGTH_SHORT).show()
                             }
                             else{
-                                //TODO ODKOMENTOWAC KIEDY BEDZIE POTRZEBA REJESTRACJI
                                 auth.createUserWithEmailAndPassword(email, password)
                                     .addOnCompleteListener(this@SignUpActivity){ task ->
                                         if(task.isSuccessful){
