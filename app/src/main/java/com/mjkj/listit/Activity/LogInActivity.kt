@@ -37,9 +37,18 @@ class LogInActivity: ComponentActivity(){
             val auth: FirebaseAuth = Firebase.auth
             val currentUser = auth.currentUser
             if(currentUser != null){ //TODO: SPRAWDZANIE CZY MA LISTY CZY NIE!!!
-                val intent = Intent(this@LogInActivity, ListsActivity::class.java)
-                startActivity(intent)
-                finish()
+                val userListsRef = db.collection("users").document(currentUser.uid).collection("lists")
+
+                if(userListsRef == null){
+                    val intent = Intent(this@LogInActivity, ListsActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+                else{
+                    val intent = Intent(this@LogInActivity, ScrollListsActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
             }
             Surface(
                 modifier = Modifier.fillMaxSize(),
@@ -68,12 +77,19 @@ class LogInActivity: ComponentActivity(){
 
                                             if(documentSnapchot.exists()){
                                                 Log.d("LogInActivity", "DocumentSnapshot data: ${documentSnapchot.data}")
-                                                if(documentSnapchot.data?.get("lists") == null){
+                                                val lists = documentSnapchot.get("lists") as? MutableList<String>
+
+                                                if(lists == null){
                                                     Log.d("LogInActivity", "No lists go to empty lists activity") //TODO: GO TO EMPTY LISTS ACTIVITY
+                                                    val intent = Intent(this@LogInActivity, ListsActivity::class.java)
+                                                    startActivity(intent)
+                                                    finish()
                                                 }else{
                                                     Log.d("LogInActivity", "Lists exist go to lists activity") //TODO: GO TO LISTS ACTIVITY
+                                                    val intent = Intent(this@LogInActivity, ScrollListsActivity::class.java)
+                                                    startActivity(intent)
+                                                    finish()
                                                 }
-
                                             }
                                             else{
                                                 Log.d("LogInActivity", "No such document")
@@ -81,11 +97,6 @@ class LogInActivity: ComponentActivity(){
                                         }.addOnFailureListener { exception ->
                                             Log.d("LogInActivity", "get failed with ", exception)
                                         }
-
-
-                                        val intent = Intent(this@LogInActivity, ListsActivity::class.java)
-                                        startActivity(intent)
-                                        finish()
                                     }
                                     else{
                                         Log.w("LogInActivity", "signInWithEmail:failure", task.exception)

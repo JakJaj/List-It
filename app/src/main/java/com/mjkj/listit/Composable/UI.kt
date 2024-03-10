@@ -62,6 +62,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.firestore
 import com.mjkj.listit.Activity.ListsActivity
 import com.mjkj.listit.Activity.MainActivity
+import com.mjkj.listit.Activity.ScrollListsActivity
 import com.mjkj.listit.Model.ListOfTasks
 import com.mjkj.listit.Model.User
 
@@ -277,7 +278,7 @@ fun JoinListContent(parentActivity: Activity){
                                     }
                                 }
                             }
-                        val intent = Intent(parentActivity, ListsActivity::class.java)
+                        val intent = Intent(parentActivity, ScrollListsActivity::class.java)
                         startActivity(parentActivity, intent, null)
                         parentActivity.finish()
                     } else {
@@ -363,7 +364,7 @@ fun CreateListContent(parentActivity: Activity){
                             }
                         }
                     }
-                val intent = Intent(parentActivity, ListsActivity::class.java)
+                val intent = Intent(parentActivity, ScrollListsActivity::class.java)
                 startActivity(parentActivity, intent, null)
                 parentActivity.finish()
             }
