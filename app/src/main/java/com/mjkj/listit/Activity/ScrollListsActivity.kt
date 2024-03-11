@@ -1,7 +1,9 @@
 package com.mjkj.listit.Activity
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -20,17 +22,100 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
 import com.mjkj.listit.Composable.ListAppBar
+import kotlinx.coroutines.launch
 
 class ScrollListsActivity : ComponentActivity() {
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+
+
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val db = Firebase.firestore
+            val auth = Firebase.auth
+            val listOfCodes = mutableListOf<String>()
+            val listOfLists = mutableStateListOf<MutableList<String>>()
+            val coroutineScope = rememberCoroutineScope()
+
+            LaunchedEffect(Unit) {
+                coroutineScope.launch {
+
+                    val currentUserId = auth.currentUser?.uid
+                    val currentUserRef = db.collection("users").document(currentUserId!!)
+                    currentUserRef.get()
+                        .addOnSuccessListener { document ->
+                        if (document.exists()) {
+                            Log.d(
+                                "LogInActivity",
+                                "DocumentSnapshot data: ${document.data!!.get("lists")}"
+                            )
+                            listOfCodes.addAll(document.data!!.get("lists") as List<String>)
+                            Log.d("LogInActivity", "List of codes: ${listOfCodes.size}")
+
+                            for (code in listOfCodes) {
+                                val listRef = db.collection("lists").document(code)
+                                listRef.get().addOnSuccessListener { document ->
+                                    if (document.exists()) {
+                                        Log.d(
+                                            "LogInActivity",
+                                            "DocumentSnapshot data: ${document.data}"
+                                        )
+                                        val listName = document.data!!.get("listName").toString()
+                                        val description =
+                                            document.data!!.get("description").toString()
+                                        val color = document.data!!.get("color").toString()
+                                        Log.d(
+                                            "LogInActivity",
+                                            "List name: $listName description: $description color: $color"
+                                        )
+                                        val tempList = mutableListOf(listName, description, color)
+                                        listOfLists.add(tempList)
+                                        Log.d("LogInActivity", "Temp lists: $tempList")
+                                        Log.d("LogInActivity", "List of lists: $listOfLists")
+                                    } else {
+                                        Log.d("LogInActivity", "No such document")
+                                    }
+                                }.addOnFailureListener { exception ->
+                                    Log.d("LogInActivity", "get failed with ", exception)
+                                }
+                            }
+                        } else {
+                            Log.d("LogInActivity", "No such document")
+                        }
+
+                    }.addOnFailureListener { exception ->
+                        Log.d("LogInActivity", "get failed with ", exception)
+                    }
+                    currentUserRef.addSnapshotListener(this@ScrollListsActivity) { value, error ->
+                        if (error != null) {
+                            Log.w("LogInActivity", "Listen failed.", error)
+                            return@addSnapshotListener
+                        }
+                        val source = if (value != null && value.metadata.hasPendingWrites()) {
+                            "Local"
+                        } else {
+                            "Server"
+                        }
+                        if (value != null && value.exists()) {
+                            Log.d("LogInActivity", "$source data: ${value.data}")
+                        } else {
+                            Log.d("LogInActivity", "$source data: null")
+                        }
+                    }
+                }
+
+            }
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background
@@ -38,7 +123,7 @@ class ScrollListsActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         ListAppBar(
-                            activity = "ListActivity",
+                            activity = "ScrollListActivity",
                             this
                         )
                     }
@@ -51,14 +136,12 @@ class ScrollListsActivity : ComponentActivity() {
                     ) {
                         Spacer(modifier = Modifier.height(100.dp))
                         LazyColumn {
-                            for (i in 1..10) {
-                                item {
-                                    ListItem(
-                                        title = "Example ${i}",
-                                        description = "Example${i}",
-                                        color = ""
-                                    )
-                                }
+                            items(listOfLists.size) { i ->
+                                ListItem(
+                                    title = listOfLists[i][0],
+                                    description = listOfLists[i][1],
+                                    color = listOfLists[i][2]
+                                )
                             }
                         }
                     }
@@ -70,7 +153,7 @@ class ScrollListsActivity : ComponentActivity() {
 
 @Composable
 fun ListItem(title: String, description: String, color: String) {
-    val backgroundColor = when (color.lowercase()) {
+    val backgroundColor = when (color) {
         "Red" -> Color.Red
         "Blue" -> Color.Blue
         "Green" -> Color.Green

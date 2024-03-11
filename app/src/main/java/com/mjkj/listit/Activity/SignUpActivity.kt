@@ -34,10 +34,32 @@ class SignUpActivity : ComponentActivity() {
             val auth: FirebaseAuth = Firebase.auth
 
             val currentUser = auth.currentUser
-            if(currentUser != null){
-                val intent = Intent(this@SignUpActivity, ListsActivity::class.java)
-                startActivity(intent)
-                finish()
+            if(currentUser != null){ //TODO: SPRAWDZANIE CZY MA LISTY CZY NIE!!!
+                val currentUserR = db.collection("users").document(auth.currentUser?.uid!!)
+                currentUserR.get().addOnSuccessListener { documentSnapchot ->
+
+                    if(documentSnapchot.exists()){
+                        Log.d("LogInActivity", "DocumentSnapshot data: ${documentSnapchot.data}")
+                        val lists = documentSnapchot.get("lists") as? MutableList<String>
+
+                        if(lists == null){
+                            Log.d("LogInActivity", "No lists go to empty lists activity")
+                            val intent = Intent(this@SignUpActivity, ListsActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }else{
+                            Log.d("LogInActivity", "Lists exist go to lists activity")
+                            val intent = Intent(this@SignUpActivity, ScrollListsActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
+                    }
+                    else{
+                        Log.d("LogInActivity", "No such document")
+                    }
+                }.addOnFailureListener { exception ->
+                    Log.d("LogInActivity", "get failed with ", exception)
+                }
             }
             Surface(
                 modifier = Modifier.fillMaxSize(),
@@ -60,7 +82,6 @@ class SignUpActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.padding(60.dp))
 
                         ButtonFilled("Register") {
-                            //TODO: Register user using Firebase
 
                             if(password != retypedPassword){
                                 Log.d("SignUpActivity", "Passwords do not match")
@@ -75,7 +96,6 @@ class SignUpActivity : ComponentActivity() {
                                 Toast.makeText(this@SignUpActivity, "Password must be at least 6 characters long", Toast.LENGTH_SHORT).show()
                             }
                             else{
-                                //TODO ODKOMENTOWAC KIEDY BEDZIE POTRZEBA REJESTRACJI
                                 auth.createUserWithEmailAndPassword(email, password)
                                     .addOnCompleteListener(this@SignUpActivity){ task ->
                                         if(task.isSuccessful){
