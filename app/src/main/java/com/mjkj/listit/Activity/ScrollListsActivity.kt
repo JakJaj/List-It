@@ -1,12 +1,14 @@
 package com.mjkj.listit.Activity
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,14 +31,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
-import com.google.firebase.firestore.firestore
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.mjkj.listit.Composable.ListAppBar
 import kotlinx.coroutines.launch
 
 class ScrollListsActivity : ComponentActivity() {
-
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,48 +56,50 @@ class ScrollListsActivity : ComponentActivity() {
                     val currentUserRef = db.collection("users").document(currentUserId!!)
                     currentUserRef.get()
                         .addOnSuccessListener { document ->
-                        if (document.exists()) {
-                            Log.d(
-                                "LogInActivity",
-                                "DocumentSnapshot data: ${document.data!!.get("lists")}"
-                            )
-                            listOfCodes.addAll(document.data!!.get("lists") as List<String>)
-                            Log.d("LogInActivity", "List of codes: ${listOfCodes.size}")
+                            if (document.exists()) {
+                                Log.d(
+                                    "LogInActivity",
+                                    "DocumentSnapshot data: ${document.data!!.get("lists")}"
+                                )
+                                listOfCodes.addAll(document.data!!.get("lists") as List<String>)
+                                Log.d("LogInActivity", "List of codes: ${listOfCodes.size}")
 
-                            for (code in listOfCodes) {
-                                val listRef = db.collection("lists").document(code)
-                                listRef.get().addOnSuccessListener { document ->
-                                    if (document.exists()) {
-                                        Log.d(
-                                            "LogInActivity",
-                                            "DocumentSnapshot data: ${document.data}"
-                                        )
-                                        val listName = document.data!!.get("listName").toString()
-                                        val description =
-                                            document.data!!.get("description").toString()
-                                        val color = document.data!!.get("color").toString()
-                                        Log.d(
-                                            "LogInActivity",
-                                            "List name: $listName description: $description color: $color"
-                                        )
-                                        val tempList = mutableListOf(listName, description, color)
-                                        listOfLists.add(tempList)
-                                        Log.d("LogInActivity", "Temp lists: $tempList")
-                                        Log.d("LogInActivity", "List of lists: $listOfLists")
-                                    } else {
-                                        Log.d("LogInActivity", "No such document")
+                                for (code in listOfCodes) {
+                                    val listRef = db.collection("lists").document(code)
+                                    listRef.get().addOnSuccessListener { document ->
+                                        if (document.exists()) {
+                                            Log.d(
+                                                "LogInActivity",
+                                                "DocumentSnapshot data: ${document.data}"
+                                            )
+                                            val listName =
+                                                document.data!!.get("listName").toString()
+                                            val description =
+                                                document.data!!.get("description").toString()
+                                            val color = document.data!!.get("color").toString()
+                                            Log.d(
+                                                "LogInActivity",
+                                                "List name: $listName description: $description color: $color"
+                                            )
+                                            val tempList =
+                                                mutableListOf(listName, description, color)
+                                            listOfLists.add(tempList)
+                                            Log.d("LogInActivity", "Temp lists: $tempList")
+                                            Log.d("LogInActivity", "List of lists: $listOfLists")
+                                        } else {
+                                            Log.d("LogInActivity", "No such document")
+                                        }
+                                    }.addOnFailureListener { exception ->
+                                        Log.d("LogInActivity", "get failed with ", exception)
                                     }
-                                }.addOnFailureListener { exception ->
-                                    Log.d("LogInActivity", "get failed with ", exception)
                                 }
+                            } else {
+                                Log.d("LogInActivity", "No such document")
                             }
-                        } else {
-                            Log.d("LogInActivity", "No such document")
-                        }
 
-                    }.addOnFailureListener { exception ->
-                        Log.d("LogInActivity", "get failed with ", exception)
-                    }
+                        }.addOnFailureListener { exception ->
+                            Log.d("LogInActivity", "get failed with ", exception)
+                        }
                     currentUserRef.addSnapshotListener(this@ScrollListsActivity) { value, error ->
                         if (error != null) {
                             Log.w("LogInActivity", "Listen failed.", error)
@@ -140,7 +143,8 @@ class ScrollListsActivity : ComponentActivity() {
                                 ListItem(
                                     title = listOfLists[i][0],
                                     description = listOfLists[i][1],
-                                    color = listOfLists[i][2]
+                                    color = listOfLists[i][2],
+                                    context = this@ScrollListsActivity
                                 )
                             }
                         }
@@ -152,7 +156,7 @@ class ScrollListsActivity : ComponentActivity() {
 }
 
 @Composable
-fun ListItem(title: String, description: String, color: String) {
+fun ListItem(title: String, description: String, color: String, context: Context) {
     val backgroundColor = when (color) {
         "Red" -> Color.Red
         "Blue" -> Color.Blue
@@ -168,6 +172,10 @@ fun ListItem(title: String, description: String, color: String) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp)
+            .clickable {
+                val intent = Intent(context, ListActivity::class.java)
+                context.startActivity(intent)
+            }
             .background(backgroundColor, shape = RoundedCornerShape(8.dp))
     ) {
         Column(
