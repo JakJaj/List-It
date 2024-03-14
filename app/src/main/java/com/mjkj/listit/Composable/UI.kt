@@ -435,14 +435,16 @@ fun DropdownMenuBox(items: Array<String>): String {
 fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>) {
     ModalDrawerSheet() {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Top section with the text "List it"
             Spacer(modifier = Modifier.height(100.dp))
             // Middle section with ListView
             LazyColumn(
                 modifier = Modifier.weight(1f)
-            ){
+            ) {
                 items(listOfLists.size) { i ->
                     NavDrawerItem(
                         title = listOfLists[i][0],
@@ -452,11 +454,22 @@ fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>) {
                     )
                 }
             }
-            // Bottom section with the text "Log out"
+            // Bottom section with buttons
+            HorizontalDivider()
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(100.dp),
+                    .padding(vertical = 10.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                ButtonTonalFilled(label = "Settings") {
+                    //TODO: Implement settings
+                }
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp),
                 contentAlignment = Alignment.Center
             ) {
                 ButtonTonalFilled(label = "Log out") {
@@ -470,6 +483,8 @@ fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>) {
         }
     }
 }
+
+
 
 @Composable
 fun ListItem(title: String, description: String, color: String, context: Context) {
