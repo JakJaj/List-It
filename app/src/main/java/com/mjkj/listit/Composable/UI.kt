@@ -16,7 +16,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -441,7 +444,7 @@ fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>) {
                 modifier = Modifier.weight(1f)
             ){
                 items(listOfLists.size) { i ->
-                    ListItem(
+                    NavDrawerItem(
                         title = listOfLists[i][0],
                         description = listOfLists[i][1],
                         color = listOfLists[i][2],
@@ -484,7 +487,7 @@ fun ListItem(title: String, description: String, color: String, context: Context
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(10.dp)
+            .padding(5.dp)
             .clickable {
                 val intent = Intent(context, ListActivity::class.java)
                 context.startActivity(intent)
@@ -503,8 +506,60 @@ fun ListItem(title: String, description: String, color: String, context: Context
             Text(
                 text = description,
                 color = Color.Black,
-                fontSize = 16.sp
+                fontSize = 15.sp
             )
+        }
+    }
+}
+
+@Composable
+fun NavDrawerItem(title: String, description: String, color: String, context: Context) {
+    val backgroundColor = Color.Transparent
+    val circleColor = remember {
+        when (color) {
+            "Red" -> Color.Red
+            "Blue" -> Color.Blue
+            "Green" -> Color.Green
+            "Yellow" -> Color.Yellow
+            "Cyan" -> Color.Cyan
+            "Pink" -> Color.Magenta
+            "White" -> Color.White
+            "Gray" -> Color.Gray
+            else -> Color.Transparent
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(5.dp)
+            .clickable {
+                val intent = Intent(context, ListActivity::class.java)
+                context.startActivity(intent)
+            }
+            .background(backgroundColor, shape = RoundedCornerShape(8.dp))
+    ) {
+        Row(modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)) {
+            Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .background(circleColor, shape = CircleShape)
+                    .align(Alignment.CenterVertically)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Column {
+                Text(
+                    text = title,
+                    color = Color.Black,
+                    fontSize = 15.sp
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = description,
+                    color = Color.Black,
+                    fontSize = 10.sp
+                )
+            }
         }
     }
 }
