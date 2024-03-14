@@ -1,40 +1,30 @@
 package com.mjkj.listit.Activity
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mjkj.listit.Composable.ListAppBar
+import com.mjkj.listit.Composable.ListItem
 import kotlinx.coroutines.launch
 
 class ScrollListsActivity : ComponentActivity() {
@@ -127,7 +117,8 @@ class ScrollListsActivity : ComponentActivity() {
                     topBar = {
                         ListAppBar(
                             activity = "ScrollListActivity",
-                            this
+                            this,
+                            listOfLists
                         )
                     }
                 ) {
@@ -155,43 +146,4 @@ class ScrollListsActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun ListItem(title: String, description: String, color: String, context: Context) {
-    val backgroundColor = when (color) {
-        "Red" -> Color.Red
-        "Blue" -> Color.Blue
-        "Green" -> Color.Green
-        "Yellow" -> Color.Yellow
-        "Cyan" -> Color.Cyan
-        "Pink" -> Color.Magenta
-        "White" -> Color.White
-        "Gray" -> Color.Gray
-        else -> Color.Transparent
-    }
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp)
-            .clickable {
-                val intent = Intent(context, ListActivity::class.java)
-                context.startActivity(intent)
-            }
-            .background(backgroundColor, shape = RoundedCornerShape(8.dp))
-    ) {
-        Column(
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
-        ) {
-            Text(
-                text = title,
-                color = Color.Black,
-                fontSize = 25.sp
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = description,
-                color = Color.Black,
-                fontSize = 16.sp
-            )
-        }
-    }
-}
+
