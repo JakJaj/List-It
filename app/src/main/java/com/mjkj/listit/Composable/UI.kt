@@ -1,9 +1,12 @@
 package com.mjkj.listit.Composable
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,15 +16,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenuItem
@@ -34,8 +36,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -49,7 +49,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -58,9 +57,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat.startActivity
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.firestore
-import com.mjkj.listit.Activity.ListsActivity
+import com.mjkj.listit.Activity.ListActivity
 import com.mjkj.listit.Activity.MainActivity
 import com.mjkj.listit.Activity.ScrollListsActivity
 import com.mjkj.listit.Model.ListOfTasks
@@ -119,7 +117,8 @@ fun OutlinedTextField(label: String): String {
          */
 fun ListAppBar(
     activity: String,
-    test: Activity
+    test: Activity,
+    listOfLists: List<List<String>>
 ) {
     val showDialog = remember {
         mutableStateOf(false)
@@ -134,7 +133,7 @@ fun ListAppBar(
     }
 
     if ((activity == "ListActivity" || activity == "ScrollListActivity") && showNavDrawer.value) {
-        NavDrawer(test)
+        NavDrawer(test, listOfLists = listOfLists)
     }
 
     Surface(
@@ -432,41 +431,13 @@ fun DropdownMenuBox(items: Array<String>): String {
     }
     return selectedText
 }
-
-data class NavigationItem(
-    val title: String,
-    val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector,
-    val badgeCount: Int? = null
-)
-
 @Composable
-fun NavDrawer(parentActivity: Activity) {
-
+fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>) {
     ModalDrawerSheet() {
-        val items = remember {
-            listOf(
-                NavigationItem(
-                    title = "All",
-                    selectedIcon = Icons.Default.Home,
-                    unselectedIcon = Icons.Default.Home,
-                ),
-                NavigationItem(
-                    title = "Urgent",
-                    selectedIcon = Icons.Default.Info,
-                    unselectedIcon = Icons.Default.Info,
-                    badgeCount = 45
-                ),
-                NavigationItem(
-                    title = "Settings",
-                    selectedIcon = Icons.Default.Settings,
-                    unselectedIcon = Icons.Default.Settings,
-                ),
-            )
-        }
-
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Top section with the text "List it"
             Spacer(modifier = Modifier.height(100.dp))
@@ -474,36 +445,31 @@ fun NavDrawer(parentActivity: Activity) {
             LazyColumn(
                 modifier = Modifier.weight(1f)
             ) {
-                items(items) { item ->
-                    NavigationDrawerItem(
-                        label = {
-                            Text(text = item.title)
-                        },
-                        selected = items.indexOf(item) == 0,
-                        onClick = {
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = if (items.indexOf(item) == 0) {
-                                    item.selectedIcon
-                                } else item.unselectedIcon,
-                                contentDescription = item.title
-                            )
-                        },
-                        badge = {
-                            item.badgeCount?.let {
-                                Text(text = item.badgeCount.toString())
-                            }
-                        },
-                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                items(listOfLists.size) { i ->
+                    NavDrawerItem(
+                        title = listOfLists[i][0],
+                        description = listOfLists[i][1],
+                        color = listOfLists[i][2],
+                        context = parentActivity
                     )
                 }
             }
-            // Bottom section with the text "Log out"
+            // Bottom section with buttons
+            HorizontalDivider()
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(100.dp),
+                    .padding(vertical = 10.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                ButtonTonalFilled(label = "Settings") {
+                    //TODO: Implement settings
+                }
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp),
                 contentAlignment = Alignment.Center
             ) {
                 ButtonTonalFilled(label = "Log out") {
@@ -519,3 +485,96 @@ fun NavDrawer(parentActivity: Activity) {
 }
 
 
+
+@Composable
+fun ListItem(title: String, description: String, color: String, context: Context) {
+    val backgroundColor = when (color) {
+        "Red" -> Color.Red
+        "Blue" -> Color.Blue
+        "Green" -> Color.Green
+        "Yellow" -> Color.Yellow
+        "Cyan" -> Color.Cyan
+        "Pink" -> Color.Magenta
+        "White" -> Color.White
+        "Gray" -> Color.Gray
+        else -> Color.Transparent
+    }
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(5.dp)
+            .clickable {
+                val intent = Intent(context, ListActivity::class.java)
+                context.startActivity(intent)
+            }
+            .background(backgroundColor, shape = RoundedCornerShape(8.dp))
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
+        ) {
+            Text(
+                text = title,
+                color = Color.Black,
+                fontSize = 25.sp
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = description,
+                color = Color.Black,
+                fontSize = 15.sp
+            )
+        }
+    }
+}
+
+@Composable
+fun NavDrawerItem(title: String, description: String, color: String, context: Context) {
+    val backgroundColor = Color.Transparent
+    val circleColor = remember {
+        when (color) {
+            "Red" -> Color.Red
+            "Blue" -> Color.Blue
+            "Green" -> Color.Green
+            "Yellow" -> Color.Yellow
+            "Cyan" -> Color.Cyan
+            "Pink" -> Color.Magenta
+            "White" -> Color.White
+            "Gray" -> Color.Gray
+            else -> Color.Transparent
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(5.dp)
+            .clickable {
+                val intent = Intent(context, ListActivity::class.java)
+                context.startActivity(intent)
+            }
+            .background(backgroundColor, shape = RoundedCornerShape(8.dp))
+    ) {
+        Row(modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)) {
+            Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .background(circleColor, shape = CircleShape)
+                    .align(Alignment.CenterVertically)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Column {
+                Text(
+                    text = title,
+                    color = Color.Black,
+                    fontSize = 15.sp
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = description,
+                    color = Color.Black,
+                    fontSize = 10.sp
+                )
+            }
+        }
+    }
+}

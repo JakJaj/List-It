@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,11 +21,11 @@ import androidx.compose.ui.unit.sp
 import com.mjkj.listit.Composable.ListAppBar
 
 class ListsActivity : ComponentActivity() {
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
+            val listOfLists = mutableStateListOf<MutableList<String>>()
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background)
@@ -33,7 +34,8 @@ class ListsActivity : ComponentActivity() {
                     topBar = {
                         ListAppBar(
                             activity = "ListActivity",
-                            this
+                            this,
+                            listOfLists
                         )
                     }
                 ) {
