@@ -450,7 +450,8 @@ fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>) {
                         title = listOfLists[i][0],
                         description = listOfLists[i][1],
                         color = listOfLists[i][2],
-                        context = parentActivity
+                        context = parentActivity,
+                        code = listOfLists[i][3]
                     )
                 }
             }
@@ -487,7 +488,7 @@ fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>) {
 
 
 @Composable
-fun ListItem(title: String, description: String, color: String, context: Context) {
+fun ListItem(title: String, description: String, color: String, context: Context, code:String) {
     val backgroundColor = when (color) {
         "Red" -> Color.Red
         "Blue" -> Color.Blue
@@ -505,6 +506,7 @@ fun ListItem(title: String, description: String, color: String, context: Context
             .padding(5.dp)
             .clickable {
                 val intent = Intent(context, ListActivity::class.java)
+                intent.putExtra("listCode", code)
                 context.startActivity(intent)
             }
             .background(backgroundColor, shape = RoundedCornerShape(8.dp))
@@ -528,7 +530,7 @@ fun ListItem(title: String, description: String, color: String, context: Context
 }
 
 @Composable
-fun NavDrawerItem(title: String, description: String, color: String, context: Context) {
+fun NavDrawerItem(title: String, description: String, color: String, context: Context, code:String) {
     val backgroundColor = Color.Transparent
     val circleColor = remember {
         when (color) {
@@ -550,6 +552,7 @@ fun NavDrawerItem(title: String, description: String, color: String, context: Co
             .padding(5.dp)
             .clickable {
                 val intent = Intent(context, ListActivity::class.java)
+                intent.putExtra("listCode", code)
                 context.startActivity(intent)
             }
             .background(backgroundColor, shape = RoundedCornerShape(8.dp))

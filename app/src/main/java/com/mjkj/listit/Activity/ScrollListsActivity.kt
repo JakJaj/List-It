@@ -67,12 +67,13 @@ class ScrollListsActivity : ComponentActivity() {
                                             val description =
                                                 document.data!!.get("description").toString()
                                             val color = document.data!!.get("color").toString()
+                                            val code = document.data!!.get("code").toString()
                                             Log.d(
                                                 "LogInActivity",
-                                                "List name: $listName description: $description color: $color"
+                                                "List name: $listName description: $description color: $color code: $code"
                                             )
                                             val tempList =
-                                                mutableListOf(listName, description, color)
+                                                mutableListOf(listName, description, color, code)
                                             listOfLists.add(tempList)
                                             Log.d("LogInActivity", "Temp lists: $tempList")
                                             Log.d("LogInActivity", "List of lists: $listOfLists")
@@ -135,7 +136,8 @@ class ScrollListsActivity : ComponentActivity() {
                                     title = listOfLists[i][0],
                                     description = listOfLists[i][1],
                                     color = listOfLists[i][2],
-                                    context = this@ScrollListsActivity
+                                    context = this@ScrollListsActivity,
+                                    code = listOfLists[i][3]
                                 )
                             }
                         }
