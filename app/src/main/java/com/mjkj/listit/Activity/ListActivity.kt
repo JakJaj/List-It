@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.sp
 class ListActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val listCode: String = intent.getStringExtra("listCode").toString()
         setContent {
             Surface(
                 color = MaterialTheme.colorScheme.background,
@@ -27,7 +28,7 @@ class ListActivity : ComponentActivity() {
                     verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
                 ) {
                     Text(
-                        text = "Hello",
+                        text = listCode,
                         fontSize = 24.sp,
                         textAlign = TextAlign.Center,
                     )
