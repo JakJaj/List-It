@@ -27,7 +27,17 @@ class ListActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val listCode: String = intent.getStringExtra("listCode").toString()
         val listTitle: String = intent.getStringExtra("listTitle").toString()
-        val listColor: String = intent.getStringExtra("listColor").toString()
+        val listColor = when (intent.getStringExtra("listColor").toString()) {
+            "Red" -> Color.Red
+            "Blue" -> Color.Blue
+            "Green" -> Color.Green
+            "Yellow" -> Color.Yellow
+            "Cyan" -> Color.Cyan
+            "Pink" -> Color.Magenta
+            "White" -> Color.White
+            "Gray" -> Color.Gray
+            else -> Color.Transparent
+        }
         setContent {
             val listOfLists = mutableStateListOf<MutableList<String>>()
 

@@ -119,8 +119,8 @@ fun ListAppBar(
     activity: String,
     test: Activity,
     listOfLists: List<List<String>>,
-    tempListTitle: Any? =null,
-    tempListColor: Any? =null,
+    tempListTitle: String? =null,
+    tempListColor: Color? =null,
 
 ) {
     val showDialog = remember {
@@ -141,7 +141,7 @@ fun ListAppBar(
 
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        color = MaterialTheme.colorScheme.primary,
+        color = tempListColor ?: MaterialTheme.colorScheme.primary,
         shape = RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp)
     ) {
         Row(
