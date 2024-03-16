@@ -38,6 +38,9 @@
         <activity
             android:name=".Activity.ListActivity">
         </activity>
+        <activity
+            android:name=".Activity.TasksActivity">
+        </activity>
     </application>
 
 </manifest>
