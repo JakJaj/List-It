@@ -118,7 +118,10 @@ fun OutlinedTextField(label: String): String {
 fun ListAppBar(
     activity: String,
     test: Activity,
-    listOfLists: List<List<String>>
+    listOfLists: List<List<String>>,
+    tempListTitle: Any? =null,
+    tempListColor: Any? =null,
+
 ) {
     val showDialog = remember {
         mutableStateOf(false)
@@ -156,7 +159,7 @@ fun ListAppBar(
                 )
             }
             Text(
-                text = "List-it",
+                text = tempListTitle?.toString() ?: "List-it",
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 16.dp),
@@ -507,6 +510,8 @@ fun ListItem(title: String, description: String, color: String, context: Context
             .clickable {
                 val intent = Intent(context, ListActivity::class.java)
                 intent.putExtra("listCode", code)
+                intent.putExtra("listTitle", title)
+                intent.putExtra("listColor", color)
                 context.startActivity(intent)
             }
             .background(backgroundColor, shape = RoundedCornerShape(8.dp))

@@ -20,13 +20,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mjkj.listit.Composable.ListAppBar
 
+@Suppress("IMPLICIT_CAST_TO_ANY")
 class ListActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val listCode: String = intent.getStringExtra("listCode").toString()
+        val listTitle: String = intent.getStringExtra("listTitle").toString()
+        val listColor: String = intent.getStringExtra("listColor").toString()
         setContent {
             val listOfLists = mutableStateListOf<MutableList<String>>()
+
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background)
@@ -36,7 +40,9 @@ class ListActivity : ComponentActivity() {
                         ListAppBar(
                             activity = "ListActivity",
                             this,
-                            listOfLists
+                            listOfLists,
+                            listTitle,
+                            listColor,
                         )
                     }
                 ) {
