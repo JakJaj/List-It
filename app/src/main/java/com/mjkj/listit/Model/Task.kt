@@ -12,7 +12,11 @@ class Task(
     /**
      * The creator of the task
      */
-    private var creator: User?
+    private var creator: User?,
+    /**
+     * The status of the task
+     */
+    private var status: Boolean = false
 ) {
     companion object{
         /**
@@ -38,6 +42,13 @@ class Task(
             }
             return code
         }
+    }
+
+    fun getStatus(): Boolean {
+        return status
+    }
+    fun setStatus(status: Boolean) {
+        this.status = status
     }
     fun getTaskName(): String {
         return taskName
