@@ -15,6 +15,7 @@ class Task(
     private var creator: User?,
     /**
      * The status of the task
+     * True if the task is done, false otherwise
      */
     private var status: Boolean = false
 ) {
