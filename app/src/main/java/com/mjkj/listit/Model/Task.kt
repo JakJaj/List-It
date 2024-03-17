@@ -2,6 +2,10 @@ package com.mjkj.listit.Model
 
 class Task(
     /**
+     * The code of the task
+     */
+    private var code: String,
+    /**
      * The name of the task
      */
     private var taskName: String,
@@ -28,7 +32,8 @@ class Task(
          * @return a new task
          */
         fun createTask(taskName: String, creator: User, description: String?): Task{
-            return Task(taskName, description, creator)
+            val code = generateCode()
+            return Task(code, taskName, description, creator)
         }
         /**
          * Static function to generate a random code
@@ -44,7 +49,12 @@ class Task(
             return code
         }
     }
-
+    fun getCode(): String {
+        return code
+    }
+    fun setCode(code: String) {
+        this.code = code
+    }
     fun getStatus(): Boolean {
         return status
     }
