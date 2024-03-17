@@ -37,18 +37,13 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import com.mjkj.listit.Activity.ScrollListsActivity
 import com.mjkj.listit.Model.ListOfTasks
+import com.mjkj.listit.Model.Task
 import com.mjkj.listit.Model.User
 
-
-@Preview(showBackground = true)
 @Composable
-fun DialogPreview() {
-    CreateTaskDialog()
-}
-
-@Composable
-fun CreateTaskDialog(){
-    androidx.compose.ui.window.Dialog(onDismissRequest = { }) {
+fun CreateTaskDialog(onDismissRequest: () -> Unit,listCode:String, parentActivity: Activity){
+    val db = Firebase.firestore
+    androidx.compose.ui.window.Dialog(onDismissRequest ={ onDismissRequest() }){
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -58,12 +53,14 @@ fun CreateTaskDialog(){
             shape = RoundedCornerShape(16.dp),
         ) {
             Spacer(modifier = Modifier.padding(10.dp))
-            Column(modifier = Modifier.padding(10.dp),
+            Column(
+                modifier = Modifier.padding(10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center) {
+                verticalArrangement = Arrangement.Center
+            ) {
                 Text(text = "Create a new task", fontSize = 20.sp)
                 Spacer(modifier = Modifier.padding(20.dp))
-                val taskName: String = OutlinedTextField("Task Name")
+                val taskName: String = OutlinedTextField("Task Name (Required)")
                 Spacer(modifier = Modifier.padding(5.dp))
                 val taskDescription: String = OutlinedTextField("Task Description")
                 Spacer(modifier = Modifier.padding(15.dp))
@@ -74,11 +71,56 @@ fun CreateTaskDialog(){
                     Log.d("D", "TaskName: $taskName")
                     Log.d("D", "TaskDescription: $taskDescription")
 
+                    if (taskName != "") {
+                        val user = User.createUser(
+                            Firebase.auth.currentUser?.uid,
+                            Firebase.auth.currentUser?.displayName.toString(),
+                            Firebase.auth.currentUser?.email.toString()
+                        )
+                        val task = Task.createTask(taskName, user, taskDescription)
+                        if(task.getTaskName() != ""){
+                            Log.d("D", "User: $user id: ${user.getId()} name: ${user.getName()} email: ${user.getEmail()} lists: ${user.getLists()}")
+                            Log.d("D", "Task: ${task.getTaskName()} creator: ${task.getCreator()?.getName()} description: ${task.getDescription()} status: ${task.getStatus()}")
+                            val hashTask = hashMapOf(
+                                "taskName" to taskName,
+                                "description" to taskDescription,
+                                "creator" to user.getId(),
+                                "status" to task.getStatus()
+                            )
+
+                            //TODO: Create a list in db
+                            db.collection("tasks").document(task.getCode()).set(hashTask)
+
+                            //TODO: Add task to lists field tasks
+
+                            db.collection("lists").document(listCode).get()
+                                .addOnSuccessListener { document ->
+                                    if (document != null) {
+                                        val tasks = document.data?.get("tasks")
+                                        if (tasks == null) {
+                                            val tempTasks = mutableListOf(task.getCode())
+                                            db.collection("lists").document(listCode).update("tasks", tempTasks)
+                                        } else {
+                                            val tempTasks = document.data?.get("tasks") as MutableList<String>
+                                            tempTasks.add(task.getCode())
+                                            db.collection("lists").document(listCode).update("tasks", tempTasks)
+                                        }
+
+                                        //TODO: ODSWIEZENIE LISTY JESLI BYLY TASKI
+
+                                        //TODO: PRZEJSCIE DO WIDOKU Z TASKAMI JESLI NIE BYLO TASKOW
+
+                                    }
+                                }
+                        }
+                        else{
+                            Toast.makeText(parentActivity, "List name is required", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
         }
     }
-
 }
 @Composable
         /** This is a composable function that creates a dialog box
@@ -140,7 +182,7 @@ fun JoinListContent(parentActivity: Activity){
         Spacer(modifier = Modifier.padding(5.dp))
         Text(text = "Join an existing list", fontSize = 20.sp)
         Spacer(modifier = Modifier.padding(25.dp))
-        var listCode: String = OutlinedTextField("List Code")
+        val listCode: String = OutlinedTextField("List Code")
         Spacer(modifier = Modifier.padding(20.dp))
 
 
@@ -240,10 +282,12 @@ fun CreateListContent(parentActivity: Activity){
         HorizontalDivider(modifier = Modifier.height(5.dp))
         Spacer(modifier = Modifier.padding(10.dp))
         ButtonFilled("Create") {
-            //TODO: CREATING LIST FUNCTIONALITY
+
             Log.d("D", "ListName: $listName")
             Log.d("D", "ShortDescription: $shortDescription")
             Log.d("D", "Color: $item")
+
+            
             if(listName != ""){
                 val user = User.createUser(
                     Firebase.auth.currentUser?.uid,
@@ -256,6 +300,7 @@ fun CreateListContent(parentActivity: Activity){
                     "code" to list.getCode(),
                     "color" to item,
                     "description" to shortDescription,
+                    "tasks" to null,
                     "creator" to user.getId()
                 )
                 db.collection("lists").document(list.getCode()).set(hashList)

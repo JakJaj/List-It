@@ -32,8 +32,9 @@ import androidx.compose.ui.unit.sp
          */
 fun ListAppBar(
     activity: String,
-    test: Activity,
-    listOfLists: List<List<String>>
+    parentActivity: Activity,
+    listOfLists: List<List<String>>,
+    inListCode: String?
 ) {
     val showDialog = remember {
         mutableStateOf(false)
@@ -43,14 +44,18 @@ fun ListAppBar(
         mutableStateOf(false)
     }
 
-    if ( (activity == "ListActivity" || activity == "ScrollListActivity")  && showDialog.value) {
-        CreateOrJoinDialog(onDismissRequest = { showDialog.value = false },test)
+    if ( (activity == "ListsActivity" || activity == "ScrollListsActivity")  && showDialog.value) {
+        CreateOrJoinDialog(onDismissRequest = { showDialog.value = false }, parentActivity)
     }
 
-    if ((activity == "ListActivity" || activity == "ScrollListActivity") && showNavDrawer.value) {
-        NavDrawer(test, listOfLists = listOfLists)
+    if ((activity == "ListsActivity" || activity == "ScrollListsActivity") && showNavDrawer.value) {
+        NavDrawer(parentActivity, listOfLists = listOfLists)
     }
-
+    if((activity == "TasksActivity") && showDialog.value){
+        if (inListCode != null) {
+            CreateTaskDialog(onDismissRequest = {showDialog.value = false}, listCode = inListCode, parentActivity = parentActivity)
+        }
+    }
     Surface(
         modifier = Modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.primary,
