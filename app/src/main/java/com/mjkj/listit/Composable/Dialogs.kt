@@ -3,17 +3,21 @@ package com.mjkj.listit.Composable
 import android.app.Activity
 import android.content.Intent
 import android.util.Log
+import android.widget.Space
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -24,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -35,6 +40,46 @@ import com.mjkj.listit.Model.ListOfTasks
 import com.mjkj.listit.Model.User
 
 
+@Preview(showBackground = true)
+@Composable
+fun DialogPreview() {
+    CreateTaskDialog()
+}
+
+@Composable
+fun CreateTaskDialog(){
+    androidx.compose.ui.window.Dialog(onDismissRequest = { }) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(380.dp)
+                .padding(10.dp),
+
+            shape = RoundedCornerShape(16.dp),
+        ) {
+            Spacer(modifier = Modifier.padding(10.dp))
+            Column(modifier = Modifier.padding(10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center) {
+                Text(text = "Create a new task", fontSize = 20.sp)
+                Spacer(modifier = Modifier.padding(20.dp))
+                val taskName: String = OutlinedTextField("Task Name")
+                Spacer(modifier = Modifier.padding(5.dp))
+                val taskDescription: String = OutlinedTextField("Task Description")
+                Spacer(modifier = Modifier.padding(15.dp))
+                HorizontalDivider(modifier = Modifier.height(5.dp))
+                Spacer(modifier = Modifier.padding(10.dp))
+
+                ButtonFilled("Create") {
+                    Log.d("D", "TaskName: $taskName")
+                    Log.d("D", "TaskDescription: $taskDescription")
+
+                }
+            }
+        }
+    }
+
+}
 @Composable
         /** This is a composable function that creates a dialog box
          *
