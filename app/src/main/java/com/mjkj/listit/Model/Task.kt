@@ -25,6 +25,19 @@ class Task(
         fun createTask(taskName: String, creator: User, description: String?): Task{
             return Task(taskName, description, creator)
         }
+        /**
+         * Static function to generate a random code
+         * @return a random code
+         */
+        fun generateCode(): String {
+            val chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            val length = 20
+            var code = ""
+            for (i in 0 until length) {
+                code += chars[Math.floor(Math.random() * chars.length).toInt()]
+            }
+            return code
+        }
     }
     fun getTaskName(): String {
         return taskName
