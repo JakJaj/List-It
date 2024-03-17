@@ -35,7 +35,7 @@ class SignUpActivity : ComponentActivity() {
             val auth: FirebaseAuth = Firebase.auth
 
             val currentUser = auth.currentUser
-            if(currentUser != null){ //TODO: SPRAWDZANIE CZY MA LISTY CZY NIE!!!
+            if(currentUser != null){
                 val currentUserR = db.collection("users").document(auth.currentUser?.uid!!)
                 currentUserR.get().addOnSuccessListener { documentSnapchot ->
 

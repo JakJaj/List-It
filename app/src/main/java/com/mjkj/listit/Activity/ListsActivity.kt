@@ -33,9 +33,10 @@ class ListsActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         ListAppBar(
-                            activity = "ListActivity",
+                            activity = "ListsActivity",
                             this,
-                            listOfLists
+                            listOfLists,
+                            null
                         )
                     }
                 ) {

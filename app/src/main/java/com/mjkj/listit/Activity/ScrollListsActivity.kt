@@ -117,9 +117,10 @@ class ScrollListsActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         ListAppBar(
-                            activity = "ScrollListActivity",
+                            activity = "ScrollListsActivity",
                             this,
-                            listOfLists
+                            listOfLists,
+                            null
                         )
                     }
                 ) {
