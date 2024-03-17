@@ -17,6 +17,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -239,4 +240,9 @@ fun CreateListContent(parentActivity: Activity){
             }
         }
     }
+}
+
+fun changeState(state: MutableState<Boolean>): Boolean {
+    state.value = !state.value
+    return state.value
 }
