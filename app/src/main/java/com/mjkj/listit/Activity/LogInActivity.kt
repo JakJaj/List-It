@@ -24,6 +24,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mjkj.listit.Composable.ButtonFilled
 import com.mjkj.listit.Composable.ButtonTonalFilled
+import com.mjkj.listit.Composable.OutlinedPasswordTextField
 import com.mjkj.listit.Composable.OutlinedTextField
 
 class LogInActivity: ComponentActivity(){
@@ -37,7 +38,7 @@ class LogInActivity: ComponentActivity(){
             val auth: FirebaseAuth = Firebase.auth
             val currentUser = auth.currentUser
 
-            if(currentUser != null){ //TODO: SPRAWDZANIE CZY MA LISTY CZY NIE!!!
+            if(currentUser != null){
                 val currentUserR = db.collection("users").document(auth.currentUser?.uid!!)
                 currentUserR.get().addOnSuccessListener { documentSnapchot ->
 
@@ -74,9 +75,9 @@ class LogInActivity: ComponentActivity(){
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center){
 
-                        var email:String = OutlinedTextField("Email")
+                        val email:String = OutlinedTextField("Email")
                         Spacer(modifier = Modifier.padding(10.dp))
-                        var password:String = OutlinedTextField("Password")
+                        val password:String = OutlinedPasswordTextField(label = "Password")
 
                         Spacer(modifier = Modifier.padding(60.dp))
 

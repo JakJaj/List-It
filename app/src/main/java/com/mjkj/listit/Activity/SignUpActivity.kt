@@ -22,6 +22,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mjkj.listit.Composable.ButtonFilled
 import com.mjkj.listit.Composable.ButtonTonalFilled
+import com.mjkj.listit.Composable.OutlinedPasswordTextField
 import com.mjkj.listit.Composable.OutlinedTextField
 
 class SignUpActivity : ComponentActivity() {
@@ -71,13 +72,13 @@ class SignUpActivity : ComponentActivity() {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center){
 
-                        var username:String = OutlinedTextField("Username")
+                        val username:String = OutlinedTextField("Username")
                         Spacer(modifier = Modifier.padding(10.dp))
-                        var email:String = OutlinedTextField("Email")
+                        val email:String = OutlinedTextField("Email")
                         Spacer(modifier = Modifier.padding(10.dp))
-                        var password:String = OutlinedTextField("Password")
+                        val password:String = OutlinedPasswordTextField("Password")
                         Spacer(modifier = Modifier.padding(10.dp))
-                        var retypedPassword = OutlinedTextField("Confirm password")
+                        val retypedPassword = OutlinedPasswordTextField("Confirm password")
 
                         Spacer(modifier = Modifier.padding(60.dp))
 
