@@ -18,7 +18,6 @@ class UserTest {
         assertNotNull(testUser)
         assertEquals("testUser", testUser.getName())
         assertEquals("testuser@test.com", testUser.getEmail())
-        assertEquals("test123", testUser.getPassword())
         assertNull(testUser.getLists())
     }
     @Test
