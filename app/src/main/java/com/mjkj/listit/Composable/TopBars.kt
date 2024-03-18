@@ -39,6 +39,17 @@ fun ListAppBar(
     listColor: Any? = null,
 
 ) {
+    val listColor = when (listColor) {
+    "Red" -> Color.Red
+    "Blue" -> Color.Blue
+    "Green" -> Color.Green
+    "Yellow" -> Color.Yellow
+    "Cyan" -> Color.Cyan
+    "Pink" -> Color.Magenta
+    "White" -> Color.White
+    "Gray" -> Color.Gray
+    else -> MaterialTheme.colorScheme.primary
+}
     val showDialog = remember {
         mutableStateOf(false)
     }
@@ -61,7 +72,7 @@ fun ListAppBar(
     }
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        color = MaterialTheme.colorScheme.primary,
+        color = listColor ?: MaterialTheme.colorScheme.primary,
         shape = RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp)
     ) {
         Row(
