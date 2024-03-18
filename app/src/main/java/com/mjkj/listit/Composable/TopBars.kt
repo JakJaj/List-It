@@ -34,7 +34,10 @@ fun ListAppBar(
     activity: String,
     parentActivity: Activity,
     listOfLists: List<List<String>>,
-    inListCode: String?
+    inListCode: String? = null,
+    listTitle: String? = null,
+    listColor: Any? = null,
+
 ) {
     val showDialog = remember {
         mutableStateOf(false)
@@ -76,7 +79,7 @@ fun ListAppBar(
                 )
             }
             Text(
-                text = "List-it",
+                text = listTitle ?: "List-it",
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 16.dp),

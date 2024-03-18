@@ -120,7 +120,7 @@ class FilledListsListActivity : ComponentActivity() {
                             activity = "ScrollListsActivity",
                             this,
                             listOfLists,
-                            null
+                            null,
                         )
                     }
                 ) {

@@ -39,6 +39,8 @@ fun ListItem(title: String, description: String, color: String, context: Context
             .clickable {
                 val intent = Intent(context, EmptyTasksTaskActivity::class.java)
                 intent.putExtra("listCode", code)
+                intent.putExtra("listColor", color)
+                intent.putExtra("listTitle", title)
                 context.startActivity(intent)
             }
             .background(backgroundColor, shape = RoundedCornerShape(8.dp))
