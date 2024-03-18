@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -19,16 +18,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.media3.common.util.Log
 import com.mjkj.listit.Composable.ListAppBar
 
 class EmptyTasksTaskActivity : ComponentActivity() {
     @SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val listCode: String = intent.getStringExtra("listCode").toString()
-        val listColor: String = intent.getStringExtra("listColor").toString()
-        val listTitle: String = intent.getStringExtra("listTitle").toString()
         setContent {
             val listOfLists = mutableStateListOf<MutableList<String>>()
             val listCode: String = intent.getStringExtra("listCode").toString()
