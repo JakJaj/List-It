@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mjkj.listit.Activity.ListActivity
+import com.mjkj.listit.Activity.EmptyTasksTaskActivity
 
 @Composable
 fun ListItem(title: String, description: String, color: String, context: Context, code:String) {
@@ -37,7 +37,7 @@ fun ListItem(title: String, description: String, color: String, context: Context
             .fillMaxWidth()
             .padding(5.dp)
             .clickable {
-                val intent = Intent(context, ListActivity::class.java)
+                val intent = Intent(context, EmptyTasksTaskActivity::class.java)
                 intent.putExtra("listCode", code)
                 context.startActivity(intent)
             }

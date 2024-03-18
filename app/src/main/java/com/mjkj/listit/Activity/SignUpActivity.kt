@@ -45,12 +45,12 @@ class SignUpActivity : ComponentActivity() {
 
                         if(lists == null){
                             Log.d("LogInActivity", "No lists go to empty lists activity")
-                            val intent = Intent(this@SignUpActivity, ListsActivity::class.java)
+                            val intent = Intent(this@SignUpActivity, EmptyListsListActivity::class.java)
                             startActivity(intent)
                             finish()
                         }else{
                             Log.d("LogInActivity", "Lists exist go to lists activity")
-                            val intent = Intent(this@SignUpActivity, ScrollListsActivity::class.java)
+                            val intent = Intent(this@SignUpActivity, FilledListsListActivity::class.java)
                             startActivity(intent)
                             finish()
                         }
@@ -110,7 +110,7 @@ class SignUpActivity : ComponentActivity() {
                                                 .set(user)
                                                 .addOnSuccessListener { Log.d("SignUpActivity", "DocumentSnapshot successfully written!") }
                                                 .addOnFailureListener { e -> Log.w("SignUpActivity", "Error writing document", e) }
-                                            val intent = Intent(this@SignUpActivity, ListsActivity::class.java)
+                                            val intent = Intent(this@SignUpActivity, EmptyListsListActivity::class.java)
                                             startActivity(intent)
                                         }
                                         else{

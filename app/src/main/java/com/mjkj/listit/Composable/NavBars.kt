@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import com.mjkj.listit.Activity.ListActivity
+import com.mjkj.listit.Activity.EmptyTasksTaskActivity
 import com.mjkj.listit.Activity.MainActivity
 
 
@@ -112,7 +112,7 @@ fun NavDrawerItem(title: String, description: String, color: String, context: Co
             .fillMaxWidth()
             .padding(5.dp)
             .clickable {
-                val intent = Intent(context, ListActivity::class.java)
+                val intent = Intent(context, EmptyTasksTaskActivity::class.java)
                 intent.putExtra("listCode", code)
                 context.startActivity(intent)
             }

@@ -48,12 +48,12 @@ class LogInActivity: ComponentActivity(){
 
                         if(lists == null){
                             Log.d("LogInActivity", "No lists go to empty lists activity")
-                            val intent = Intent(this@LogInActivity, ListsActivity::class.java)
+                            val intent = Intent(this@LogInActivity, EmptyListsListActivity::class.java)
                             startActivity(intent)
                             finish()
                         }else{
                             Log.d("LogInActivity", "Lists exist go to lists activity")
-                            val intent = Intent(this@LogInActivity, ScrollListsActivity::class.java)
+                            val intent = Intent(this@LogInActivity, FilledListsListActivity::class.java)
                             startActivity(intent)
                             finish()
                         }
@@ -96,12 +96,12 @@ class LogInActivity: ComponentActivity(){
 
                                                 if(lists == null){
                                                     Log.d("LogInActivity", "No lists go to empty lists activity")
-                                                    val intent = Intent(this@LogInActivity, ListsActivity::class.java)
+                                                    val intent = Intent(this@LogInActivity, EmptyListsListActivity::class.java)
                                                     startActivity(intent)
                                                     finish()
                                                 }else{
                                                     Log.d("LogInActivity", "Lists exist go to lists activity")
-                                                    val intent = Intent(this@LogInActivity, ScrollListsActivity::class.java)
+                                                    val intent = Intent(this@LogInActivity, FilledListsListActivity::class.java)
                                                     startActivity(intent)
                                                     finish()
                                                 }
