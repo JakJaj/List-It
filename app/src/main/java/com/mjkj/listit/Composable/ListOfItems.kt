@@ -3,6 +3,7 @@ package com.mjkj.listit.Composable
 import android.content.Context
 import android.content.Intent
 import android.os.Parcelable
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -18,7 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 import com.mjkj.listit.Activity.EmptyTasksTaskActivity
+import com.mjkj.listit.Activity.FilledTasksTaskActivity
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -33,6 +37,7 @@ fun ListItem(
     code: String,
     navDrawerList: List<List<String>>
 ) {
+    val firestore = Firebase.firestore
     val backgroundColor = when (color) {
         "Red" -> Color.Red
         "Blue" -> Color.Blue
@@ -49,13 +54,29 @@ fun ListItem(
             .fillMaxWidth()
             .padding(5.dp)
             .clickable {
-                val intent = Intent(context, EmptyTasksTaskActivity::class.java)
-                intent.putExtra("listCode", code)
-                intent.putExtra("listColor", color)
-                intent.putExtra("listTitle", title)
-                intent.putExtra("navDrawerList", ListItemData(navDrawerList))
+                firestore.collection("lists").document(code)
+                    .get().addOnSuccessListener { document ->
+                        if (document.exists()) {
 
-                context.startActivity(intent)
+                            Log.d("FilledTasksTaskActivity", "List of codes: ${document.data!!.get("tasks")}")
+
+                            if (document.data!!.get("tasks") == null) {
+                                val intent = Intent(context, EmptyTasksTaskActivity::class.java)
+                                intent.putExtra("listCode", code)
+                                intent.putExtra("listColor", color)
+                                intent.putExtra("listTitle", title)
+                                intent.putExtra("navDrawerList", ListItemData(navDrawerList))
+                                context.startActivity(intent)
+                            } else {
+                                val intent = Intent(context, FilledTasksTaskActivity::class.java)
+                                intent.putExtra("listCode", code)
+                                intent.putExtra("listColor", color)
+                                intent.putExtra("listTitle", title)
+                                intent.putExtra("navDrawerList", ListItemData(navDrawerList))
+                                context.startActivity(intent)
+                            }
+                        }
+                    }
             }
             .background(backgroundColor, shape = RoundedCornerShape(8.dp))
     ) {
@@ -76,4 +97,3 @@ fun ListItem(
         }
     }
 }
-
