@@ -119,7 +119,7 @@ class FilledListsListActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         ListAppBar(
-                            activity = "ScrollListsActivity",
+                            activity = "FilledListsListActivity",
                             this,
                             listOfLists,
                             null,

@@ -33,7 +33,7 @@ class EmptyListsListActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         ListAppBar(
-                            activity = "ListsActivity",
+                            activity = "EmptyListsListActivity",
                             this,
                             listOfLists,
                             null

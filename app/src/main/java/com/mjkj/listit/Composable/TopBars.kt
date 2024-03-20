@@ -59,11 +59,11 @@ fun ListAppBar(
         mutableStateOf(false)
     }
 
-    if ( (activity == "ListsActivity" || activity == "ScrollListsActivity")  && showDialog.value) {
+    if ( (activity == "EmptyListsListActivity" || activity == "FilledListsListActivity")  && showDialog.value) {
         CreateOrJoinDialog(onDismissRequest = { showDialog.value = false }, parentActivity)
     }
 
-    if ((activity == "ListsActivity" || activity == "ScrollListsActivity" || activity == "EmptyTasksTaskActivity" || activity == "FilledTasksTaskActivity") && showNavDrawer.value) {
+    if ((activity == "EmptyListsListActivity" || activity == "FilledListsListActivity" || activity == "EmptyTasksTaskActivity" || activity == "FilledTasksTaskActivity") && showNavDrawer.value) {
         NavDrawer(parentActivity, listOfLists = listOfLists)
     }
 
