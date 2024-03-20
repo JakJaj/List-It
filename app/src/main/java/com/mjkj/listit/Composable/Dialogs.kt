@@ -3,21 +3,17 @@ package com.mjkj.listit.Composable
 import android.app.Activity
 import android.content.Intent
 import android.util.Log
-import android.widget.Space
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -28,14 +24,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
-import com.mjkj.listit.Activity.ScrollListsActivity
+import com.mjkj.listit.Activity.FilledListsListActivity
+import com.mjkj.listit.Activity.FilledTasksTaskActivity
+import com.mjkj.listit.Activity.MainActivity
 import com.mjkj.listit.Model.ListOfTasks
 import com.mjkj.listit.Model.Task
 import com.mjkj.listit.Model.User
@@ -88,10 +85,7 @@ fun CreateTaskDialog(onDismissRequest: () -> Unit,listCode:String, parentActivit
                                 "status" to task.getStatus()
                             )
 
-                            //TODO: Create a list in db
                             db.collection("tasks").document(task.getCode()).set(hashTask)
-
-                            //TODO: Add task to lists field tasks
 
                             db.collection("lists").document(listCode).get()
                                 .addOnSuccessListener { document ->
@@ -106,9 +100,10 @@ fun CreateTaskDialog(onDismissRequest: () -> Unit,listCode:String, parentActivit
                                             db.collection("lists").document(listCode).update("tasks", tempTasks)
                                         }
 
-                                        //TODO: ODSWIEZENIE LISTY JESLI BYLY TASKI
-
-                                        //TODO: PRZEJSCIE DO WIDOKU Z TASKAMI JESLI NIE BYLO TASKOW
+                                        val intent = Intent(parentActivity, FilledTasksTaskActivity::class.java)
+                                        intent.putExtra("listCode", listCode)
+                                        ContextCompat.startActivity(parentActivity, intent, null)
+                                        parentActivity.finish()
 
                                     }
                                 }
@@ -232,7 +227,7 @@ fun JoinListContent(parentActivity: Activity){
                                             }
                                         }
                                     }
-                                    val intent = Intent(parentActivity, ScrollListsActivity::class.java)
+                                    val intent = Intent(parentActivity, FilledListsListActivity::class.java)
                                     ContextCompat.startActivity(parentActivity, intent, null)
                                     parentActivity.finish()
                                 }
@@ -320,7 +315,7 @@ fun CreateListContent(parentActivity: Activity){
                                 currentList.add(list.getCode())
                                 db.collection("users").document(Firebase.auth.currentUser!!.uid).update("lists", currentList)
                             }
-                            val intent = Intent(parentActivity, ScrollListsActivity::class.java)
+                            val intent = Intent(parentActivity, FilledListsListActivity::class.java)
                             ContextCompat.startActivity(parentActivity, intent, null)
                         }
                     }

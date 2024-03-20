@@ -32,12 +32,12 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import com.mjkj.listit.Activity.ListActivity
+import com.mjkj.listit.Activity.EmptyTasksTaskActivity
 import com.mjkj.listit.Activity.MainActivity
 
 
 @Composable
-fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>) {
+fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>, listCode: String? = null) {
     ModalDrawerSheet() {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -56,7 +56,9 @@ fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>) {
                         description = listOfLists[i][1],
                         color = listOfLists[i][2],
                         context = parentActivity,
-                        code = listOfLists[i][3]
+                        code = listOfLists[i][3],
+                        listCode,
+                        listOfLists
                     )
                 }
             }
@@ -91,8 +93,16 @@ fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>) {
 }
 
 @Composable
-fun NavDrawerItem(title: String, description: String, color: String, context: Context, code:String) {
-    val backgroundColor = Color.Transparent
+fun NavDrawerItem(
+    title: String,
+    description: String,
+    color: String,
+    context: Context,
+    code: String,
+    listCode: String? = null,
+    navDrawerList: List<List<String>>
+) {
+    val backgroundColor = if (code == listCode) Color.LightGray else Color.Transparent
     val circleColor = remember {
         when (color) {
             "Red" -> Color.Red
@@ -112,8 +122,11 @@ fun NavDrawerItem(title: String, description: String, color: String, context: Co
             .fillMaxWidth()
             .padding(5.dp)
             .clickable {
-                val intent = Intent(context, ListActivity::class.java)
+                val intent = Intent(context, EmptyTasksTaskActivity::class.java)
                 intent.putExtra("listCode", code)
+                intent.putExtra("listColor", color)
+                intent.putExtra("listTitle", title)
+                intent.putExtra("navDrawerList", ListItemData(navDrawerList))
                 context.startActivity(intent)
             }
             .background(backgroundColor, shape = RoundedCornerShape(8.dp))

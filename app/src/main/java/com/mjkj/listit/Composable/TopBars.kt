@@ -34,8 +34,23 @@ fun ListAppBar(
     activity: String,
     parentActivity: Activity,
     listOfLists: List<List<String>>,
-    inListCode: String?
-) {
+    inListCode: String? = null,
+    listTitle: String? = null,
+    listColor: Any? = null,
+
+    ) {
+    val listColor = when (listColor) {
+        "Red" -> Color.Red
+        "Blue" -> Color.Blue
+        "Green" -> Color.Green
+        "Yellow" -> Color.Yellow
+        "Cyan" -> Color.Cyan
+        "Pink" -> Color.Magenta
+        "White" -> Color.White
+        "Gray" -> Color.Gray
+        else -> MaterialTheme.colorScheme.primary
+    }
+
     val showDialog = remember {
         mutableStateOf(false)
     }
@@ -44,21 +59,31 @@ fun ListAppBar(
         mutableStateOf(false)
     }
 
-    if ( (activity == "ListsActivity" || activity == "ScrollListsActivity")  && showDialog.value) {
+    if ((activity == "EmptyListsListActivity" || activity == "FilledListsListActivity") && showDialog.value) {
         CreateOrJoinDialog(onDismissRequest = { showDialog.value = false }, parentActivity)
     }
 
-    if ((activity == "ListsActivity" || activity == "ScrollListsActivity") && showNavDrawer.value) {
-        NavDrawer(parentActivity, listOfLists = listOfLists)
-    }
-    if((activity == "TasksActivity") && showDialog.value){
+    if ((activity == "EmptyListsListActivity" || activity == "FilledListsListActivity" || activity == "EmptyTasksTaskActivity" || activity == "FilledTasksTaskActivity") && showNavDrawer.value) {
         if (inListCode != null) {
-            CreateTaskDialog(onDismissRequest = {showDialog.value = false}, listCode = inListCode, parentActivity = parentActivity)
+            NavDrawer(parentActivity, listOfLists = listOfLists, listCode = inListCode)
+        } else {
+            NavDrawer(parentActivity, listOfLists = listOfLists)
         }
     }
+
+    if ((activity == "EmptyTasksTaskActivity" || activity == "FilledTasksTaskActivity") && showDialog.value) {
+        if (inListCode != null) {
+            CreateTaskDialog(
+                onDismissRequest = { showDialog.value = false },
+                listCode = inListCode,
+                parentActivity = parentActivity
+            )
+        }
+    }
+
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        color = MaterialTheme.colorScheme.primary,
+        color = listColor ?: MaterialTheme.colorScheme.primary,
         shape = RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp)
     ) {
         Row(
@@ -76,7 +101,7 @@ fun ListAppBar(
                 )
             }
             Text(
-                text = "List-it",
+                text = listTitle ?: "List-it",
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 16.dp),

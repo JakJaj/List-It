@@ -27,8 +27,7 @@ import com.mjkj.listit.Composable.ButtonTonalFilled
 import com.mjkj.listit.Composable.OutlinedPasswordTextField
 import com.mjkj.listit.Composable.OutlinedTextField
 
-class LogInActivity: ComponentActivity(){
-
+class LogInActivity : ComponentActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,27 +37,28 @@ class LogInActivity: ComponentActivity(){
             val auth: FirebaseAuth = Firebase.auth
             val currentUser = auth.currentUser
 
-            if(currentUser != null){
+            if (currentUser != null) {
                 val currentUserR = db.collection("users").document(auth.currentUser?.uid!!)
                 currentUserR.get().addOnSuccessListener { documentSnapchot ->
 
-                    if(documentSnapchot.exists()){
+                    if (documentSnapchot.exists()) {
                         Log.d("LogInActivity", "DocumentSnapshot data: ${documentSnapchot.data}")
                         val lists = documentSnapchot.get("lists") as? MutableList<String>
 
-                        if(lists == null){
+                        if (lists == null) {
                             Log.d("LogInActivity", "No lists go to empty lists activity")
-                            val intent = Intent(this@LogInActivity, ListsActivity::class.java)
+                            val intent =
+                                Intent(this@LogInActivity, EmptyListsListActivity::class.java)
                             startActivity(intent)
                             finish()
-                        }else{
+                        } else {
                             Log.d("LogInActivity", "Lists exist go to lists activity")
-                            val intent = Intent(this@LogInActivity, ScrollListsActivity::class.java)
+                            val intent =
+                                Intent(this@LogInActivity, FilledListsListActivity::class.java)
                             startActivity(intent)
                             finish()
                         }
-                    }
-                    else{
+                    } else {
                         Log.d("LogInActivity", "No such document")
                     }
                 }.addOnFailureListener { exception ->
@@ -67,60 +67,87 @@ class LogInActivity: ComponentActivity(){
             }
             Surface(
                 modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background) {
+                color = MaterialTheme.colorScheme.background
+            ) {
 
                 Column {
 
-                    Column (modifier = Modifier.fillMaxSize(),
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center){
+                        verticalArrangement = Arrangement.Center
+                    ) {
 
-                        val email:String = OutlinedTextField("Email")
+                        val email: String = OutlinedTextField("Email")
                         Spacer(modifier = Modifier.padding(10.dp))
-                        val password:String = OutlinedPasswordTextField(label = "Password")
+                        val password: String = OutlinedPasswordTextField(label = "Password")
 
                         Spacer(modifier = Modifier.padding(60.dp))
 
                         ButtonFilled("Log in") {
                             //TODO: Verify login using firebase
                             auth.signInWithEmailAndPassword(email, password)
-                                .addOnCompleteListener(this@LogInActivity){task ->
-                                    if(task.isSuccessful){
+                                .addOnCompleteListener(this@LogInActivity) { task ->
+                                    if (task.isSuccessful) {
                                         val currentUserId = auth.currentUser?.uid
-                                        val currentUserRef = db.collection("users").document(currentUserId!!)
-                                        currentUserRef.get().addOnSuccessListener { documentSnapchot ->
+                                        val currentUserRef =
+                                            db.collection("users").document(currentUserId!!)
+                                        currentUserRef.get()
+                                            .addOnSuccessListener { documentSnapchot ->
 
-                                            if(documentSnapchot.exists()){
-                                                Log.d("LogInActivity", "DocumentSnapshot data: ${documentSnapchot.data}")
-                                                val lists = documentSnapchot.get("lists") as? MutableList<String>
+                                                if (documentSnapchot.exists()) {
+                                                    Log.d(
+                                                        "LogInActivity",
+                                                        "DocumentSnapshot data: ${documentSnapchot.data}"
+                                                    )
+                                                    val lists =
+                                                        documentSnapchot.get("lists") as? MutableList<String>
 
-                                                if(lists == null){
-                                                    Log.d("LogInActivity", "No lists go to empty lists activity")
-                                                    val intent = Intent(this@LogInActivity, ListsActivity::class.java)
-                                                    startActivity(intent)
-                                                    finish()
-                                                }else{
-                                                    Log.d("LogInActivity", "Lists exist go to lists activity")
-                                                    val intent = Intent(this@LogInActivity, ScrollListsActivity::class.java)
-                                                    startActivity(intent)
-                                                    finish()
+                                                    if (lists == null) {
+                                                        Log.d(
+                                                            "LogInActivity",
+                                                            "No lists go to empty lists activity"
+                                                        )
+                                                        val intent = Intent(
+                                                            this@LogInActivity,
+                                                            EmptyListsListActivity::class.java
+                                                        )
+                                                        startActivity(intent)
+                                                        finish()
+                                                    } else {
+                                                        Log.d(
+                                                            "LogInActivity",
+                                                            "Lists exist go to lists activity"
+                                                        )
+                                                        val intent = Intent(
+                                                            this@LogInActivity,
+                                                            FilledListsListActivity::class.java
+                                                        )
+                                                        startActivity(intent)
+                                                        finish()
+                                                    }
+                                                } else {
+                                                    Log.d("LogInActivity", "No such document")
                                                 }
-                                            }
-                                            else{
-                                                Log.d("LogInActivity", "No such document")
-                                            }
-                                        }.addOnFailureListener { exception ->
+                                            }.addOnFailureListener { exception ->
                                             Log.d("LogInActivity", "get failed with ", exception)
                                         }
-                                    }
-                                    else{
-                                        Log.w("LogInActivity", "signInWithEmail:failure", task.exception)
-                                        Toast.makeText(baseContext, "Authentication failed.", Toast.LENGTH_SHORT,).show()
+                                    } else {
+                                        Log.w(
+                                            "LogInActivity",
+                                            "signInWithEmail:failure",
+                                            task.exception
+                                        )
+                                        Toast.makeText(
+                                            baseContext,
+                                            "Authentication failed.",
+                                            Toast.LENGTH_SHORT,
+                                        ).show()
                                     }
                                 }
                         }
                         Spacer(modifier = Modifier.padding(5.dp))
-                        ButtonTonalFilled(label = "Go back"){
+                        ButtonTonalFilled(label = "Go back") {
                             val intent = Intent(this@LogInActivity, MainActivity::class.java)
                             startActivity(intent)
                             finish()
@@ -138,13 +165,16 @@ class LogInActivity: ComponentActivity(){
 fun LoginPreview() {
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background) {
+        color = MaterialTheme.colorScheme.background
+    ) {
 
         Column {
 
-            Column (modifier = Modifier.fillMaxSize(),
+            Column(
+                modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center){
+                verticalArrangement = Arrangement.Center
+            ) {
 
                 OutlinedTextField("Username")
                 Spacer(modifier = Modifier.padding(10.dp))
@@ -155,7 +185,7 @@ fun LoginPreview() {
                 ButtonFilled("Log in") {
                     //TODO: Handle login
                 }
-                ButtonTonalFilled(label = "Go back"){
+                ButtonTonalFilled(label = "Go back") {
                     //TODO: Handle going back to main screen
                 }
             }

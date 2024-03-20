@@ -30,13 +30,16 @@
             android:name=".Activity.SignUpActivity">
         </activity>
         <activity
-            android:name=".Activity.ListsActivity">
+            android:name=".Activity.EmptyListsListActivity">
         </activity>
         <activity
-            android:name=".Activity.ScrollListsActivity">
+            android:name=".Activity.FilledListsListActivity">
         </activity>
         <activity
-            android:name=".Activity.ListActivity">
+            android:name=".Activity.EmptyTasksTaskActivity">
+        </activity>
+        <activity
+            android:name=".Activity.FilledTasksTaskActivity">
         </activity>
     </application>
 

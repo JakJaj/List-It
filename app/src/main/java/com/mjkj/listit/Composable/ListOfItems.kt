@@ -2,6 +2,7 @@ package com.mjkj.listit.Composable
 
 import android.content.Context
 import android.content.Intent
+import android.os.Parcelable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -17,10 +18,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mjkj.listit.Activity.ListActivity
+import com.mjkj.listit.Activity.EmptyTasksTaskActivity
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+data class ListItemData(val navDrawerList: List<List<String>>) : Parcelable
 
 @Composable
-fun ListItem(title: String, description: String, color: String, context: Context, code:String) {
+fun ListItem(
+    title: String,
+    description: String,
+    color: String,
+    context: Context,
+    code: String,
+    navDrawerList: List<List<String>>
+) {
     val backgroundColor = when (color) {
         "Red" -> Color.Red
         "Blue" -> Color.Blue
@@ -37,8 +49,12 @@ fun ListItem(title: String, description: String, color: String, context: Context
             .fillMaxWidth()
             .padding(5.dp)
             .clickable {
-                val intent = Intent(context, ListActivity::class.java)
+                val intent = Intent(context, EmptyTasksTaskActivity::class.java)
                 intent.putExtra("listCode", code)
+                intent.putExtra("listColor", color)
+                intent.putExtra("listTitle", title)
+                intent.putExtra("navDrawerList", ListItemData(navDrawerList))
+
                 context.startActivity(intent)
             }
             .background(backgroundColor, shape = RoundedCornerShape(8.dp))

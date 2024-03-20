@@ -27,7 +27,7 @@ import com.mjkj.listit.Composable.ListAppBar
 import com.mjkj.listit.Composable.ListItem
 import kotlinx.coroutines.launch
 
-class ScrollListsActivity : ComponentActivity() {
+class FilledListsListActivity : ComponentActivity() {
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +38,8 @@ class ScrollListsActivity : ComponentActivity() {
             val listOfCodes = mutableListOf<String>()
             val listOfLists = mutableStateListOf<MutableList<String>>()
             val coroutineScope = rememberCoroutineScope()
+            val typ = listOfLists::class
+            Log.d("W", "Typ listy $typ")
 
             LaunchedEffect(Unit) {
                 coroutineScope.launch {
@@ -91,7 +93,7 @@ class ScrollListsActivity : ComponentActivity() {
                         }.addOnFailureListener { exception ->
                             Log.d("LogInActivity", "get failed with ", exception)
                         }
-                    currentUserRef.addSnapshotListener(this@ScrollListsActivity) { value, error ->
+                    currentUserRef.addSnapshotListener(this@FilledListsListActivity) { value, error ->
                         if (error != null) {
                             Log.w("LogInActivity", "Listen failed.", error)
                             return@addSnapshotListener
@@ -117,10 +119,10 @@ class ScrollListsActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         ListAppBar(
-                            activity = "ScrollListsActivity",
+                            activity = "FilledListsListActivity",
                             this,
                             listOfLists,
-                            null
+                            null,
                         )
                     }
                 ) {
@@ -137,8 +139,9 @@ class ScrollListsActivity : ComponentActivity() {
                                     title = listOfLists[i][0],
                                     description = listOfLists[i][1],
                                     color = listOfLists[i][2],
-                                    context = this@ScrollListsActivity,
-                                    code = listOfLists[i][3]
+                                    context = this@FilledListsListActivity,
+                                    code = listOfLists[i][3],
+                                    listOfLists
                                 )
                             }
                         }

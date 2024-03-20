@@ -28,8 +28,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
 
-            Surface (modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background) {
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background
+            ) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -45,7 +47,7 @@ class MainActivity : ComponentActivity() {
 
                     Spacer(modifier = Modifier.padding(100.dp))
 
-                    ButtonFilled("Log in"){
+                    ButtonFilled("Log in") {
                         val intent = Intent(this@MainActivity, LogInActivity::class.java)
                         startActivity(intent)
                         finish()
@@ -67,8 +69,10 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    Surface (modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background) {
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
