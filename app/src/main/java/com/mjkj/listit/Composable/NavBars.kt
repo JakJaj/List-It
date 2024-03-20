@@ -37,7 +37,7 @@ import com.mjkj.listit.Activity.MainActivity
 
 
 @Composable
-fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>) {
+fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>, listCode: String ?= null) {
     ModalDrawerSheet() {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -56,7 +56,8 @@ fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>) {
                         description = listOfLists[i][1],
                         color = listOfLists[i][2],
                         context = parentActivity,
-                        code = listOfLists[i][3]
+                        code = listOfLists[i][3],
+                        listCode
                     )
                 }
             }
@@ -91,8 +92,8 @@ fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>) {
 }
 
 @Composable
-fun NavDrawerItem(title: String, description: String, color: String, context: Context, code:String) {
-    val backgroundColor = Color.Transparent
+fun NavDrawerItem(title: String, description: String, color: String, context: Context, code:String, listCode: String ?= null) {
+    val backgroundColor = if (code == listCode) Color.LightGray else Color.Transparent
     val circleColor = remember {
         when (color) {
             "Red" -> Color.Red

@@ -64,7 +64,12 @@ fun ListAppBar(
     }
 
     if ((activity == "EmptyListsListActivity" || activity == "FilledListsListActivity" || activity == "EmptyTasksTaskActivity" || activity == "FilledTasksTaskActivity") && showNavDrawer.value) {
-        NavDrawer(parentActivity, listOfLists = listOfLists)
+        if (inListCode != null) {
+            NavDrawer(parentActivity, listOfLists = listOfLists, listCode = inListCode)
+        }
+        else{
+            NavDrawer(parentActivity, listOfLists = listOfLists)
+        }
     }
 
     if((activity == "EmptyTasksTaskActivity") && showDialog.value){
