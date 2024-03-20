@@ -25,8 +25,10 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mjkj.listit.Composable.ListAppBar
 import com.mjkj.listit.Composable.ListItem
+import com.mjkj.listit.Composable.ListItemData
 import kotlinx.coroutines.launch
 
+@Suppress("DEPRECATION")
 class FilledTasksTaskActivity : ComponentActivity() {
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
@@ -34,6 +36,16 @@ class FilledTasksTaskActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val listCode: String = intent.getStringExtra("listCode").toString()
+            val listColor: String = intent.getStringExtra("listColor").toString()
+            val listTitle: String = intent.getStringExtra("listTitle").toString()
+            val listItemData: ListItemData? = intent.getParcelableExtra("navDrawerList")
+            val listOfLists: List<List<String>> =
+                if (listColor != null && listTitle != null && listItemData != null) {
+                    listItemData.navDrawerList
+                } else {
+                    emptyList()
+                }
+
             val db = Firebase.firestore
             val auth = Firebase.auth
             val listOfTasksCodes = mutableListOf<String>()
@@ -133,8 +145,10 @@ class FilledTasksTaskActivity : ComponentActivity() {
                         ListAppBar(
                             activity = "FilledTasksTaskActivity",
                             this,
-                            listOfTasks,
+                            listOfLists,
                             listCode,
+                            listTitle,
+                            listColor
                         )
                     }
                 ) {
