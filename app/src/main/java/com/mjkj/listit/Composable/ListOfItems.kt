@@ -52,14 +52,18 @@ fun ListItem(
 ) {
     val firestore = Firebase.firestore
     val backgroundColor = when (color) {
-        "Red" -> Color.Red
-        "Blue" -> Color.Blue
-        "Green" -> Color.Green
-        "Yellow" -> Color.Yellow
-        "Cyan" -> Color.Cyan
-        "Pink" -> Color.Magenta
-        "White" -> Color.White
-        "Gray" -> Color.Gray
+        "Red" -> Color(0xFFD91A60)
+        "Blue" -> Color(0xFF1862CA)
+        "Green" -> Color(0xFF1D893B)
+        "Yellow" -> Color(0xFFF6C022)
+        "Cyan" -> Color(0xFF139EAE)
+        "Pink" -> Color(0xFFE42591)
+        "Gray" -> Color(0xFF5F6367)
+        "Orange" -> Color(0xFFE87109)
+        "Purple" -> Color(0xFF8D32DD)
+        "Light Blue" -> Color(0xFF407FEA)
+        "Burgundy" -> Color(0xFF870E51)
+        "Dark Green" -> Color(0xFF004C3F)
         else -> Color.Transparent
     }
     Box(
@@ -104,14 +108,14 @@ fun ListItem(
         ) {
             Text(
                 text = title,
-                color = Color.Black,
-                fontSize = 25.sp
+                fontSize = 25.sp,
+                color = Color.White
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = description,
-                color = Color.Black,
-                fontSize = 15.sp
+                fontSize = 15.sp,
+                color = Color.White
             )
         }
     }
@@ -142,7 +146,7 @@ fun TaskItem(
                 //TODO: Go to task details
             }
             .background(
-                if (isChecked) Color.Green else Color.Red,
+                if (isChecked) Color(0xFF004C3F) else Color(0xFFD91A60),
                 shape = RoundedCornerShape(8.dp)
             )
     ) {
@@ -155,8 +159,8 @@ fun TaskItem(
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = title,
-                    color = Color.Black,
-                    fontSize = 25.sp
+                    fontSize = 25.sp,
+                    color = Color.White
                 )
                 Spacer(modifier = Modifier.height(10.dp))
             }

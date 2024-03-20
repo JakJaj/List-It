@@ -252,8 +252,12 @@ fun CreateListContent(parentActivity: Activity){
         "Yellow",
         "Cyan",
         "Pink",
-        "White",
         "Gray",
+        "Orange",
+        "Purple",
+        "Light Blue",
+        "Burgundy",
+        "Dark Green"
     )
     val db = Firebase.firestore
     Column(
