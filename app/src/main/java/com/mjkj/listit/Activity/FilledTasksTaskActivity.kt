@@ -166,7 +166,8 @@ class FilledTasksTaskActivity : ComponentActivity() {
                                     title = listOfTasks[i][0],
                                     context = this@FilledTasksTaskActivity,
                                     code = listOfTasks[i][3],
-                                    listOfLists
+                                    listOfLists,
+
                                 )
                             }
                         }
