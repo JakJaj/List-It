@@ -37,7 +37,7 @@ import com.mjkj.listit.Activity.MainActivity
 
 
 @Composable
-fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>, listCode: String ?= null) {
+fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>, listCode: String? = null) {
     ModalDrawerSheet() {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -57,7 +57,8 @@ fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>, listCod
                         color = listOfLists[i][2],
                         context = parentActivity,
                         code = listOfLists[i][3],
-                        listCode
+                        listCode,
+                        listOfLists
                     )
                 }
             }
@@ -92,7 +93,15 @@ fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>, listCod
 }
 
 @Composable
-fun NavDrawerItem(title: String, description: String, color: String, context: Context, code:String, listCode: String ?= null) {
+fun NavDrawerItem(
+    title: String,
+    description: String,
+    color: String,
+    context: Context,
+    code: String,
+    listCode: String? = null,
+    navDrawerList: List<List<String>>
+) {
     val backgroundColor = if (code == listCode) Color.LightGray else Color.Transparent
     val circleColor = remember {
         when (color) {
@@ -115,6 +124,9 @@ fun NavDrawerItem(title: String, description: String, color: String, context: Co
             .clickable {
                 val intent = Intent(context, EmptyTasksTaskActivity::class.java)
                 intent.putExtra("listCode", code)
+                intent.putExtra("listColor", color)
+                intent.putExtra("listTitle", title)
+                intent.putExtra("navDrawerList", ListItemData(navDrawerList))
                 context.startActivity(intent)
             }
             .background(backgroundColor, shape = RoundedCornerShape(8.dp))

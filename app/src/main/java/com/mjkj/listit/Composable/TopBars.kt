@@ -38,17 +38,17 @@ fun ListAppBar(
     listTitle: String? = null,
     listColor: Any? = null,
 
-) {
+    ) {
     val listColor = when (listColor) {
-    "Red" -> Color.Red
-    "Blue" -> Color.Blue
-    "Green" -> Color.Green
-    "Yellow" -> Color.Yellow
-    "Cyan" -> Color.Cyan
-    "Pink" -> Color.Magenta
-    "White" -> Color.White
-    "Gray" -> Color.Gray
-    else -> MaterialTheme.colorScheme.primary
+        "Red" -> Color.Red
+        "Blue" -> Color.Blue
+        "Green" -> Color.Green
+        "Yellow" -> Color.Yellow
+        "Cyan" -> Color.Cyan
+        "Pink" -> Color.Magenta
+        "White" -> Color.White
+        "Gray" -> Color.Gray
+        else -> MaterialTheme.colorScheme.primary
     }
 
     val showDialog = remember {
@@ -59,22 +59,25 @@ fun ListAppBar(
         mutableStateOf(false)
     }
 
-    if ( (activity == "EmptyListsListActivity" || activity == "FilledListsListActivity")  && showDialog.value) {
+    if ((activity == "EmptyListsListActivity" || activity == "FilledListsListActivity") && showDialog.value) {
         CreateOrJoinDialog(onDismissRequest = { showDialog.value = false }, parentActivity)
     }
 
     if ((activity == "EmptyListsListActivity" || activity == "FilledListsListActivity" || activity == "EmptyTasksTaskActivity" || activity == "FilledTasksTaskActivity") && showNavDrawer.value) {
         if (inListCode != null) {
             NavDrawer(parentActivity, listOfLists = listOfLists, listCode = inListCode)
-        }
-        else{
+        } else {
             NavDrawer(parentActivity, listOfLists = listOfLists)
         }
     }
 
-    if((activity == "EmptyTasksTaskActivity") && showDialog.value){
+    if ((activity == "EmptyTasksTaskActivity") && showDialog.value) {
         if (inListCode != null) {
-            CreateTaskDialog(onDismissRequest = {showDialog.value = false}, listCode = inListCode, parentActivity = parentActivity)
+            CreateTaskDialog(
+                onDismissRequest = { showDialog.value = false },
+                listCode = inListCode,
+                parentActivity = parentActivity
+            )
         }
     }
 

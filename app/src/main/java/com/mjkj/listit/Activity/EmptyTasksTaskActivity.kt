@@ -11,7 +11,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,20 +30,29 @@ class EmptyTasksTaskActivity : ComponentActivity() {
             val listColor: String = intent.getStringExtra("listColor").toString()
             val listTitle: String = intent.getStringExtra("listTitle").toString()
 
-            val listItemData: ListItemData? = intent.getParcelableExtra("lista")
-            val listOfLists: List<List<String>> = if (listColor != null && listTitle != null && listItemData != null) {
-                listItemData.lista
-            } else {
-                emptyList()
-            }
+            val listItemData: ListItemData? = intent.getParcelableExtra("navDrawerList")
+            val listOfLists: List<List<String>> =
+                if (listColor != null && listTitle != null && listItemData != null) {
+                    listItemData.navDrawerList
+                } else {
+                    emptyList()
+                }
             android.util.Log.d("LogInActivity", "List Color: $listColor")
             Surface(
                 modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background)
+                color = MaterialTheme.colorScheme.background
+            )
             {
                 Scaffold(
                     topBar = {
-                        ListAppBar(activity = "EmptyTasksTaskActivity", this, listOfLists, listCode, listTitle, listColor)
+                        ListAppBar(
+                            activity = "EmptyTasksTaskActivity",
+                            this,
+                            listOfLists,
+                            listCode,
+                            listTitle,
+                            listColor
+                        )
                     }
                 ) {
                     Box(
