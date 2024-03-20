@@ -1,5 +1,6 @@
 package com.mjkj.listit.Composable
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Parcelable
@@ -17,9 +18,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +34,8 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.mjkj.listit.Activity.EmptyTasksTaskActivity
 import com.mjkj.listit.Activity.FilledTasksTaskActivity
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -111,6 +117,7 @@ fun ListItem(
     }
 }
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun TaskItem(
     title: String,
@@ -118,40 +125,21 @@ fun TaskItem(
     code: String,
     navDrawerList: List<List<String>>
 ) {
-    val firestore = Firebase.firestore
-    var isChecked by remember { mutableStateOf(false) } //Checkbox Status
 
+    val firestore = Firebase.firestore
+    val coroutineScope = rememberCoroutineScope()
+    var isChecked: Boolean by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        coroutineScope.launch {
+            isChecked = getTasksStatus(code)
+        }
+    }
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(5.dp)
             .clickable {
-                firestore
-                    .collection("lists")
-                    .document(code)
-                    .get()
-                    .addOnSuccessListener { document ->
-                        if (document.exists()) {
-                            Log.d(
-                                "FilledTasksTaskActivity",
-                                "List of codes: ${document.data!!.get("tasks")}"
-                            )
-
-                            if (document.data!!.get("tasks") == null) {
-                                val intent = Intent(context, EmptyTasksTaskActivity::class.java)
-                                intent.putExtra("listCode", code)
-                                intent.putExtra("listTitle", title)
-                                intent.putExtra("navDrawerList", ListItemData(navDrawerList))
-                                context.startActivity(intent)
-                            } else {
-                                val intent = Intent(context, FilledTasksTaskActivity::class.java)
-                                intent.putExtra("listCode", code)
-                                intent.putExtra("listTitle", title)
-                                intent.putExtra("navDrawerList", ListItemData(navDrawerList))
-                                context.startActivity(intent)
-                            }
-                        }
-                    }
+                //TODO: Go to task details
             }
             .background(
                 if (isChecked) Color.Green else Color.Red,
@@ -174,9 +162,17 @@ fun TaskItem(
             }
             Checkbox(
                 checked = isChecked,
-                onCheckedChange = { isChecked = it },
-                modifier = Modifier.align(Alignment.CenterVertically)
+                onCheckedChange = {
+                    isChecked = it
+                    firestore.collection("tasks").document(code).update("status", isChecked);
+                    },
+                modifier = Modifier.align(Alignment.CenterVertically),
             )
         }
     }
+}
+
+suspend fun getTasksStatus(code: String):Boolean{
+    val document = Firebase.firestore.collection("tasks").document(code).get().await()
+    return document.exists() && (document.data?.get("status") as Boolean ?: false)
 }
