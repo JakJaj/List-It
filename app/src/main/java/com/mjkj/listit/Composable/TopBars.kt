@@ -49,7 +49,8 @@ fun ListAppBar(
     "White" -> Color.White
     "Gray" -> Color.Gray
     else -> MaterialTheme.colorScheme.primary
-}
+    }
+
     val showDialog = remember {
         mutableStateOf(false)
     }
@@ -62,14 +63,16 @@ fun ListAppBar(
         CreateOrJoinDialog(onDismissRequest = { showDialog.value = false }, parentActivity)
     }
 
-    if ((activity == "ListsActivity" || activity == "ScrollListsActivity") && showNavDrawer.value) {
+    if ((activity == "ListsActivity" || activity == "ScrollListsActivity" || activity == "EmptyTasksTaskActivity" || activity == "FilledTasksTaskActivity") && showNavDrawer.value) {
         NavDrawer(parentActivity, listOfLists = listOfLists)
     }
-    if((activity == "TasksActivity") && showDialog.value){
+
+    if((activity == "EmptyTasksTaskActivity") && showDialog.value){
         if (inListCode != null) {
             CreateTaskDialog(onDismissRequest = {showDialog.value = false}, listCode = inListCode, parentActivity = parentActivity)
         }
     }
+
     Surface(
         modifier = Modifier.fillMaxWidth(),
         color = listColor ?: MaterialTheme.colorScheme.primary,

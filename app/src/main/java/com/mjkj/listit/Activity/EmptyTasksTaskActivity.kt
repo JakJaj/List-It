@@ -44,7 +44,7 @@ class EmptyTasksTaskActivity : ComponentActivity() {
             {
                 Scaffold(
                     topBar = {
-                        ListAppBar(activity = "ListsActivity", this, listOfLists, null, listTitle, listColor)
+                        ListAppBar(activity = "EmptyTasksTaskActivity", this, listOfLists, listCode, listTitle, listColor)
                     }
                 ) {
                     Box(

@@ -38,6 +38,9 @@
         <activity
             android:name=".Activity.EmptyTasksTaskActivity">
         </activity>
+        <activity
+            android:name=".Activity.FilledTasksTaskActivity">
+        </activity>
     </application>
 
 </manifest>

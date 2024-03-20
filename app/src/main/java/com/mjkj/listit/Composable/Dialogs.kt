@@ -31,6 +31,8 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import com.mjkj.listit.Activity.FilledListsListActivity
+import com.mjkj.listit.Activity.FilledTasksTaskActivity
+import com.mjkj.listit.Activity.MainActivity
 import com.mjkj.listit.Model.ListOfTasks
 import com.mjkj.listit.Model.Task
 import com.mjkj.listit.Model.User
@@ -104,6 +106,10 @@ fun CreateTaskDialog(onDismissRequest: () -> Unit,listCode:String, parentActivit
                                         //TODO: ODSWIEZENIE LISTY JESLI BYLY TASKI
 
                                         //TODO: PRZEJSCIE DO WIDOKU Z TASKAMI JESLI NIE BYLO TASKOW
+                                        val intent = Intent(parentActivity, FilledTasksTaskActivity::class.java)
+                                        ContextCompat.startActivity(parentActivity, intent, null)
+                                        parentActivity.finish()
+
 
                                     }
                                 }
