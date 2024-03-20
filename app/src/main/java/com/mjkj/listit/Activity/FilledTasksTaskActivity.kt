@@ -26,6 +26,7 @@ import com.google.firebase.ktx.Firebase
 import com.mjkj.listit.Composable.ListAppBar
 import com.mjkj.listit.Composable.ListItem
 import com.mjkj.listit.Composable.ListItemData
+import com.mjkj.listit.Composable.TaskItem
 import kotlinx.coroutines.launch
 
 @Suppress("DEPRECATION")
@@ -161,13 +162,11 @@ class FilledTasksTaskActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.height(100.dp))
                         LazyColumn {
                             items(listOfTasks.size) { i ->
-                                ListItem(
+                                TaskItem(
                                     title = listOfTasks[i][0],
-                                    description = listOfTasks[i][1],
-                                    color = listOfTasks[i][2],
                                     context = this@FilledTasksTaskActivity,
                                     code = listOfTasks[i][3],
-                                    listOfTasks
+                                    listOfLists
                                 )
                             }
                         }

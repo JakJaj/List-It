@@ -97,3 +97,52 @@ fun ListItem(
         }
     }
 }
+
+@Composable
+fun TaskItem(
+    title: String,
+    context: Context,
+    code: String,
+    navDrawerList: List<List<String>>
+) {
+    val firestore = Firebase.firestore
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(5.dp)
+            .clickable {
+                firestore.collection("lists").document(code)
+                    .get().addOnSuccessListener { document ->
+                        if (document.exists()) {
+
+                            Log.d("FilledTasksTaskActivity", "List of codes: ${document.data!!.get("tasks")}")
+
+                            if (document.data!!.get("tasks") == null) {
+                                val intent = Intent(context, EmptyTasksTaskActivity::class.java)
+                                intent.putExtra("listCode", code)
+                                intent.putExtra("listTitle", title)
+                                intent.putExtra("navDrawerList", ListItemData(navDrawerList))
+                                context.startActivity(intent)
+                            } else {
+                                val intent = Intent(context, FilledTasksTaskActivity::class.java)
+                                intent.putExtra("listCode", code)
+                                intent.putExtra("listTitle", title)
+                                intent.putExtra("navDrawerList", ListItemData(navDrawerList))
+                                context.startActivity(intent)
+                            }
+                        }
+                    }
+            }
+            .background(Color.Red, shape = RoundedCornerShape(8.dp))
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
+        ) {
+            Text(
+                text = title,
+                color = Color.Black,
+                fontSize = 25.sp
+            )
+        }
+    }
+}
