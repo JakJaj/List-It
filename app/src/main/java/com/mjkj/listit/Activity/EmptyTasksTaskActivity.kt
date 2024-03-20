@@ -19,16 +19,24 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mjkj.listit.Composable.ListAppBar
+import com.mjkj.listit.Composable.ListItemData
 
+@Suppress("DEPRECATION")
 class EmptyTasksTaskActivity : ComponentActivity() {
     @SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val listOfLists = mutableStateListOf<MutableList<String>>()
             val listCode: String = intent.getStringExtra("listCode").toString()
             val listColor: String = intent.getStringExtra("listColor").toString()
             val listTitle: String = intent.getStringExtra("listTitle").toString()
+
+            val listItemData: ListItemData? = intent.getParcelableExtra("lista")
+            val listOfLists: List<List<String>> = if (listColor != null && listTitle != null && listItemData != null) {
+                listItemData.lista
+            } else {
+                emptyList()
+            }
             android.util.Log.d("LogInActivity", "List Color: $listColor")
             Surface(
                 modifier = Modifier.fillMaxSize(),
@@ -36,15 +44,7 @@ class EmptyTasksTaskActivity : ComponentActivity() {
             {
                 Scaffold(
                     topBar = {
-                        ListAppBar(
-                            activity = "ListsActivity",
-                            this,
-                            listOfLists,
-                            null,
-                            listTitle,
-                            listColor,
-
-                        )
+                        ListAppBar(activity = "ListsActivity", this, listOfLists, null, listTitle, listColor)
                     }
                 ) {
                     Box(

@@ -2,6 +2,7 @@ package com.mjkj.listit.Composable
 
 import android.content.Context
 import android.content.Intent
+import android.os.Parcelable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -13,14 +14,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mjkj.listit.Activity.EmptyTasksTaskActivity
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+data class ListItemData(val lista: List<List<String>>) : Parcelable
 
 @Composable
-fun ListItem(title: String, description: String, color: String, context: Context, code:String) {
+fun ListItem(title: String, description: String, color: String, context: Context, code:String, lista: List<List<String>>) {
     val backgroundColor = when (color) {
         "Red" -> Color.Red
         "Blue" -> Color.Blue
@@ -41,6 +47,8 @@ fun ListItem(title: String, description: String, color: String, context: Context
                 intent.putExtra("listCode", code)
                 intent.putExtra("listColor", color)
                 intent.putExtra("listTitle", title)
+                intent.putExtra("lista", ListItemData(lista))
+
                 context.startActivity(intent)
             }
             .background(backgroundColor, shape = RoundedCornerShape(8.dp))

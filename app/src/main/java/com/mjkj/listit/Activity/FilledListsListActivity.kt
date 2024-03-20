@@ -38,6 +38,8 @@ class FilledListsListActivity : ComponentActivity() {
             val listOfCodes = mutableListOf<String>()
             val listOfLists = mutableStateListOf<MutableList<String>>()
             val coroutineScope = rememberCoroutineScope()
+            val typ = listOfLists::class
+            Log.d("W", "Typ listy $typ")
 
             LaunchedEffect(Unit) {
                 coroutineScope.launch {
@@ -138,7 +140,8 @@ class FilledListsListActivity : ComponentActivity() {
                                     description = listOfLists[i][1],
                                     color = listOfLists[i][2],
                                     context = this@FilledListsListActivity,
-                                    code = listOfLists[i][3]
+                                    code = listOfLists[i][3],
+                                    listOfLists
                                 )
                             }
                         }
