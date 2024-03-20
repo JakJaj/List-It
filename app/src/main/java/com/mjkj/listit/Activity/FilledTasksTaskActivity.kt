@@ -28,7 +28,7 @@ class FilledTasksTaskActivity : ComponentActivity() {
         setContent {
             val listOfCodes = mutableListOf<String>()
             val listOfTasks = mutableStateListOf<MutableList<String>>()
-
+            val listCode: String = intent.getStringExtra("listCode").toString()
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background
@@ -39,7 +39,7 @@ class FilledTasksTaskActivity : ComponentActivity() {
                             activity = "FilledTasksTaskActivity",
                             this,
                             listOfTasks,
-                            null,
+                            listCode,
                         )
                     }
                 ) {

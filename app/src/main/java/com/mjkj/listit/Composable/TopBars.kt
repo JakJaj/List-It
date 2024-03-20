@@ -71,7 +71,7 @@ fun ListAppBar(
         }
     }
 
-    if ((activity == "EmptyTasksTaskActivity") && showDialog.value) {
+    if ((activity == "EmptyTasksTaskActivity" || activity == "FilledTasksTaskActivity") && showDialog.value) {
         if (inListCode != null) {
             CreateTaskDialog(
                 onDismissRequest = { showDialog.value = false },

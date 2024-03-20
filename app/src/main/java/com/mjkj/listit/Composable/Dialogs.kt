@@ -85,10 +85,7 @@ fun CreateTaskDialog(onDismissRequest: () -> Unit,listCode:String, parentActivit
                                 "status" to task.getStatus()
                             )
 
-                            //TODO: Create a list in db
                             db.collection("tasks").document(task.getCode()).set(hashTask)
-
-                            //TODO: Add task to lists field tasks
 
                             db.collection("lists").document(listCode).get()
                                 .addOnSuccessListener { document ->
@@ -103,13 +100,10 @@ fun CreateTaskDialog(onDismissRequest: () -> Unit,listCode:String, parentActivit
                                             db.collection("lists").document(listCode).update("tasks", tempTasks)
                                         }
 
-                                        //TODO: ODSWIEZENIE LISTY JESLI BYLY TASKI
-
-                                        //TODO: PRZEJSCIE DO WIDOKU Z TASKAMI JESLI NIE BYLO TASKOW
                                         val intent = Intent(parentActivity, FilledTasksTaskActivity::class.java)
+                                        intent.putExtra("listCode", listCode)
                                         ContextCompat.startActivity(parentActivity, intent, null)
                                         parentActivity.finish()
-
 
                                     }
                                 }
