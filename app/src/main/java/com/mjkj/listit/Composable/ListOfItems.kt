@@ -1,6 +1,7 @@
 package com.mjkj.listit.Composable
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Parcelable
@@ -125,12 +126,13 @@ fun ListItem(
 @Composable
 fun TaskItem(
     title: String,
-    context: Context,
+    activity: Activity,
     code: String,
     navDrawerList: List<List<String>>
 ) {
 
     val firestore = Firebase.firestore
+    val showDialog = remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     var isChecked: Boolean by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
@@ -143,7 +145,7 @@ fun TaskItem(
             .fillMaxWidth()
             .padding(5.dp)
             .clickable {
-                //TODO: Go to task details
+                showDialog.value = true
             }
             .background(
                 if (isChecked) Color(0xFF004C3F) else Color(0xFFD91A60),
@@ -172,6 +174,9 @@ fun TaskItem(
                     },
                 modifier = Modifier.align(Alignment.CenterVertically),
             )
+        }
+        if(showDialog.value){
+            taskInfoDialog(onDismissRequest = {showDialog.value = false}, parentActivity = activity, taskCode = code)
         }
     }
 }
