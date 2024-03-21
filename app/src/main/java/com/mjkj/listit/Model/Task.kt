@@ -25,15 +25,18 @@ class Task(
 ) {
     companion object{
         /**
-         * Static function to create a task
+         * Static function to generate a task
          * @param taskName the name of the task
          * @param creator the creator of the task
          * @param description the description of the task
          * @return a new task
          */
-        fun createTask(taskName: String, creator: User, description: String?): Task{
+        fun generateTask(taskName: String, creator: User, description: String?): Task{
             val code = generateCode()
             return Task(code, taskName, description, creator)
+        }
+        fun createTask(code: String, taskName: String, description: String?, creator: User, status: Boolean): Task{
+            return Task(code, taskName, description, creator, status)
         }
         /**
          * Static function to generate a random code
