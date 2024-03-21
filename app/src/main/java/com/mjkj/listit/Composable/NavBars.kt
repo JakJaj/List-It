@@ -107,18 +107,20 @@ fun NavDrawerItem(
 ) {
     val backgroundColor = if (code == listCode) Color.LightGray else Color.Transparent
     val firestore = Firebase.firestore
-    val circleColor = remember {
-        when (color) {
-            "Red" -> Color.Red
-            "Blue" -> Color.Blue
-            "Green" -> Color.Green
-            "Yellow" -> Color.Yellow
-            "Cyan" -> Color.Cyan
-            "Pink" -> Color.Magenta
-            "White" -> Color.White
-            "Gray" -> Color.Gray
-            else -> Color.Transparent
-        }
+    val circleColor = when (color) {
+        "Red" -> Color(0xFFD91A60)
+        "Blue" -> Color(0xFF1862CA)
+        "Green" -> Color(0xFF1D893B)
+        "Yellow" -> Color(0xFFF6C022)
+        "Cyan" -> Color(0xFF139EAE)
+        "Pink" -> Color(0xFFE42591)
+        "Gray" -> Color(0xFF5F6367)
+        "Orange" -> Color(0xFFE87109)
+        "Purple" -> Color(0xFF8D32DD)
+        "Light Blue" -> Color(0xFF407FEA)
+        "Burgundy" -> Color(0xFF870E51)
+        "Dark Green" -> Color(0xFF004C3F)
+        else -> Color.Transparent
     }
 
     Box(
