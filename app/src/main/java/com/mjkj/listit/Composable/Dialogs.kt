@@ -143,7 +143,22 @@ fun taskInfoDialog(onDismissRequest: () -> Unit, parentActivity: Activity, taskC
                         horizontalArrangement = Arrangement.Center
                     ) {
                         ButtonFilled(label = "Delete") {
-
+                            firestore.collection("tasks").document(taskCode).delete()
+                            firestore.collection("lists").document(parentActivity.intent.getStringExtra("listCode")!!).get()
+                                .addOnSuccessListener { document ->
+                                    if (document != null) {
+                                        val tasks = document.data?.get("tasks") as MutableList<String>
+                                        tasks.remove(taskCode)
+                                        firestore.collection("lists").document(parentActivity.intent.getStringExtra("listCode")!!)
+                                            .update("tasks", tasks)
+                                    }
+                                }
+                            val intent = Intent(parentActivity, FilledTasksTaskActivity::class.java)
+                            intent.putExtra("listCode", parentActivity.intent.getStringExtra("listCode"))
+                            intent.putExtra("listColor", parentActivity.intent.getStringExtra("listColor"))
+                            intent.putExtra("listTitle", parentActivity.intent.getStringExtra("listTitle"))
+                            ContextCompat.startActivity(parentActivity, intent, null)
+                            parentActivity.finish()
                         }
                     }
                 }
