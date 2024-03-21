@@ -80,7 +80,8 @@ fun ListAppBar(
             CreateTaskDialog(
                 onDismissRequest = { showDialog.value = false },
                 listCode = inListCode,
-                parentActivity = parentActivity
+                parentActivity = parentActivity,
+                navDrawerList = listOfLists
             )
         }
     }

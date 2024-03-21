@@ -28,7 +28,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -36,13 +35,13 @@ import androidx.core.content.ContextCompat
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
+import com.mjkj.listit.Activity.EmptyTasksTaskActivity
 import com.mjkj.listit.Activity.FilledListsListActivity
 import com.mjkj.listit.Activity.FilledTasksTaskActivity
 import com.mjkj.listit.Model.ListOfTasks
 import com.mjkj.listit.Model.Task
 import com.mjkj.listit.Model.User
 import kotlinx.coroutines.launch
-import java.lang.Thread.sleep
 
 
 /** This is a composable function that creates a dialog box
@@ -51,12 +50,15 @@ import java.lang.Thread.sleep
  * @param parentActivity: Activity - The activity that called the dialog
  * */
 @Composable
-fun taskInfoDialog(onDismissRequest: () -> Unit, parentActivity: Activity, taskCode: String){
+fun taskInfoDialog(onDismissRequest: () -> Unit, parentActivity: Activity, taskCode: String, navDrawerList: List<List<String>>){
 
     val firestore = Firebase.firestore
     val content = remember { mutableStateOf(mutableListOf<String>()) }
     val loading = remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
+    val listCode = parentActivity.intent.getStringExtra("listCode")!!
+    val color = parentActivity.intent.getStringExtra("listColor")!!
+    val title = parentActivity.intent.getStringExtra("listTitle")!!
     LaunchedEffect(Unit) {
         coroutineScope.launch {
             firestore.collection("tasks").document(taskCode).get()
@@ -144,21 +146,46 @@ fun taskInfoDialog(onDismissRequest: () -> Unit, parentActivity: Activity, taskC
                     ) {
                         ButtonFilled(label = "Delete") {
                             firestore.collection("tasks").document(taskCode).delete()
-                            firestore.collection("lists").document(parentActivity.intent.getStringExtra("listCode")!!).get()
+                            firestore.collection("lists").document(listCode).get()
                                 .addOnSuccessListener { document ->
                                     if (document != null) {
                                         val tasks = document.data?.get("tasks") as MutableList<String>
                                         tasks.remove(taskCode)
-                                        firestore.collection("lists").document(parentActivity.intent.getStringExtra("listCode")!!)
+                                        firestore.collection("lists").document(listCode)
                                             .update("tasks", tasks)
+
+                                        firestore
+                                            .collection("lists")
+                                            .document(listCode)
+                                            .get()
+                                            .addOnSuccessListener { document ->
+                                                if (document.exists()) {
+
+                                                    Log.d(
+                                                        "FilledTasksTaskActivity",
+                                                        "List of codes: ${document.data!!.get("tasks")} tutaj"
+                                                    )
+                                                    if (document.data!!.get("tasks") == null || (document.data!!.get("tasks") as MutableList<String>).isEmpty() ){
+                                                        val intent = Intent(parentActivity, EmptyTasksTaskActivity::class.java)
+                                                        intent.putExtra("listCode", listCode)
+                                                        intent.putExtra("listColor", color)
+                                                        intent.putExtra("listTitle", title)
+                                                        intent.putExtra("navDrawerList", ListItemData(navDrawerList))
+                                                        parentActivity.startActivity(intent)
+                                                    } else {
+                                                        val intent = Intent(parentActivity, FilledTasksTaskActivity::class.java)
+                                                        intent.putExtra("listCode", listCode)
+                                                        intent.putExtra("listColor", color)
+                                                        intent.putExtra("listTitle", title)
+                                                        intent.putExtra("navDrawerList", ListItemData(navDrawerList))
+                                                        parentActivity.startActivity(intent)
+                                                    }
+                                                }
+                                            }
                                     }
                                 }
-                            val intent = Intent(parentActivity, FilledTasksTaskActivity::class.java)
-                            intent.putExtra("listCode", parentActivity.intent.getStringExtra("listCode"))
-                            intent.putExtra("listColor", parentActivity.intent.getStringExtra("listColor"))
-                            intent.putExtra("listTitle", parentActivity.intent.getStringExtra("listTitle"))
-                            ContextCompat.startActivity(parentActivity, intent, null)
-                            parentActivity.finish()
+
+
                         }
                     }
                 }
@@ -178,7 +205,7 @@ fun taskInfoDialog(onDismissRequest: () -> Unit, parentActivity: Activity, taskC
          * @param onDismissRequest: () -> Unit - The action to be performed when the dialog is dismissed
          * @param parentActivity: Activity - The activity that called the dialog
          * */
-fun CreateTaskDialog(onDismissRequest: () -> Unit,listCode:String, parentActivity: Activity){
+fun CreateTaskDialog(onDismissRequest: () -> Unit,listCode:String, parentActivity: Activity, navDrawerList: List<List<String>>){
     val db = Firebase.firestore
     Dialog(onDismissRequest ={ onDismissRequest() }){
         Card(
@@ -257,6 +284,9 @@ fun CreateTaskDialog(onDismissRequest: () -> Unit,listCode:String, parentActivit
                                                 FilledTasksTaskActivity::class.java
                                             )
                                             intent.putExtra("listCode", listCode)
+                                            intent.putExtra("listColor", parentActivity.intent.getStringExtra("listColor"))
+                                            intent.putExtra("listTitle", parentActivity.intent.getStringExtra("listTitle"))
+                                            intent.putExtra("navDrawerList", ListItemData(navDrawerList))
                                             ContextCompat.startActivity(
                                                 parentActivity,
                                                 intent,

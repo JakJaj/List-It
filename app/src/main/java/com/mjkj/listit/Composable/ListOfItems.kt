@@ -84,7 +84,7 @@ fun ListItem(
                                 "List of codes: ${document.data!!.get("tasks")}"
                             )
 
-                            if (document.data!!.get("tasks") == null) {
+                            if (document.data!!.get("tasks") == null || (document.data!!.get("tasks") as MutableList<String>).isEmpty() ){
                                 val intent = Intent(context, EmptyTasksTaskActivity::class.java)
                                 intent.putExtra("listCode", code)
                                 intent.putExtra("listColor", color)
@@ -176,7 +176,7 @@ fun TaskItem(
             )
         }
         if(showDialog.value){
-            taskInfoDialog(onDismissRequest = {showDialog.value = false}, parentActivity = activity, taskCode = code)
+            taskInfoDialog(onDismissRequest = {showDialog.value = false}, parentActivity = activity, taskCode = code, navDrawerList = navDrawerList)
         }
     }
 }
