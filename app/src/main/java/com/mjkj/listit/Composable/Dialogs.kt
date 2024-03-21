@@ -45,11 +45,11 @@ import kotlinx.coroutines.launch
 import java.lang.Thread.sleep
 
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    taskInfoDialog(onDismissRequest = {}, parentActivity = FilledTasksTaskActivity(), taskCode = "123456")
-}
+/** This is a composable function that creates a dialog box
+ *
+ * @param onDismissRequest: () -> Unit - The action to be performed when the dialog is dismissed
+ * @param parentActivity: Activity - The activity that called the dialog
+ * */
 @Composable
 fun taskInfoDialog(onDismissRequest: () -> Unit, parentActivity: Activity, taskCode: String){
 
