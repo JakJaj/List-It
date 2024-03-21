@@ -13,34 +13,201 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
+import com.mjkj.listit.Activity.EmptyTasksTaskActivity
 import com.mjkj.listit.Activity.FilledListsListActivity
 import com.mjkj.listit.Activity.FilledTasksTaskActivity
-import com.mjkj.listit.Activity.MainActivity
 import com.mjkj.listit.Model.ListOfTasks
 import com.mjkj.listit.Model.Task
 import com.mjkj.listit.Model.User
+import kotlinx.coroutines.launch
+
+
+/** This is a composable function that creates a dialog box
+ *
+ * @param onDismissRequest: () -> Unit - The action to be performed when the dialog is dismissed
+ * @param parentActivity: Activity - The activity that called the dialog
+ * */
+@Composable
+fun taskInfoDialog(onDismissRequest: () -> Unit, parentActivity: Activity, taskCode: String, navDrawerList: List<List<String>>){
+
+    val firestore = Firebase.firestore
+    val content = remember { mutableStateOf(mutableListOf<String>()) }
+    val loading = remember { mutableStateOf(true) }
+    val coroutineScope = rememberCoroutineScope()
+    val listCode = parentActivity.intent.getStringExtra("listCode")!!
+    val color = parentActivity.intent.getStringExtra("listColor")!!
+    val title = parentActivity.intent.getStringExtra("listTitle")!!
+    LaunchedEffect(Unit) {
+        coroutineScope.launch {
+            firestore.collection("tasks").document(taskCode).get()
+                .addOnSuccessListener { document ->
+                    Log.d("D", "Document: ${document.data}")
+                    val taskName = document.data?.get("taskName") as String
+                    val description = document.data?.get("description") as String
+                    val status = document.data?.get("status") as Boolean
+                    val creator = document.data?.get("creator") as String
+                    Log.d(
+                        "D",
+                        "TaskName: $taskName description: $description status: $status creator: $creator"
+                    )
+                    firestore.collection("users").document(creator).get()
+                        .addOnSuccessListener { documentUser ->
+                            val creatorName = documentUser.data?.get("username") as String
+                            val tempList = mutableListOf(
+                                taskName,
+                                if (description == "") "No description provided" else description,
+                                if (status) "Done" else "Ongoing",
+                                creatorName
+                            )
+                            Log.d("D", "TempListOfTasks: $tempList")
+                            content.value = tempList
+                            Log.d("D", "Content: $content")
+                            loading.value = false
+                        }
+                        .addOnFailureListener() {
+                            Log.d("D", "Error: ${it.message}")
+                        }
+                }
+                .addOnFailureListener() {
+                    Log.d("D", "Error: ${it.message}")
+                }
+        }
+    }
+    if(loading.value){
+        CircularProgressIndicator()
+    }
+    else {
+        Dialog(onDismissRequest = { onDismissRequest() }) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(650.dp)
+                    .padding(16.dp),
+                shape = RoundedCornerShape(16.dp),
+            ) {
+                Spacer(modifier = Modifier.padding(10.dp))
+                Column(
+                    modifier = Modifier.padding(10.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Spacer(modifier = Modifier.padding(5.dp))
+                    Text(text = "Task Information", fontSize = 25.sp)
+                    Spacer(modifier = Modifier.padding(15.dp))
+
+                    Text(text = "Task Name: ", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text(text = content.value[0], fontSize = 20.sp)
+                    Spacer(modifier = Modifier.padding(15.dp))
+
+                    Text(
+                        text = "Task Description: ",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(text = content.value[1], fontSize = 20.sp)
+                    Spacer(modifier = Modifier.padding(15.dp))
+
+                    Text(text = "Task Status: ", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text(text = content.value[2], fontSize = 20.sp)
+                    Spacer(modifier = Modifier.padding(15.dp))
+
+                    Text(text = "Task Creator: ", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text(text = content.value[3], fontSize = 20.sp)
+                    Spacer(modifier = Modifier.padding(15.dp))
+
+                    HorizontalDivider(modifier = Modifier.height(5.dp))
+                    Spacer(modifier = Modifier.padding(10.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.Bottom,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        ButtonFilled(label = "Delete") {
+                            firestore.collection("tasks").document(taskCode).delete()
+                            firestore.collection("lists").document(listCode).get()
+                                .addOnSuccessListener { document ->
+                                    if (document != null) {
+                                        val tasks = document.data?.get("tasks") as MutableList<String>
+                                        tasks.remove(taskCode)
+                                        firestore.collection("lists").document(listCode)
+                                            .update("tasks", tasks)
+
+                                        firestore
+                                            .collection("lists")
+                                            .document(listCode)
+                                            .get()
+                                            .addOnSuccessListener { document ->
+                                                if (document.exists()) {
+
+                                                    Log.d(
+                                                        "FilledTasksTaskActivity",
+                                                        "List of codes: ${document.data!!.get("tasks")} tutaj"
+                                                    )
+                                                    if (document.data!!.get("tasks") == null || (document.data!!.get("tasks") as MutableList<String>).isEmpty() ){
+                                                        val intent = Intent(parentActivity, EmptyTasksTaskActivity::class.java)
+                                                        intent.putExtra("listCode", listCode)
+                                                        intent.putExtra("listColor", color)
+                                                        intent.putExtra("listTitle", title)
+                                                        intent.putExtra("navDrawerList", ListItemData(navDrawerList))
+                                                        parentActivity.startActivity(intent)
+                                                    } else {
+                                                        val intent = Intent(parentActivity, FilledTasksTaskActivity::class.java)
+                                                        intent.putExtra("listCode", listCode)
+                                                        intent.putExtra("listColor", color)
+                                                        intent.putExtra("listTitle", title)
+                                                        intent.putExtra("navDrawerList", ListItemData(navDrawerList))
+                                                        parentActivity.startActivity(intent)
+                                                    }
+                                                }
+                                            }
+                                    }
+                                }
+
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 @Composable
-fun CreateTaskDialog(onDismissRequest: () -> Unit,listCode:String, parentActivity: Activity){
+        /** This is a composable function that creates a dialog box
+         *
+         * @param onDismissRequest: () -> Unit - The action to be performed when the dialog is dismissed
+         * @param parentActivity: Activity - The activity that called the dialog
+         * */
+/** This is a composable function that creates a dialog box
+         *
+         * @param onDismissRequest: () -> Unit - The action to be performed when the dialog is dismissed
+         * @param parentActivity: Activity - The activity that called the dialog
+         * */
+fun CreateTaskDialog(onDismissRequest: () -> Unit,listCode:String, parentActivity: Activity, navDrawerList: List<List<String>>){
     val db = Firebase.firestore
-    androidx.compose.ui.window.Dialog(onDismissRequest ={ onDismissRequest() }){
+    Dialog(onDismissRequest ={ onDismissRequest() }){
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -59,7 +226,7 @@ fun CreateTaskDialog(onDismissRequest: () -> Unit,listCode:String, parentActivit
                 Spacer(modifier = Modifier.padding(20.dp))
                 val taskName: String = OutlinedTextField("Task Name (Required)")
                 Spacer(modifier = Modifier.padding(5.dp))
-                val taskDescription: String = OutlinedTextField("Task Description")
+                val taskDescription: String = OutlinedTextField("Task Description max 180 characters")
                 Spacer(modifier = Modifier.padding(15.dp))
                 HorizontalDivider(modifier = Modifier.height(5.dp))
                 Spacer(modifier = Modifier.padding(10.dp))
@@ -69,49 +236,81 @@ fun CreateTaskDialog(onDismissRequest: () -> Unit,listCode:String, parentActivit
                     Log.d("D", "TaskDescription: $taskDescription")
 
                     if (taskName != "") {
-                        val user = User.createUser(
-                            Firebase.auth.currentUser?.uid,
-                            Firebase.auth.currentUser?.displayName.toString(),
-                            Firebase.auth.currentUser?.email.toString()
-                        )
-                        val task = Task.createTask(taskName, user, taskDescription)
-                        if(task.getTaskName() != ""){
-                            Log.d("D", "User: $user id: ${user.getId()} name: ${user.getName()} email: ${user.getEmail()} lists: ${user.getLists()}")
-                            Log.d("D", "Task: ${task.getTaskName()} creator: ${task.getCreator()?.getName()} description: ${task.getDescription()} status: ${task.getStatus()}")
-                            val hashTask = hashMapOf(
-                                "taskName" to taskName,
-                                "description" to taskDescription,
-                                "creator" to user.getId(),
-                                "status" to task.getStatus()
+                        if (taskDescription.length <= 180) {
+                            val user = User.createUser(
+                                Firebase.auth.currentUser?.uid,
+                                Firebase.auth.currentUser?.displayName.toString(),
+                                Firebase.auth.currentUser?.email.toString()
                             )
+                            val task = Task.generateTask(taskName, user, taskDescription)
+                            if (task.getTaskName() != "") {
+                                Log.d(
+                                    "D",
+                                    "User: $user id: ${user.getId()} name: ${user.getName()} email: ${user.getEmail()} lists: ${user.getLists()}"
+                                )
+                                Log.d(
+                                    "D",
+                                    "Task: ${task.getTaskName()} creator: ${
+                                        task.getCreator()?.getName()
+                                    } description: ${task.getDescription()} status: ${task.getStatus()}"
+                                )
+                                val hashTask = hashMapOf(
+                                    "taskName" to taskName,
+                                    "description" to taskDescription,
+                                    "creator" to user.getId(),
+                                    "status" to task.getStatus()
+                                )
 
-                            db.collection("tasks").document(task.getCode()).set(hashTask)
+                                db.collection("tasks").document(task.getCode()).set(hashTask)
 
-                            db.collection("lists").document(listCode).get()
-                                .addOnSuccessListener { document ->
-                                    if (document != null) {
-                                        val tasks = document.data?.get("tasks")
-                                        if (tasks == null) {
-                                            val tempTasks = mutableListOf(task.getCode())
-                                            db.collection("lists").document(listCode).update("tasks", tempTasks)
-                                        } else {
-                                            val tempTasks = document.data?.get("tasks") as MutableList<String>
-                                            tempTasks.add(task.getCode())
-                                            db.collection("lists").document(listCode).update("tasks", tempTasks)
+                                db.collection("lists").document(listCode).get()
+                                    .addOnSuccessListener { document ->
+                                        if (document != null) {
+                                            val tasks = document.data?.get("tasks")
+                                            if (tasks == null) {
+                                                val tempTasks = mutableListOf(task.getCode())
+                                                db.collection("lists").document(listCode)
+                                                    .update("tasks", tempTasks)
+                                            } else {
+                                                val tempTasks =
+                                                    document.data?.get("tasks") as MutableList<String>
+                                                tempTasks.add(task.getCode())
+                                                db.collection("lists").document(listCode)
+                                                    .update("tasks", tempTasks)
+                                            }
+
+                                            val intent = Intent(
+                                                parentActivity,
+                                                FilledTasksTaskActivity::class.java
+                                            )
+                                            intent.putExtra("listCode", listCode)
+                                            intent.putExtra("listColor", parentActivity.intent.getStringExtra("listColor"))
+                                            intent.putExtra("listTitle", parentActivity.intent.getStringExtra("listTitle"))
+                                            intent.putExtra("navDrawerList", ListItemData(navDrawerList))
+                                            ContextCompat.startActivity(
+                                                parentActivity,
+                                                intent,
+                                                null
+                                            )
+                                            parentActivity.finish()
+
                                         }
-
-                                        val intent = Intent(parentActivity, FilledTasksTaskActivity::class.java)
-                                        intent.putExtra("listCode", listCode)
-                                        ContextCompat.startActivity(parentActivity, intent, null)
-                                        parentActivity.finish()
-
                                     }
-                                }
+                            } else {
+                                Toast.makeText(
+                                    parentActivity,
+                                    "List name is required",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
                         else{
-                            Toast.makeText(parentActivity, "List name is required", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(parentActivity, "Task description is too long", Toast.LENGTH_SHORT).show()
                         }
                     }
+                    else{
+                        Toast.makeText(parentActivity, "Task name is required", Toast.LENGTH_SHORT).show()
+                        }
                 }
             }
         }
@@ -122,10 +321,14 @@ fun CreateTaskDialog(onDismissRequest: () -> Unit,listCode:String, parentActivit
          *
          * @param onDismissRequest: () -> Unit - The action to be performed when the dialog is dismissed
          * */
+        /** This is a composable function that creates a dialog box
+         *
+         * @param onDismissRequest: () -> Unit - The action to be performed when the dialog is dismissed
+         * */
 fun CreateOrJoinDialog(onDismissRequest: () -> Unit, parentActivity: Activity) {
     var showCreateListContent by remember { mutableStateOf(false) }
 
-    androidx.compose.ui.window.Dialog(onDismissRequest = { onDismissRequest() }) {
+    Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -162,6 +365,9 @@ fun CreateOrJoinDialog(onDismissRequest: () -> Unit, parentActivity: Activity) {
 }
 
 @Composable
+        /** This is a composable function that joins to an existing a new list
+         *
+         * */
         /** This is a composable function that joins to an existing a new list
          *
          * */
@@ -241,6 +447,9 @@ fun JoinListContent(parentActivity: Activity){
 }
 
 @Composable
+        /** This is a composable function that creates submenu for creating a new list
+         *
+         * */
         /** This is a composable function that creates submenu for creating a new list
          *
          * */

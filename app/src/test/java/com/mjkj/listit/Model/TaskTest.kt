@@ -1,6 +1,5 @@
 package com.mjkj.listit.Model
 
-import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
@@ -9,11 +8,11 @@ import org.junit.Test
 class TaskTest {
 
     @Test
-    fun createTaskTest() {
+    fun generateTaskTest() {
         //Arrange
         val user = User.createUser("testUser", "user@test.com", "test123")
         //Act
-        val task = Task.createTask("testTask", user, "testDescription")
+        val task = Task.generateTask("testTask", user, "testDescription")
         //Assert
         assertNotNull(task)
         assertEquals(task.getTaskName(), "testTask")

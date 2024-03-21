@@ -62,7 +62,7 @@ class ListOfTasksTest {
         //Arrange
         val creator = User("creator", "creator@test.com", "123456789", null)
         val testList = ListOfTasks.createList("testList", creator, "#FFFFFFFF", "testDescription")
-        val task = Task.createTask("testTask", creator, "testDescription")
+        val task = Task.generateTask("testTask", creator, "testDescription")
         //Act
         testList.addTask(task)
         //Assert

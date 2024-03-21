@@ -164,7 +164,7 @@ class FilledTasksTaskActivity : ComponentActivity() {
                             items(listOfTasks.size) { i ->
                                 TaskItem(
                                     title = listOfTasks[i][0],
-                                    context = this@FilledTasksTaskActivity,
+                                    activity = this@FilledTasksTaskActivity,
                                     code = listOfTasks[i][3],
                                     listOfLists,
 
