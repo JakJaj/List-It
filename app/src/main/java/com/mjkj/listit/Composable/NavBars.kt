@@ -37,6 +37,7 @@ import com.google.firebase.firestore.firestore
 import com.mjkj.listit.Activity.EmptyTasksTaskActivity
 import com.mjkj.listit.Activity.FilledTasksTaskActivity
 import com.mjkj.listit.Activity.MainActivity
+import com.mjkj.listit.Activity.SettingsActivity
 
 
 @Composable
@@ -75,6 +76,8 @@ fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>, listCod
             ) {
                 ButtonTonalFilled(label = "Settings") {
                     //TODO: Implement settings
+                    val intent = Intent(parentActivity, SettingsActivity::class.java)
+                    ContextCompat.startActivity(parentActivity, intent, null)
                 }
             }
             Box(

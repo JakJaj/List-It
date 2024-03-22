@@ -41,6 +41,9 @@
         <activity
             android:name=".Activity.FilledTasksTaskActivity">
         </activity>
+        <activity
+            android:name=".Activity.SettingsActivity">
+        </activity>
     </application>
 
 </manifest>
