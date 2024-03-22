@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mjkj.listit.Composable.ListAppBar
 import com.mjkj.listit.Composable.ListItemData
+import com.mjkj.listit.ui.theme.AppTheme
 
 @Suppress("DEPRECATION")
 class EmptyTasksTaskActivity : ComponentActivity() {
@@ -38,34 +39,36 @@ class EmptyTasksTaskActivity : ComponentActivity() {
                     emptyList()
                 }
             android.util.Log.d("LogInActivity", "List Color: $listColor")
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
-            )
-            {
-                Scaffold(
-                    topBar = {
-                        ListAppBar(
-                            activity = "EmptyTasksTaskActivity",
-                            this,
-                            listOfLists,
-                            listCode,
-                            listTitle,
-                            listColor
-                        )
-                    }
-                ) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
+            AppTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                )
+                {
+                    Scaffold(
+                        topBar = {
+                            ListAppBar(
+                                activity = "EmptyTasksTaskActivity",
+                                this,
+                                listOfLists,
+                                listCode,
+                                listTitle,
+                                listColor
+                            )
+                        }
                     ) {
-                        Text(
-                            text = "Press the + to create a new task",
-                            textAlign = TextAlign.Center,
-                            color = Color.Gray,
-                            fontSize = 25.sp,
-                            modifier = Modifier.padding(15.dp)
-                        )
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "Press the + to create a new task",
+                                textAlign = TextAlign.Center,
+                                color = Color.Gray,
+                                fontSize = 25.sp,
+                                modifier = Modifier.padding(15.dp)
+                            )
+                        }
                     }
                 }
             }

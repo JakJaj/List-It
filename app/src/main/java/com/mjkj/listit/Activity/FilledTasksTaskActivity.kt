@@ -27,6 +27,7 @@ import com.mjkj.listit.Composable.ListAppBar
 import com.mjkj.listit.Composable.ListItem
 import com.mjkj.listit.Composable.ListItemData
 import com.mjkj.listit.Composable.TaskItem
+import com.mjkj.listit.ui.theme.AppTheme
 import kotlinx.coroutines.launch
 
 @Suppress("DEPRECATION")
@@ -137,38 +138,40 @@ class FilledTasksTaskActivity : ComponentActivity() {
                     }
                 }
             }
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
-            ) {
-                Scaffold(
-                    topBar = {
-                        ListAppBar(
-                            activity = "FilledTasksTaskActivity",
-                            this,
-                            listOfLists,
-                            listCode,
-                            listTitle,
-                            listColor
-                        )
-                    }
+            AppTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(10.dp),
-                        verticalArrangement = Arrangement.Top,
+                    Scaffold(
+                        topBar = {
+                            ListAppBar(
+                                activity = "FilledTasksTaskActivity",
+                                this,
+                                listOfLists,
+                                listCode,
+                                listTitle,
+                                listColor
+                            )
+                        }
                     ) {
-                        Spacer(modifier = Modifier.height(100.dp))
-                        LazyColumn {
-                            items(listOfTasks.size) { i ->
-                                TaskItem(
-                                    title = listOfTasks[i][0],
-                                    activity = this@FilledTasksTaskActivity,
-                                    code = listOfTasks[i][3],
-                                    listOfLists,
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(10.dp),
+                            verticalArrangement = Arrangement.Top,
+                        ) {
+                            Spacer(modifier = Modifier.height(100.dp))
+                            LazyColumn {
+                                items(listOfTasks.size) { i ->
+                                    TaskItem(
+                                        title = listOfTasks[i][0],
+                                        activity = this@FilledTasksTaskActivity,
+                                        code = listOfTasks[i][3],
+                                        listOfLists,
 
-                                )
+                                        )
+                                }
                             }
                         }
                     }

@@ -16,88 +16,91 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mjkj.listit.Composable.ButtonTonalFilled
 import com.mjkj.listit.Composable.OutlinedPasswordTextField
+import com.mjkj.listit.ui.theme.AppTheme
 
 class SettingsActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
-            ) {
-                Column(
+            AppTheme {
+                Surface(
                     modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                    color = MaterialTheme.colorScheme.background
                 ) {
-                    Spacer(modifier = Modifier.padding(20.dp))
-
-                    Text(
-                        text = "Application Settings",
-                        style = MaterialTheme.typography.displayLarge,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontSize = 40.sp
-                    )
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(16.dp)
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
+                        Spacer(modifier = Modifier.padding(20.dp))
+
                         Text(
-                            text = "Push Notifications",
-                            color = MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier.weight(1f)
+                            text = "Application Settings",
+                            style = MaterialTheme.typography.displayLarge,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = 40.sp
                         )
-                        var checked by remember { mutableStateOf(true)}
-                        Switch(
-                            checked = checked,
-                            onCheckedChange = {
-                                checked = it
-                            }
-                        )
-                    }
 
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(16.dp)
-                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            Text(
+                                text = "Push Notifications",
+                                color = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier.weight(1f)
+                            )
+                            var checked by remember { mutableStateOf(true) }
+                            Switch(
+                                checked = checked,
+                                onCheckedChange = {
+                                    checked = it
+                                }
+                            )
+                        }
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            Text(
+                                text = "App theme",
+                                color = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier.weight(1f)
+                            )
+                            var checked by remember { mutableStateOf(true) }
+                            Switch(
+                                checked = checked,
+                                onCheckedChange = {
+                                    checked = it
+                                }
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.padding(10.dp))
+
+                        HorizontalDivider()
+
+                        Spacer(modifier = Modifier.padding(10.dp))
+
                         Text(
-                            text = "App theme",
-                            color = MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier.weight(1f)
+                            text = "Reset Password",
+                            style = MaterialTheme.typography.displayLarge,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = 40.sp
                         )
-                        var checked by remember { mutableStateOf(true)}
-                        Switch(
-                            checked = checked,
-                            onCheckedChange = {
-                                checked = it
-                            }
-                        )
-                    }
 
-                    Spacer(modifier = Modifier.padding(10.dp))
+                        val email: String = OutlinedPasswordTextField("Current Password")
+                        Spacer(modifier = Modifier.padding(10.dp))
+                        val password: String = OutlinedPasswordTextField("New Password")
+                        Spacer(modifier = Modifier.padding(10.dp))
+                        val retypedPassword = OutlinedPasswordTextField("Retype New Password")
 
-                    HorizontalDivider()
+                        Spacer(modifier = Modifier.padding(20.dp))
 
-                    Spacer(modifier = Modifier.padding(10.dp))
-
-                    Text(
-                        text = "Reset Password",
-                        style = MaterialTheme.typography.displayLarge,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontSize = 40.sp
-                    )
-
-                    val email: String = OutlinedPasswordTextField("Current Password")
-                    Spacer(modifier = Modifier.padding(10.dp))
-                    val password: String = OutlinedPasswordTextField("New Password")
-                    Spacer(modifier = Modifier.padding(10.dp))
-                    val retypedPassword = OutlinedPasswordTextField("Retype New Password")
-
-                    Spacer(modifier = Modifier.padding(20.dp))
-
-                    ButtonTonalFilled(label = "Confirm") {
-                        // TODO: Implement password reset functionality
+                        ButtonTonalFilled(label = "Confirm") {
+                            // TODO: Implement password reset functionality
+                        }
                     }
                 }
             }

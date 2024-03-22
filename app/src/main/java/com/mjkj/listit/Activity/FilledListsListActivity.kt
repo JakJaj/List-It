@@ -25,6 +25,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mjkj.listit.Composable.ListAppBar
 import com.mjkj.listit.Composable.ListItem
+import com.mjkj.listit.ui.theme.AppTheme
 import kotlinx.coroutines.launch
 
 class FilledListsListActivity : ComponentActivity() {
@@ -112,37 +113,39 @@ class FilledListsListActivity : ComponentActivity() {
                 }
 
             }
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
-            ) {
-                Scaffold(
-                    topBar = {
-                        ListAppBar(
-                            activity = "FilledListsListActivity",
-                            this,
-                            listOfLists,
-                            null,
-                        )
-                    }
+            AppTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(10.dp),
-                        verticalArrangement = Arrangement.Top,
+                    Scaffold(
+                        topBar = {
+                            ListAppBar(
+                                activity = "FilledListsListActivity",
+                                this,
+                                listOfLists,
+                                null,
+                            )
+                        }
                     ) {
-                        Spacer(modifier = Modifier.height(100.dp))
-                        LazyColumn {
-                            items(listOfLists.size) { i ->
-                                ListItem(
-                                    title = listOfLists[i][0],
-                                    description = listOfLists[i][1],
-                                    color = listOfLists[i][2],
-                                    context = this@FilledListsListActivity,
-                                    code = listOfLists[i][3],
-                                    listOfLists
-                                )
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(10.dp),
+                            verticalArrangement = Arrangement.Top,
+                        ) {
+                            Spacer(modifier = Modifier.height(100.dp))
+                            LazyColumn {
+                                items(listOfLists.size) { i ->
+                                    ListItem(
+                                        title = listOfLists[i][0],
+                                        description = listOfLists[i][1],
+                                        color = listOfLists[i][2],
+                                        context = this@FilledListsListActivity,
+                                        code = listOfLists[i][3],
+                                        listOfLists
+                                    )
+                                }
                             }
                         }
                     }

@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mjkj.listit.Composable.ButtonFilled
 import com.mjkj.listit.Composable.ButtonTonalFilled
+import com.mjkj.listit.ui.theme.AppTheme
 
 class MainActivity : ComponentActivity() {
 
@@ -27,38 +28,39 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
-            ) {
-                Column(
+            AppTheme {
+                Surface(
                     modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    color = MaterialTheme.colorScheme.background
                 ) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
 
-                    Text(
-                        text = "List It",
-                        style = MaterialTheme.typography.displayLarge,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontSize = 120.sp
-                    )
+                        Text(
+                            text = "List It",
+                            style = MaterialTheme.typography.displayLarge,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = 120.sp
+                        )
 
-                    Spacer(modifier = Modifier.padding(100.dp))
+                        Spacer(modifier = Modifier.padding(100.dp))
 
-                    ButtonFilled("Log in") {
-                        val intent = Intent(this@MainActivity, LogInActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    }
+                        ButtonFilled("Log in") {
+                            val intent = Intent(this@MainActivity, LogInActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
 
-                    Spacer(modifier = Modifier.padding(5.dp))
+                        Spacer(modifier = Modifier.padding(5.dp))
 
-                    ButtonTonalFilled("Register") {
-                        val intent = Intent(this@MainActivity, SignUpActivity::class.java)
-                        startActivity(intent)
-                        finish()
+                        ButtonTonalFilled("Register") {
+                            val intent = Intent(this@MainActivity, SignUpActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
                     }
                 }
             }
