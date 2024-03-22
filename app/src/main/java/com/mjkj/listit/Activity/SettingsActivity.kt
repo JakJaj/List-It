@@ -4,18 +4,18 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mjkj.listit.Composable.ButtonTonalFilled
+import com.mjkj.listit.Composable.OutlinedPasswordTextField
 
 class SettingsActivity : ComponentActivity() {
 
@@ -29,22 +29,76 @@ class SettingsActivity : ComponentActivity() {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
                 ) {
+                    Spacer(modifier = Modifier.padding(20.dp))
 
                     Text(
-                        text = "List It",
+                        text = "Application Settings",
                         style = MaterialTheme.typography.displayLarge,
                         color = MaterialTheme.colorScheme.primary,
-                        fontSize = 120.sp
+                        fontSize = 40.sp
                     )
 
-                    Spacer(modifier = Modifier.padding(100.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text(
+                            text = "Push Notifications",
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.weight(1f)
+                        )
+                        var checked by remember { mutableStateOf(true)}
+                        Switch(
+                            checked = checked,
+                            onCheckedChange = {
+                                checked = it
+                            }
+                        )
+                    }
 
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text(
+                            text = "App theme",
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.weight(1f)
+                        )
+                        var checked by remember { mutableStateOf(true)}
+                        Switch(
+                            checked = checked,
+                            onCheckedChange = {
+                                checked = it
+                            }
+                        )
+                    }
 
-                    Spacer(modifier = Modifier.padding(5.dp))
+                    Spacer(modifier = Modifier.padding(10.dp))
 
+                    HorizontalDivider()
 
+                    Spacer(modifier = Modifier.padding(10.dp))
+
+                    Text(
+                        text = "Reset Password",
+                        style = MaterialTheme.typography.displayLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = 40.sp
+                    )
+
+                    val email: String = OutlinedPasswordTextField("Current Password")
+                    Spacer(modifier = Modifier.padding(10.dp))
+                    val password: String = OutlinedPasswordTextField("New Password")
+                    Spacer(modifier = Modifier.padding(10.dp))
+                    val retypedPassword = OutlinedPasswordTextField("Retype New Password")
+
+                    Spacer(modifier = Modifier.padding(20.dp))
+
+                    ButtonTonalFilled(label = "Confirm") {
+                        // TODO: Implement password reset functionality
+                    }
                 }
             }
         }
