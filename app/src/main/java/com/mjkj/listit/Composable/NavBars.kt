@@ -76,8 +76,6 @@ fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>, listCod
             ) {
                 ButtonTonalFilled(label = "Settings") {
                     //TODO: Implement settings
-                    val intent = Intent(parentActivity, SettingsActivity::class.java)
-                    ContextCompat.startActivity(parentActivity, intent, null)
                 }
             }
             Box(

@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -121,6 +123,48 @@ fun ListAppBar(
                     tint = Color.White
                 )
             }
+        }
+    }
+}
+
+@Composable
+        /**
+         * Special function to display an Settings app bar for a list screen.
+         *
+         * @param parentActivity The title of the parent activity associated with the app bar.
+         */
+fun SettingsAppBar(
+    parentActivity: Activity) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = MaterialTheme.colorScheme.primary,
+        shape = RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = {
+                //TODO: Implement button functionality
+            }) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Home",
+                    tint = Color.White
+                )
+            }
+            Text(
+                text = "Settings",
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 16.dp),
+                textAlign = TextAlign.Center,
+                color = Color.White,
+                fontSize = 30.sp
+            )
         }
     }
 }
