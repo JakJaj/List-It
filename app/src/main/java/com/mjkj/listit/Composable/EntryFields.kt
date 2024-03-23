@@ -16,6 +16,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
         /** This is a composable function that creates a text field with an outlined border
          *
          *  @param label: String - The text to be displayed on the label
+         *  @param textIn: String - The text to be displayed in the text field
          *  @return text: String - The text entered into the text field
          * */
 fun OutlinedTextField(label: String, textIn:String): String {
@@ -35,6 +36,7 @@ fun OutlinedTextField(label: String, textIn:String): String {
         /** This is a composable function that creates a password text field with an outlined border
          *
          *  @param label: String - The text to be displayed on the label
+         *  @param textIn: String - The text to be displayed in the text field
          *  @return text: String - The text entered into the text field
          * */
 fun OutlinedPasswordTextField(label: String): String {

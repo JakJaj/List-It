@@ -36,6 +36,9 @@ import androidx.compose.ui.unit.sp
         }
     }
 
+/**
+ * This is a composable function that creates a danger button with a filled background and a label
+ */
 @Composable
 fun DangerFilledButton(label: String,color: Color, onClick: () -> Unit) {
     Button(onClick = { onClick() },
