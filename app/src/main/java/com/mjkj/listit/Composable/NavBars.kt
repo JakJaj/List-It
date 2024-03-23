@@ -37,6 +37,7 @@ import com.google.firebase.firestore.firestore
 import com.mjkj.listit.Activity.EmptyTasksTaskActivity
 import com.mjkj.listit.Activity.FilledTasksTaskActivity
 import com.mjkj.listit.Activity.MainActivity
+import com.mjkj.listit.Activity.SettingsActivity
 
 
 @Composable

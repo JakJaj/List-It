@@ -24,6 +24,7 @@ import com.mjkj.listit.Composable.ButtonFilled
 import com.mjkj.listit.Composable.ButtonTonalFilled
 import com.mjkj.listit.Composable.OutlinedPasswordTextField
 import com.mjkj.listit.Composable.OutlinedTextField
+import com.mjkj.listit.ui.theme.AppTheme
 
 class SignUpActivity : ComponentActivity() {
 
@@ -63,102 +64,104 @@ class SignUpActivity : ComponentActivity() {
                     Log.d("LogInActivity", "get failed with ", exception)
                 }
             }
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
-            ) {
+            AppTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
 
-                Column {
+                    Column {
 
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
 
-                        val username: String = OutlinedTextField("Username")
-                        Spacer(modifier = Modifier.padding(10.dp))
-                        val email: String = OutlinedTextField("Email")
-                        Spacer(modifier = Modifier.padding(10.dp))
-                        val password: String = OutlinedPasswordTextField("Password")
-                        Spacer(modifier = Modifier.padding(10.dp))
-                        val retypedPassword = OutlinedPasswordTextField("Confirm password")
+                            val username: String = OutlinedTextField("Username")
+                            Spacer(modifier = Modifier.padding(10.dp))
+                            val email: String = OutlinedTextField("Email")
+                            Spacer(modifier = Modifier.padding(10.dp))
+                            val password: String = OutlinedPasswordTextField("Password")
+                            Spacer(modifier = Modifier.padding(10.dp))
+                            val retypedPassword = OutlinedPasswordTextField("Confirm password")
 
-                        Spacer(modifier = Modifier.padding(60.dp))
+                            Spacer(modifier = Modifier.padding(60.dp))
 
-                        ButtonFilled("Register") {
+                            ButtonFilled("Register") {
 
-                            if (password != retypedPassword) {
-                                Log.d("SignUpActivity", "Passwords do not match")
-                                Toast.makeText(
-                                    this@SignUpActivity,
-                                    "Passwords do not match",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } else if (username.isEmpty() || email.isEmpty() || password.isEmpty() || retypedPassword.isEmpty()) {
-                                Log.d("SignUpActivity", "Please fill in all fields")
-                                Toast.makeText(
-                                    this@SignUpActivity,
-                                    "Please fill in all fields",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } else if (password.length < 6) {
-                                Log.d(
-                                    "SignUpActivity",
-                                    "Password must be at least 6 characters long"
-                                )
-                                Toast.makeText(
-                                    this@SignUpActivity,
-                                    "Password must be at least 6 characters long",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } else {
-                                auth.createUserWithEmailAndPassword(email, password)
-                                    .addOnCompleteListener(this@SignUpActivity) { task ->
-                                        if (task.isSuccessful) {
-                                            Log.d("SignUpActivity", "User created successfully")
-                                            val user = hashMapOf(
-                                                "username" to username,
-                                                "email" to email,
-                                                "lists" to null
-                                            )
-                                            db.collection("users")
-                                                .document("${auth.currentUser?.uid}")
-                                                .set(user)
-                                                .addOnSuccessListener {
-                                                    Log.d(
-                                                        "SignUpActivity",
-                                                        "DocumentSnapshot successfully written!"
-                                                    )
-                                                }
-                                                .addOnFailureListener { e ->
-                                                    Log.w(
-                                                        "SignUpActivity",
-                                                        "Error writing document",
-                                                        e
-                                                    )
-                                                }
-                                            val intent = Intent(
-                                                this@SignUpActivity,
-                                                EmptyListsListActivity::class.java
-                                            )
-                                            startActivity(intent)
-                                        } else {
-                                            Log.d("SignUpActivity", "User creation failed")
-                                            Toast.makeText(
-                                                this@SignUpActivity,
-                                                "User creation failed",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
+                                if (password != retypedPassword) {
+                                    Log.d("SignUpActivity", "Passwords do not match")
+                                    Toast.makeText(
+                                        this@SignUpActivity,
+                                        "Passwords do not match",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else if (username.isEmpty() || email.isEmpty() || password.isEmpty() || retypedPassword.isEmpty()) {
+                                    Log.d("SignUpActivity", "Please fill in all fields")
+                                    Toast.makeText(
+                                        this@SignUpActivity,
+                                        "Please fill in all fields",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else if (password.length < 6) {
+                                    Log.d(
+                                        "SignUpActivity",
+                                        "Password must be at least 6 characters long"
+                                    )
+                                    Toast.makeText(
+                                        this@SignUpActivity,
+                                        "Password must be at least 6 characters long",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    auth.createUserWithEmailAndPassword(email, password)
+                                        .addOnCompleteListener(this@SignUpActivity) { task ->
+                                            if (task.isSuccessful) {
+                                                Log.d("SignUpActivity", "User created successfully")
+                                                val user = hashMapOf(
+                                                    "username" to username,
+                                                    "email" to email,
+                                                    "lists" to null
+                                                )
+                                                db.collection("users")
+                                                    .document("${auth.currentUser?.uid}")
+                                                    .set(user)
+                                                    .addOnSuccessListener {
+                                                        Log.d(
+                                                            "SignUpActivity",
+                                                            "DocumentSnapshot successfully written!"
+                                                        )
+                                                    }
+                                                    .addOnFailureListener { e ->
+                                                        Log.w(
+                                                            "SignUpActivity",
+                                                            "Error writing document",
+                                                            e
+                                                        )
+                                                    }
+                                                val intent = Intent(
+                                                    this@SignUpActivity,
+                                                    EmptyListsListActivity::class.java
+                                                )
+                                                startActivity(intent)
+                                            } else {
+                                                Log.d("SignUpActivity", "User creation failed")
+                                                Toast.makeText(
+                                                    this@SignUpActivity,
+                                                    "User creation failed",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
                                         }
-                                    }
+                                }
                             }
-                        }
-                        Spacer(modifier = Modifier.padding(5.dp))
-                        ButtonTonalFilled(label = "Go back") {
-                            val intent = Intent(this@SignUpActivity, MainActivity::class.java)
-                            startActivity(intent)
-                            finish()
+                            Spacer(modifier = Modifier.padding(5.dp))
+                            ButtonTonalFilled(label = "Go back") {
+                                val intent = Intent(this@SignUpActivity, MainActivity::class.java)
+                                startActivity(intent)
+                                finish()
+                            }
                         }
                     }
                 }

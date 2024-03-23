@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mjkj.listit.Composable.ListAppBar
+import com.mjkj.listit.ui.theme.AppTheme
 
 class EmptyListsListActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
@@ -26,32 +27,34 @@ class EmptyListsListActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val listOfLists = mutableStateListOf<MutableList<String>>()
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
-            )
-            {
-                Scaffold(
-                    topBar = {
-                        ListAppBar(
-                            activity = "EmptyListsListActivity",
-                            this,
-                            listOfLists,
-                            null
-                        )
-                    }
-                ) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
+            AppTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                )
+                {
+                    Scaffold(
+                        topBar = {
+                            ListAppBar(
+                                activity = "EmptyListsListActivity",
+                                this,
+                                listOfLists,
+                                null
+                            )
+                        }
                     ) {
-                        Text(
-                            text = "Press the + to join a list or to create a new one \n",
-                            textAlign = TextAlign.Center,
-                            color = Color.Gray,
-                            fontSize = 25.sp,
-                            modifier = Modifier.padding(15.dp)
-                        )
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "Press the + to join a list or to create a new one \n",
+                                textAlign = TextAlign.Center,
+                                color = Color.Gray,
+                                fontSize = 25.sp,
+                                modifier = Modifier.padding(15.dp)
+                            )
+                        }
                     }
                 }
             }
