@@ -80,9 +80,9 @@ class LogInActivity : ComponentActivity() {
                             verticalArrangement = Arrangement.Center
                         ) {
 
-                            val email: String = OutlinedTextField("Email")
-                            Spacer(modifier = Modifier.padding(10.dp))
-                            val password: String = OutlinedPasswordTextField(label = "Password")
+                        val email: String = OutlinedTextField("Email","")
+                        Spacer(modifier = Modifier.padding(10.dp))
+                        val password: String = OutlinedPasswordTextField(label = "Password")
 
                             Spacer(modifier = Modifier.padding(60.dp))
 
@@ -183,9 +183,9 @@ fun LoginPreview() {
                 verticalArrangement = Arrangement.Center
             ) {
 
-                OutlinedTextField("Username")
+                OutlinedTextField("Username","")
                 Spacer(modifier = Modifier.padding(10.dp))
-                OutlinedTextField("Password")
+                OutlinedTextField("Password","")
 
                 Spacer(modifier = Modifier.padding(60.dp))
 

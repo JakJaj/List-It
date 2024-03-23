@@ -26,14 +26,16 @@ import androidx.compose.ui.unit.dp
          *@param items: Array<String> - The items to be displayed in the dropdown menu
          *@return selectedText: String - The selected item from the dropdown menu
          * */
-fun DropdownMenuBox(items: Array<String>): String {
+fun DropdownMenuBox(items: Array<String>, selectedItem:String): String {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(items[0]) }
 
+    var selectedText by remember { mutableStateOf(items[0]) }
+    if(selectedItem != ""){
+        selectedText =  items.find { it == selectedItem } ?: items[0]
+    }
     Box(
         modifier = Modifier
-            .fillMaxWidth()
             .padding(10.dp)
     ) {
         ExposedDropdownMenuBox(

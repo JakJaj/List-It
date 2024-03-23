@@ -17,8 +17,14 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
          *  @param label: String - The text to be displayed on the label
          *  @return text: String - The text entered into the text field
          * */
-fun OutlinedTextField(label: String): String {
-    var text by remember { mutableStateOf("") }
+fun OutlinedTextField(label: String, textIn:String): String {
+
+    var text by remember { mutableStateOf(textIn) }
+    if(textIn != ""){
+        text = textIn
+    }
+
+
 
     androidx.compose.material3.OutlinedTextField(
         value = text,

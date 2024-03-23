@@ -224,9 +224,9 @@ fun CreateTaskDialog(onDismissRequest: () -> Unit,listCode:String, parentActivit
             ) {
                 Text(text = "Create a new task", fontSize = 20.sp)
                 Spacer(modifier = Modifier.padding(20.dp))
-                val taskName: String = OutlinedTextField("Task Name (Required)")
+                val taskName: String = OutlinedTextField("Task Name (Required)","")
                 Spacer(modifier = Modifier.padding(5.dp))
-                val taskDescription: String = OutlinedTextField("Task Description max 180 characters")
+                val taskDescription: String = OutlinedTextField("Task Description max 180 characters","")
                 Spacer(modifier = Modifier.padding(15.dp))
                 HorizontalDivider(modifier = Modifier.height(5.dp))
                 Spacer(modifier = Modifier.padding(10.dp))
@@ -383,7 +383,7 @@ fun JoinListContent(parentActivity: Activity){
         Spacer(modifier = Modifier.padding(5.dp))
         Text(text = "Join an existing list", fontSize = 20.sp)
         Spacer(modifier = Modifier.padding(25.dp))
-        val listCode: String = OutlinedTextField("List Code")
+        val listCode: String = OutlinedTextField("List Code","")
         Spacer(modifier = Modifier.padding(20.dp))
 
 
@@ -479,13 +479,13 @@ fun CreateListContent(parentActivity: Activity){
         Spacer(modifier = Modifier.padding(5.dp))
         Text(text = "Create a new list", fontSize = 20.sp)
         Spacer(modifier = Modifier.padding(20.dp))
-        val listName: String = OutlinedTextField("List Name (Required)")
+        val listName: String = OutlinedTextField("List Name (Required)","")
 
         Spacer(modifier = Modifier.padding(5.dp))
-        val shortDescription: String = OutlinedTextField("Short Description ")
+        val shortDescription: String = OutlinedTextField("Short Description ","")
         Spacer(modifier = Modifier.padding(15.dp))
         Text(text = "Choose a color for your list", fontSize = 14.sp)
-        val item: String = DropdownMenuBox(colorArray)
+        val item: String = DropdownMenuBox(colorArray,"")
         Spacer(modifier = Modifier.padding(15.dp))
         HorizontalDivider(modifier = Modifier.height(5.dp))
         Spacer(modifier = Modifier.padding(10.dp))
