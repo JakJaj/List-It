@@ -6,6 +6,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,6 +38,7 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import com.mjkj.listit.Activity.EmptyTasksTaskActivity
 import com.mjkj.listit.Activity.FilledTasksTaskActivity
+import com.mjkj.listit.Activity.ListsSettings
 import com.mjkj.listit.Activity.MainActivity
 import com.mjkj.listit.Activity.SettingsActivity
 
@@ -75,7 +78,16 @@ fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>, listCod
                 contentAlignment = Alignment.Center
             ) {
                 ButtonTonalFilled(label = "Settings") {
-                    //TODO: Implement settings
+                    if(listCode != null){
+                        val intent = Intent(parentActivity, ListsSettings::class.java)
+                        intent.putExtra("listCode", listCode)
+                        parentActivity.startActivity(intent)
+                    }
+                    else{
+                        val intent = Intent(parentActivity, SettingsActivity::class.java)
+                        parentActivity.startActivity(intent)
+                    }
+
                 }
             }
             Box(
@@ -85,7 +97,6 @@ fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>, listCod
                 contentAlignment = Alignment.Center
             ) {
                 ButtonTonalFilled(label = "Log out") {
-                    //TODO: Implement log out
                     val intent = Intent(parentActivity, MainActivity::class.java)
                     ContextCompat.startActivity(parentActivity, intent, null)
                     Firebase.auth.signOut()
@@ -106,7 +117,16 @@ fun NavDrawerItem(
     listCode: String? = null,
     navDrawerList: List<List<String>>
 ) {
-    val backgroundColor = if (code == listCode) Color.LightGray else Color.Transparent
+    var backgroundColor = if (code == listCode) Color.LightGray else Color.Transparent
+    if(backgroundColor == Color.LightGray){
+        if(isSystemInDarkTheme()){
+            backgroundColor = MaterialTheme.colorScheme.onSecondary
+        }
+        else{
+            backgroundColor = MaterialTheme.colorScheme.tertiaryContainer
+
+        }
+    }
     val firestore = Firebase.firestore
     val circleColor = when (color) {
         "Red" -> Color(0xFFD91A60)
@@ -129,11 +149,17 @@ fun NavDrawerItem(
             .fillMaxWidth()
             .padding(5.dp)
             .clickable {
-                firestore.collection("lists").document(code)
-                    .get().addOnSuccessListener { document ->
+                firestore
+                    .collection("lists")
+                    .document(code)
+                    .get()
+                    .addOnSuccessListener { document ->
                         if (document.exists()) {
 
-                            Log.d("FilledTasksTaskActivity", "List of codes: ${document.data!!.get("tasks")}")
+                            Log.d(
+                                "FilledTasksTaskActivity",
+                                "List of codes: ${document.data!!.get("tasks")}"
+                            )
 
                             if (document.data!!.get("tasks") == null) {
                                 val intent = Intent(context, EmptyTasksTaskActivity::class.java)
@@ -166,13 +192,13 @@ fun NavDrawerItem(
             Column {
                 Text(
                     text = title,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 15.sp
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = description,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 10.sp
                 )
             }

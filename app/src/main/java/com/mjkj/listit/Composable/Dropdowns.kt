@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -26,14 +27,14 @@ import androidx.compose.ui.unit.dp
          *@param items: Array<String> - The items to be displayed in the dropdown menu
          *@return selectedText: String - The selected item from the dropdown menu
          * */
-fun DropdownMenuBox(items: Array<String>): String {
+fun DropdownMenuBox(items: Array<String>, selectedItem:String): String {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(items[0]) }
+
+    var selectedText by rememberSaveable { mutableStateOf(items.find { it == selectedItem } ?: items[0]) }
 
     Box(
         modifier = Modifier
-            .fillMaxWidth()
             .padding(10.dp)
     ) {
         ExposedDropdownMenuBox(

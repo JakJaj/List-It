@@ -148,7 +148,7 @@ fun SettingsAppBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = {
-                //TODO: Implement button functionality
+                parentActivity.finish()
             }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -165,6 +165,15 @@ fun SettingsAppBar(
                 color = Color.White,
                 fontSize = 30.sp
             )
+
+            IconButton(enabled = false, onClick = {
+            }) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "To nasza słodka tajemnica :)",
+                    tint = Color.Transparent
+                )
+            }
         }
     }
 }

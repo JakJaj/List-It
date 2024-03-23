@@ -44,7 +44,7 @@ class SignUpActivity : ComponentActivity() {
                         Log.d("LogInActivity", "DocumentSnapshot data: ${documentSnapchot.data}")
                         val lists = documentSnapchot.get("lists") as? MutableList<String>
 
-                        if (lists == null) {
+                        if (lists.isNullOrEmpty()) {
                             Log.d("LogInActivity", "No lists go to empty lists activity")
                             val intent =
                                 Intent(this@SignUpActivity, EmptyListsListActivity::class.java)
@@ -78,13 +78,13 @@ class SignUpActivity : ComponentActivity() {
                             verticalArrangement = Arrangement.Center
                         ) {
 
-                            val username: String = OutlinedTextField("Username")
-                            Spacer(modifier = Modifier.padding(10.dp))
-                            val email: String = OutlinedTextField("Email")
-                            Spacer(modifier = Modifier.padding(10.dp))
-                            val password: String = OutlinedPasswordTextField("Password")
-                            Spacer(modifier = Modifier.padding(10.dp))
-                            val retypedPassword = OutlinedPasswordTextField("Confirm password")
+                        val username: String = OutlinedTextField("Username","")
+                        Spacer(modifier = Modifier.padding(10.dp))
+                        val email: String = OutlinedTextField("Email","")
+                        Spacer(modifier = Modifier.padding(10.dp))
+                        val password: String = OutlinedPasswordTextField("Password")
+                        Spacer(modifier = Modifier.padding(10.dp))
+                        val retypedPassword = OutlinedPasswordTextField("Confirm password")
 
                             Spacer(modifier = Modifier.padding(60.dp))
 

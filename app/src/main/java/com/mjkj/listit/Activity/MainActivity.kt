@@ -23,8 +23,6 @@ import com.mjkj.listit.Composable.ButtonTonalFilled
 import com.mjkj.listit.ui.theme.AppTheme
 
 class MainActivity : ComponentActivity() {
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

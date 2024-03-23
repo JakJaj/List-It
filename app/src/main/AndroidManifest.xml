@@ -45,6 +45,9 @@
         <activity
             android:name=".Activity.SettingsActivity">
         </activity>
+        <activity
+            android:name=".Activity.ListsSettings">
+        </activity>
     </application>
 
 </manifest>

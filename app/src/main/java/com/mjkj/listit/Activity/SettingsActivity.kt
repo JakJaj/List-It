@@ -1,5 +1,6 @@
 package com.mjkj.listit.Activity
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,30 +17,32 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mjkj.listit.Composable.ButtonTonalFilled
 import com.mjkj.listit.Composable.OutlinedPasswordTextField
+import com.mjkj.listit.Composable.SettingsAppBar
 import com.mjkj.listit.ui.theme.AppTheme
 
 class SettingsActivity : ComponentActivity() {
 
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
+
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    Scaffold(
+                        topBar = {
+                            SettingsAppBar(parentActivity = this@SettingsActivity)
+                        }
+                    ) {
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        Spacer(modifier = Modifier.padding(20.dp))
-
-                        Text(
-                            text = "Application Settings",
-                            style = MaterialTheme.typography.displayLarge,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontSize = 40.sp
-                        )
+                        Spacer(modifier = Modifier.padding(40.dp))
 
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -104,6 +107,7 @@ class SettingsActivity : ComponentActivity() {
                     }
                 }
             }
+        }
         }
     }
 }
