@@ -211,7 +211,7 @@ fun CreateTaskDialog(onDismissRequest: () -> Unit,listCode:String, parentActivit
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(380.dp)
+                .height(400.dp)
                 .padding(10.dp),
 
             shape = RoundedCornerShape(16.dp),
