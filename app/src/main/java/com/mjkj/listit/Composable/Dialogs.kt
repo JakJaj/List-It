@@ -200,11 +200,6 @@ fun taskInfoDialog(onDismissRequest: () -> Unit, parentActivity: Activity, taskC
          * @param onDismissRequest: () -> Unit - The action to be performed when the dialog is dismissed
          * @param parentActivity: Activity - The activity that called the dialog
          * */
-/** This is a composable function that creates a dialog box
-         *
-         * @param onDismissRequest: () -> Unit - The action to be performed when the dialog is dismissed
-         * @param parentActivity: Activity - The activity that called the dialog
-         * */
 fun CreateTaskDialog(onDismissRequest: () -> Unit,listCode:String, parentActivity: Activity, navDrawerList: List<List<String>>){
     val db = Firebase.firestore
     Dialog(onDismissRequest ={ onDismissRequest() }){
@@ -321,10 +316,6 @@ fun CreateTaskDialog(onDismissRequest: () -> Unit,listCode:String, parentActivit
          *
          * @param onDismissRequest: () -> Unit - The action to be performed when the dialog is dismissed
          * */
-        /** This is a composable function that creates a dialog box
-         *
-         * @param onDismissRequest: () -> Unit - The action to be performed when the dialog is dismissed
-         * */
 fun CreateOrJoinDialog(onDismissRequest: () -> Unit, parentActivity: Activity) {
     var showCreateListContent by remember { mutableStateOf(false) }
 
@@ -368,10 +359,6 @@ fun CreateOrJoinDialog(onDismissRequest: () -> Unit, parentActivity: Activity) {
         /** This is a composable function that joins to an existing a new list
          *
          * */
-        /** This is a composable function that joins to an existing a new list
-         *
-         * */
-
 fun JoinListContent(parentActivity: Activity){
     Column(
         modifier = Modifier
@@ -447,9 +434,6 @@ fun JoinListContent(parentActivity: Activity){
 }
 
 @Composable
-        /** This is a composable function that creates submenu for creating a new list
-         *
-         * */
         /** This is a composable function that creates submenu for creating a new list
          *
          * */
@@ -551,7 +535,11 @@ fun CreateListContent(parentActivity: Activity){
         }
     }
 }
-
+/**
+ * Function to change the state of a MutableState
+ * @param state: MutableState<Boolean> - The state to be changed
+ * @return Boolean: The new state
+ */
 fun changeState(state: MutableState<Boolean>): Boolean {
     state.value = !state.value
     return state.value
