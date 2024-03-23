@@ -43,6 +43,7 @@ import com.mjkj.listit.Composable.DropdownMenuBox
 import com.mjkj.listit.Composable.ListAppBar
 import com.mjkj.listit.Composable.OutlinedTextField
 import com.mjkj.listit.Composable.SettingsAppBar
+import com.mjkj.listit.Composable.deleteListDialog
 import com.mjkj.listit.Model.ListOfTasks
 import com.mjkj.listit.ui.theme.AppTheme
 import kotlinx.coroutines.launch
@@ -75,7 +76,7 @@ class ListsSettings : ComponentActivity(){
             val listDescription = remember { mutableStateOf("") }
             val listColor = remember { mutableStateOf("") }
             val coroutineScope = rememberCoroutineScope()
-
+            val showDialog = remember { mutableStateOf(false) }
             var errorColorText = MaterialTheme.colorScheme.error
             var errorColorContainer = MaterialTheme.colorScheme.error
             if(isSystemInDarkTheme()){
@@ -293,87 +294,14 @@ class ListsSettings : ComponentActivity(){
                                 )
                                 Spacer(modifier = Modifier.padding(10.dp))
                                 DangerFilledButton("Delete list", color = errorColorContainer) { //TODO: EWENTUALNE BADZ MILY I ZROB DIALOG CZY NA PEWNO
-                                    val db = com.google.firebase.ktx.Firebase.firestore
-                                    val auth: FirebaseAuth = com.google.firebase.ktx.Firebase.auth
-                                    firestore.collection("lists").document(listCode).delete()
-                                        .addOnSuccessListener {
-                                            firestore.collection("users").get()
-                                                .addOnSuccessListener { documents ->
-                                                    for (document in documents) {
-                                                        val lists =
-                                                            document.get("lists") as? MutableList<String>
-                                                        if (lists != null) {
-                                                            if (lists.contains(listCode)) {
-                                                                lists.remove(listCode)
-                                                                firestore.collection("users")
-                                                                    .document(document.id).update(
-                                                                        mapOf(
-                                                                            "lists" to lists
-                                                                        )
-                                                                    )
-                                                            }
-                                                        }
-                                                    }
-                                                    Toast.makeText(
-                                                        baseContext,
-                                                        "List deleted",
-                                                        Toast.LENGTH_SHORT
-                                                    )
-                                                        .show()
-                                                    //TODO: check if user has any lists left --------------
-                                                    val currentUserR = db.collection("users")
-                                                        .document(auth.currentUser?.uid!!)
-                                                    currentUserR.get()
-                                                        .addOnSuccessListener { documentSnapchot ->
-
-                                                            if (documentSnapchot.exists()) {
-                                                                Log.d(
-                                                                    "ListsSettings",
-                                                                    "DocumentSnapshot data: ${documentSnapchot.data}"
-                                                                )
-                                                                val lists =
-                                                                    documentSnapchot.get("lists") as? MutableList<String>
-
-                                                                if (lists.isNullOrEmpty()) {
-                                                                    Log.d(
-                                                                        "ListsSettings",
-                                                                        "No lists go to empty lists activity"
-                                                                    )
-                                                                    val intent =
-                                                                        Intent(
-                                                                            this@ListsSettings,
-                                                                            EmptyListsListActivity::class.java
-                                                                        )
-                                                                    startActivity(intent)
-                                                                    finish()
-                                                                } else {
-                                                                    Log.d(
-                                                                        "ListsSettings",
-                                                                        "Lists exist go to lists activity"
-                                                                    )
-                                                                    val intent =
-                                                                        Intent(
-                                                                            this@ListsSettings,
-                                                                            FilledListsListActivity::class.java
-                                                                        )
-                                                                    startActivity(intent)
-                                                                    finish()
-                                                                }
-                                                            } else {
-                                                                Log.d(
-                                                                    "ListsSettings",
-                                                                    "No such document"
-                                                                )
-                                                            }
-                                                        }.addOnFailureListener { exception ->
-                                                            Log.d(
-                                                                "LogInActivity",
-                                                                "get failed with ",
-                                                                exception
-                                                            )
-                                                        }
-                                                }
-                                        }
+                                    showDialog.value = true
+                                }
+                                if(showDialog.value){
+                                    deleteListDialog(
+                                        onDismissRequest = {showDialog.value = false},
+                                        parentActivity = this@ListsSettings,
+                                        listCode = listCode
+                                    )
                                 }
                             }
                         }
