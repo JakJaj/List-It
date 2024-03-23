@@ -33,8 +33,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.ktx.firestore
+import com.mjkj.listit.Activity.EmptyListsListActivity
 import com.mjkj.listit.Activity.EmptyTasksTaskActivity
 import com.mjkj.listit.Activity.FilledListsListActivity
 import com.mjkj.listit.Activity.FilledTasksTaskActivity
@@ -43,7 +47,122 @@ import com.mjkj.listit.Model.Task
 import com.mjkj.listit.Model.User
 import kotlinx.coroutines.launch
 
+@Composable
+fun deleteListDialog(onDismissRequest: () -> kotlin.Unit, parentActivity: Activity, listCode: String){
 
+    Dialog(onDismissRequest = {onDismissRequest}){
+
+        Card(modifier = Modifier
+            .fillMaxWidth()
+            .height(250.dp),
+            shape = RoundedCornerShape(16.dp)){
+            Spacer(modifier = Modifier.padding(10.dp))
+            Column(
+                modifier = Modifier.padding(15.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(text = "Are you sure you want to delete this list?", fontSize = 20.sp)
+                Spacer(modifier = Modifier.padding(40.dp))
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ){
+
+                    ButtonTonalFilled(label = "Delete") {
+                        val db = com.google.firebase.ktx.Firebase.firestore
+                        val auth: FirebaseAuth = com.google.firebase.ktx.Firebase.auth
+                        val firestore = Firebase.firestore
+                        firestore.collection("lists").document(listCode).delete()
+                            .addOnSuccessListener {
+                                firestore.collection("users").get()
+                                    .addOnSuccessListener { documents ->
+                                        for (document in documents) {
+                                            val lists =
+                                                document.get("lists") as? MutableList<String>
+                                            if (lists != null) {
+                                                if (lists.contains(listCode)) {
+                                                    lists.remove(listCode)
+                                                    firestore.collection("users")
+                                                        .document(document.id).update(
+                                                            mapOf(
+                                                                "lists" to lists
+                                                            )
+                                                        )
+                                                }
+                                            }
+                                        }
+                                        Toast.makeText(
+                                            parentActivity,
+                                            "List deleted",
+                                            Toast.LENGTH_SHORT
+                                        )
+                                            .show()
+                                        //TODO: check if user has any lists left --------------
+                                        val currentUserR = db.collection("users")
+                                            .document(auth.currentUser?.uid!!)
+                                        currentUserR.get()
+                                            .addOnSuccessListener { documentSnapchot ->
+
+                                                if (documentSnapchot.exists()) {
+                                                    Log.d(
+                                                        "ListsSettings",
+                                                        "DocumentSnapshot data: ${documentSnapchot.data}"
+                                                    )
+                                                    val lists =
+                                                        documentSnapchot.get("lists") as? MutableList<String>
+
+                                                    if (lists.isNullOrEmpty()) {
+                                                        Log.d(
+                                                            "ListsSettings",
+                                                            "No lists go to empty lists activity"
+                                                        )
+                                                        val intent =
+                                                            Intent(
+                                                                parentActivity,
+                                                                EmptyListsListActivity::class.java
+                                                            )
+                                                        parentActivity.startActivity(intent)
+                                                        parentActivity.finish()
+                                                    } else {
+                                                        Log.d(
+                                                            "ListsSettings",
+                                                            "Lists exist go to lists activity"
+                                                        )
+                                                        val intent =
+                                                            Intent(
+                                                                parentActivity,
+                                                                FilledListsListActivity::class.java
+                                                            )
+                                                        parentActivity.startActivity(intent)
+                                                        parentActivity.finish()
+                                                    }
+                                                } else {
+                                                    Log.d(
+                                                        "ListsSettings",
+                                                        "No such document"
+                                                    )
+                                                }
+                                            }.addOnFailureListener { exception ->
+                                                Log.d(
+                                                    "LogInActivity",
+                                                    "get failed with ",
+                                                    exception
+                                                )
+                                            }
+                                    }
+                            }
+                    }
+                    ButtonFilled(label = "Cancel") {
+                        onDismissRequest()
+                    }
+                }
+            }
+
+        }
+    }
+}
 /** This is a composable function that creates a dialog box
  *
  * @param onDismissRequest: () -> Unit - The action to be performed when the dialog is dismissed
@@ -497,7 +616,7 @@ fun CreateListContent(parentActivity: Activity){
 
             
             if(listName != "") {
-                if (listName.length >= 14) {
+                if (listName.length <= 14) {
                     val user = User.createUser(
                         Firebase.auth.currentUser?.uid,
                         Firebase.auth.currentUser?.displayName.toString(),
