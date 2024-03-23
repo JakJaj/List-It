@@ -1,5 +1,6 @@
 package com.mjkj.listit.Activity
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -31,6 +32,7 @@ import com.mjkj.listit.ui.theme.AppTheme
 class LogInActivity : ComponentActivity() {
 
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -87,70 +89,83 @@ class LogInActivity : ComponentActivity() {
                             Spacer(modifier = Modifier.padding(60.dp))
 
                             ButtonFilled("Log in") {
-                                //TODO: Verify login using firebase
-                                auth.signInWithEmailAndPassword(email, password)
-                                    .addOnCompleteListener(this@LogInActivity) { task ->
-                                        if (task.isSuccessful) {
-                                            val currentUserId = auth.currentUser?.uid
-                                            val currentUserRef =
-                                                db.collection("users").document(currentUserId!!)
-                                            currentUserRef.get()
-                                                .addOnSuccessListener { documentSnapchot ->
 
-                                                    if (documentSnapchot.exists()) {
-                                                        Log.d(
-                                                            "LogInActivity",
-                                                            "DocumentSnapshot data: ${documentSnapchot.data}"
-                                                        )
-                                                        val lists =
-                                                            documentSnapchot.get("lists") as? MutableList<String>
+                                if(email.isEmpty() || password.isEmpty()){
+                                    Toast.makeText(
+                                        baseContext,
+                                        "Please fill in all fields",
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
+                                    return@ButtonFilled
+                                }
+                                else {
+                                    auth.signInWithEmailAndPassword(email, password)
+                                        .addOnCompleteListener(this@LogInActivity) { task ->
+                                            if (task.isSuccessful) {
+                                                val currentUserId = auth.currentUser?.uid
+                                                val currentUserRef =
+                                                    db.collection("users").document(currentUserId!!)
+                                                currentUserRef.get()
+                                                    .addOnSuccessListener { documentSnapchot ->
 
-                                                        if (lists == null) {
+                                                        if (documentSnapchot.exists()) {
                                                             Log.d(
                                                                 "LogInActivity",
-                                                                "No lists go to empty lists activity"
+                                                                "DocumentSnapshot data: ${documentSnapchot.data}"
                                                             )
-                                                            val intent = Intent(
-                                                                this@LogInActivity,
-                                                                EmptyListsListActivity::class.java
-                                                            )
-                                                            startActivity(intent)
-                                                            finish()
+                                                            val lists =
+                                                                documentSnapchot.get("lists") as? MutableList<String>
+
+                                                            if (lists == null) {
+                                                                Log.d(
+                                                                    "LogInActivity",
+                                                                    "No lists go to empty lists activity"
+                                                                )
+                                                                val intent = Intent(
+                                                                    this@LogInActivity,
+                                                                    EmptyListsListActivity::class.java
+                                                                )
+                                                                startActivity(intent)
+                                                                finish()
+                                                            } else {
+                                                                Log.d(
+                                                                    "LogInActivity",
+                                                                    "Lists exist go to lists activity"
+                                                                )
+                                                                val intent = Intent(
+                                                                    this@LogInActivity,
+                                                                    FilledListsListActivity::class.java
+                                                                )
+                                                                startActivity(intent)
+                                                                finish()
+                                                            }
                                                         } else {
                                                             Log.d(
                                                                 "LogInActivity",
-                                                                "Lists exist go to lists activity"
+                                                                "No such document"
                                                             )
-                                                            val intent = Intent(
-                                                                this@LogInActivity,
-                                                                FilledListsListActivity::class.java
-                                                            )
-                                                            startActivity(intent)
-                                                            finish()
                                                         }
-                                                    } else {
-                                                        Log.d("LogInActivity", "No such document")
+                                                    }.addOnFailureListener { exception ->
+                                                        Log.d(
+                                                            "LogInActivity",
+                                                            "get failed with ",
+                                                            exception
+                                                        )
                                                     }
-                                                }.addOnFailureListener { exception ->
-                                                    Log.d(
-                                                        "LogInActivity",
-                                                        "get failed with ",
-                                                        exception
-                                                    )
-                                                }
-                                        } else {
-                                            Log.w(
-                                                "LogInActivity",
-                                                "signInWithEmail:failure",
-                                                task.exception
-                                            )
-                                            Toast.makeText(
-                                                baseContext,
-                                                "Authentication failed.",
-                                                Toast.LENGTH_SHORT,
-                                            ).show()
+                                            } else {
+                                                Log.w(
+                                                    "LogInActivity",
+                                                    "signInWithEmail:failure",
+                                                    task.exception
+                                                )
+                                                Toast.makeText(
+                                                    baseContext,
+                                                    "Authentication failed.",
+                                                    Toast.LENGTH_SHORT,
+                                                ).show()
+                                            }
                                         }
-                                    }
+                                }
                             }
                             Spacer(modifier = Modifier.padding(5.dp))
                             ButtonTonalFilled(label = "Go back") {
