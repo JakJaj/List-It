@@ -37,8 +37,9 @@ import androidx.compose.ui.unit.sp
     }
 
 @Composable
-fun DangerFilledButton(label: String, onClick: () -> Unit) {
-    Button(onClick = { onClick() }, colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)){
+fun DangerFilledButton(label: String,color: Color, onClick: () -> Unit) {
+    Button(onClick = { onClick() },
+        colors = ButtonDefaults.buttonColors(containerColor = color)){
         Text(label, fontSize = 25.sp, color = Color.White)
     }
 }
