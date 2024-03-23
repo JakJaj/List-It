@@ -479,7 +479,7 @@ fun CreateListContent(parentActivity: Activity){
         Spacer(modifier = Modifier.padding(5.dp))
         Text(text = "Create a new list", fontSize = 20.sp)
         Spacer(modifier = Modifier.padding(20.dp))
-        val listName: String = OutlinedTextField("List Name (Required)","")
+        val listName: String = OutlinedTextField("List Name (Required) max 14 characters","")
 
         Spacer(modifier = Modifier.padding(5.dp))
         val shortDescription: String = OutlinedTextField("Short Description ","")
@@ -496,42 +496,54 @@ fun CreateListContent(parentActivity: Activity){
             Log.d("D", "Color: $item")
 
             
-            if(listName != ""){
-                val user = User.createUser(
-                    Firebase.auth.currentUser?.uid,
-                    Firebase.auth.currentUser?.displayName.toString(),
-                    Firebase.auth.currentUser?.email.toString())
-                val list = ListOfTasks.createList(listName, user, item, shortDescription)
-                Log.d("D", "User: $user id: ${user.getId()} name: ${user.getName()} email: ${user.getEmail()} lists: ${user.getLists()}")
-                val hashList = hashMapOf(
-                    "listName" to listName,
-                    "code" to list.getCode(),
-                    "color" to item,
-                    "description" to shortDescription,
-                    "tasks" to null,
-                    "creator" to user.getId()
-                )
-                db.collection("lists").document(list.getCode()).set(hashList)
+            if(listName != "") {
+                if (listName.length >= 14) {
+                    val user = User.createUser(
+                        Firebase.auth.currentUser?.uid,
+                        Firebase.auth.currentUser?.displayName.toString(),
+                        Firebase.auth.currentUser?.email.toString()
+                    )
+                    val list = ListOfTasks.createList(listName, user, item, shortDescription)
+                    Log.d(
+                        "D",
+                        "User: $user id: ${user.getId()} name: ${user.getName()} email: ${user.getEmail()} lists: ${user.getLists()}"
+                    )
+                    val hashList = hashMapOf(
+                        "listName" to listName,
+                        "code" to list.getCode(),
+                        "color" to item,
+                        "description" to shortDescription,
+                        "tasks" to null,
+                        "creator" to user.getId()
+                    )
+                    db.collection("lists").document(list.getCode()).set(hashList)
 
-                db.collection("users").document(Firebase.auth.currentUser!!.uid).get()
-                    .addOnSuccessListener { document ->
-                        if (document != null) {
-                            val currentList = document.data?.get("lists")
+                    db.collection("users").document(Firebase.auth.currentUser!!.uid).get()
+                        .addOnSuccessListener { document ->
+                            if (document != null) {
+                                val currentList = document.data?.get("lists")
 
-                            if(currentList == null){
-                                val currentList = mutableListOf<String>()
-                                currentList.add(list.getCode())
-                                db.collection("users").document(Firebase.auth.currentUser!!.uid).update("lists", currentList)
+                                if (currentList == null) {
+                                    val currentList = mutableListOf<String>()
+                                    currentList.add(list.getCode())
+                                    db.collection("users").document(Firebase.auth.currentUser!!.uid)
+                                        .update("lists", currentList)
+                                } else {
+                                    val currentList =
+                                        document.data?.get("lists") as MutableList<String>
+                                    currentList.add(list.getCode())
+                                    db.collection("users").document(Firebase.auth.currentUser!!.uid)
+                                        .update("lists", currentList)
+                                }
+                                val intent =
+                                    Intent(parentActivity, FilledListsListActivity::class.java)
+                                ContextCompat.startActivity(parentActivity, intent, null)
                             }
-                            else{
-                                val currentList = document.data?.get("lists") as MutableList<String>
-                                currentList.add(list.getCode())
-                                db.collection("users").document(Firebase.auth.currentUser!!.uid).update("lists", currentList)
-                            }
-                            val intent = Intent(parentActivity, FilledListsListActivity::class.java)
-                            ContextCompat.startActivity(parentActivity, intent, null)
                         }
-                    }
+                }
+                else{
+                    Toast.makeText(parentActivity, "List name is too long", Toast.LENGTH_SHORT).show()
+                }
             }
             else{
                 Toast.makeText(parentActivity, "List name is required", Toast.LENGTH_SHORT).show()

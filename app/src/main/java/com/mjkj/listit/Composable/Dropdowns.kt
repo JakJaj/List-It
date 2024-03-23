@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -30,10 +31,8 @@ fun DropdownMenuBox(items: Array<String>, selectedItem:String): String {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
 
-    var selectedText by remember { mutableStateOf(items[0]) }
-    if(selectedItem != ""){
-        selectedText =  items.find { it == selectedItem } ?: items[0]
-    }
+    var selectedText by rememberSaveable { mutableStateOf(items.find { it == selectedItem } ?: items[0]) }
+
     Box(
         modifier = Modifier
             .padding(10.dp)

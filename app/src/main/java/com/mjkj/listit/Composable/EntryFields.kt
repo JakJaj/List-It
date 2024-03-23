@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -18,21 +19,15 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
          *  @return text: String - The text entered into the text field
          * */
 fun OutlinedTextField(label: String, textIn:String): String {
-
-    var text by remember { mutableStateOf(textIn) }
-    if(textIn != ""){
-        text = textIn
-    }
-
-
+    var text = rememberSaveable { mutableStateOf(textIn) }
 
     androidx.compose.material3.OutlinedTextField(
-        value = text,
+        value = text.value,
         singleLine = true,
-        onValueChange = { text = it },
+        onValueChange = { newText -> text.value = newText },
         label = { Text(label) }
     )
-    return text
+    return text.value
 }
 
 

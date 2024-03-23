@@ -36,6 +36,7 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import com.mjkj.listit.Activity.EmptyTasksTaskActivity
 import com.mjkj.listit.Activity.FilledTasksTaskActivity
+import com.mjkj.listit.Activity.ListsSettings
 import com.mjkj.listit.Activity.MainActivity
 import com.mjkj.listit.Activity.SettingsActivity
 
@@ -75,7 +76,13 @@ fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>, listCod
                 contentAlignment = Alignment.Center
             ) {
                 ButtonTonalFilled(label = "Settings") {
-                    //TODO: Implement settings
+                    if(listCode != null){
+                        val intent = Intent(parentActivity, ListsSettings::class.java)
+                        intent.putExtra("listCode", listCode)
+                        parentActivity.startActivity(intent)
+                        parentActivity.finish()
+                    }
+
                 }
             }
             Box(
@@ -85,7 +92,6 @@ fun NavDrawer(parentActivity: Activity, listOfLists: List<List<String>>, listCod
                 contentAlignment = Alignment.Center
             ) {
                 ButtonTonalFilled(label = "Log out") {
-                    //TODO: Implement log out
                     val intent = Intent(parentActivity, MainActivity::class.java)
                     ContextCompat.startActivity(parentActivity, intent, null)
                     Firebase.auth.signOut()
