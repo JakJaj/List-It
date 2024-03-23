@@ -46,7 +46,7 @@ class LogInActivity : ComponentActivity() {
                         Log.d("LogInActivity", "DocumentSnapshot data: ${documentSnapchot.data}")
                         val lists = documentSnapchot.get("lists") as? MutableList<String>
 
-                        if (lists == null) {
+                        if (lists.isNullOrEmpty()) {
                             Log.d("LogInActivity", "No lists go to empty lists activity")
                             val intent =
                                 Intent(this@LogInActivity, EmptyListsListActivity::class.java)
