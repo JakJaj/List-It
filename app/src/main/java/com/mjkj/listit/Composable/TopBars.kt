@@ -29,6 +29,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mjkj.listit.Activity.EmptyListsListActivity
 import com.mjkj.listit.Activity.FilledListsListActivity
 
 @Composable
@@ -110,7 +111,7 @@ fun ListAppBar(
         ) {
             IconButton(onClick = {
                 showNavDrawer.value = changeState(showNavDrawer)
-                appBarText = if (appBarText == defaultAppBarText) "TEST" else defaultAppBarText
+                appBarText = if (appBarText == defaultAppBarText) "List-it" else defaultAppBarText //Here is the "checked" name
             }) {
                 Icon(
                     imageVector = Icons.Filled.Menu,
@@ -125,13 +126,15 @@ fun ListAppBar(
                     .padding(horizontal = 16.dp)
                     .pointerInput(Unit) {
                         detectTapGestures {
-                            if (appBarText == "TEST") {
-                                parentActivity.startActivity(
-                                    Intent(
-                                        parentActivity,
-                                        FilledListsListActivity::class.java
+                            if (appBarText == "List-it") {
+                                if (activity == "FilledTasksTaskActivity") {
+                                    parentActivity.startActivity(
+                                        Intent(
+                                            parentActivity,
+                                            FilledListsListActivity::class.java
+                                        )
                                     )
-                                )
+                                }
                             }
                         }
                     },
