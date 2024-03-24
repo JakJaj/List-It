@@ -24,6 +24,7 @@ import com.google.firebase.ktx.Firebase
 import com.mjkj.listit.Composable.ButtonTonalFilled
 import com.mjkj.listit.Composable.OutlinedPasswordTextField
 import com.mjkj.listit.Composable.SettingsAppBar
+import com.mjkj.listit.ui.theme.AppSettings
 import com.mjkj.listit.ui.theme.AppTheme
 
 class SettingsActivity : ComponentActivity() {
@@ -32,10 +33,8 @@ class SettingsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var darkMode by mutableStateOf(true)
-
         setContent {
-            AppTheme(useDarkTheme = darkMode) {
+            AppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -80,9 +79,8 @@ class SettingsActivity : ComponentActivity() {
                             )
 
                             Switch(
-                                checked = darkMode,
-                                onCheckedChange = {
-                                    darkMode = !darkMode
+                                checked = AppSettings.darkMode,
+                                onCheckedChange = { newDarkMode -> AppSettings.darkMode = newDarkMode
                                 }
                             )
                         }
