@@ -1,6 +1,8 @@
 package com.mjkj.listit.Composable
 
 import android.app.Activity
+import android.content.Intent
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,7 +11,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -17,14 +18,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mjkj.listit.Activity.EmptyListsListActivity
+import com.mjkj.listit.Activity.FilledListsListActivity
 
 @Composable
         /**
@@ -56,6 +62,9 @@ fun ListAppBar(
         "Dark Green" -> Color(0xFF004C3F)
         else -> MaterialTheme.colorScheme.primary
     }
+
+    var appBarText by remember { mutableStateOf(listTitle ?: "List-it") }
+    val defaultAppBarText = listTitle ?: "List-it"
 
     val showDialog = remember {
         mutableStateOf(false)
@@ -100,7 +109,10 @@ fun ListAppBar(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { showNavDrawer.value = changeState(showNavDrawer) }) {
+            IconButton(onClick = {
+                showNavDrawer.value = changeState(showNavDrawer)
+                appBarText = if (appBarText == defaultAppBarText) "List-it" else defaultAppBarText //Here is the "checked" name
+            }) {
                 Icon(
                     imageVector = Icons.Filled.Menu,
                     contentDescription = "Home",
@@ -108,10 +120,32 @@ fun ListAppBar(
                 )
             }
             Text(
-                text = listTitle ?: "List-it",
+                text = appBarText,
                 modifier = Modifier
                     .weight(1f)
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .pointerInput(Unit) {
+                        detectTapGestures {
+                            if (appBarText == "List-it") {
+                                if (activity == "FilledTasksTaskActivity") {
+                                    parentActivity.startActivity(
+                                        Intent(
+                                            parentActivity,
+                                            FilledListsListActivity::class.java
+                                        )
+                                    )
+                                }
+                                if (activity == "EmptyTasksTaskActivity") {
+                                    parentActivity.startActivity(
+                                        Intent(
+                                            parentActivity,
+                                            FilledListsListActivity::class.java
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    },
                 textAlign = TextAlign.Center,
                 color = Color.White,
                 fontSize = 30.sp
@@ -134,7 +168,8 @@ fun ListAppBar(
          * @param parentActivity The title of the parent activity associated with the app bar.
          */
 fun SettingsAppBar(
-    parentActivity: Activity) {
+    parentActivity: Activity
+) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.primary,
