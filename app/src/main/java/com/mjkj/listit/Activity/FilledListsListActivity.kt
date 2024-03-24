@@ -25,6 +25,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.mjkj.listit.Composable.ListAppBar
 import com.mjkj.listit.Composable.ListItem
+import com.mjkj.listit.ui.theme.AppSettings
 import com.mjkj.listit.ui.theme.AppTheme
 import kotlinx.coroutines.launch
 
@@ -33,6 +34,7 @@ class FilledListsListActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppSettings.init(applicationContext)
         setContent {
             val db = Firebase.firestore
             val auth = Firebase.auth

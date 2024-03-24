@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mjkj.listit.Composable.ListAppBar
 import com.mjkj.listit.Composable.ListItemData
+import com.mjkj.listit.ui.theme.AppSettings
 import com.mjkj.listit.ui.theme.AppTheme
 
 @Suppress("DEPRECATION")
@@ -26,6 +27,7 @@ class EmptyTasksTaskActivity : ComponentActivity() {
     @SuppressLint("UnrememberedMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppSettings.init(applicationContext)
         setContent {
             val listCode: String = intent.getStringExtra("listCode").toString()
             val listColor: String = intent.getStringExtra("listColor").toString()

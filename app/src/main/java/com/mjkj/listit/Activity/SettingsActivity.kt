@@ -33,6 +33,9 @@ class SettingsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Inicjalizacja ustawień aplikacji
+        AppSettings.init(applicationContext)
+
         setContent {
             AppTheme {
                 Surface(
@@ -44,78 +47,79 @@ class SettingsActivity : ComponentActivity() {
                             SettingsAppBar(parentActivity = this@SettingsActivity)
                         }
                     ) {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        Spacer(modifier = Modifier.padding(40.dp))
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(16.dp)
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
+                            Spacer(modifier = Modifier.padding(40.dp))
+
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(16.dp)
+                            ) {
+                                Text(
+                                    text = "Push Notifications",
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                var checked by remember { mutableStateOf(true) }
+                                Switch(
+                                    checked = checked,
+                                    onCheckedChange = {
+                                        checked = it
+                                    }
+                                )
+                            }
+
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(16.dp)
+                            ) {
+                                Text(
+                                    text = "App theme",
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    modifier = Modifier.weight(1f)
+                                )
+
+                                Switch(
+                                    checked = AppSettings.darkMode,
+                                    onCheckedChange = { newDarkMode -> AppSettings.darkMode = newDarkMode
+                                    }
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.padding(10.dp))
+
+                            HorizontalDivider()
+
+                            Spacer(modifier = Modifier.padding(10.dp))
+
                             Text(
-                                text = "Push Notifications",
-                                color = MaterialTheme.colorScheme.onSurface,
-                                modifier = Modifier.weight(1f)
-                            )
-                            var checked by remember { mutableStateOf(true) }
-                            Switch(
-                                checked = checked,
-                                onCheckedChange = {
-                                    checked = it
-                                }
-                            )
-                        }
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(16.dp)
-                        ) {
-                            Text(
-                                text = "App theme",
-                                color = MaterialTheme.colorScheme.onSurface,
-                                modifier = Modifier.weight(1f)
+                                text = "Reset Password",
+                                style = MaterialTheme.typography.displayLarge,
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = 40.sp
                             )
 
-                            Switch(
-                                checked = AppSettings.darkMode,
-                                onCheckedChange = { newDarkMode -> AppSettings.darkMode = newDarkMode
-                                }
-                            )
-                        }
+                            val currentPassword: String = OutlinedPasswordTextField("Current Password")
+                            Spacer(modifier = Modifier.padding(10.dp))
+                            val password: String = OutlinedPasswordTextField("New Password")
+                            Spacer(modifier = Modifier.padding(10.dp))
+                            val retypedPassword = OutlinedPasswordTextField("Retype New Password")
 
-                        Spacer(modifier = Modifier.padding(10.dp))
+                            Spacer(modifier = Modifier.padding(20.dp))
 
-                        HorizontalDivider()
-
-                        Spacer(modifier = Modifier.padding(10.dp))
-
-                        Text(
-                            text = "Reset Password",
-                            style = MaterialTheme.typography.displayLarge,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontSize = 40.sp
-                        )
-
-                        val currentPassword: String = OutlinedPasswordTextField("Current Password")
-                        Spacer(modifier = Modifier.padding(10.dp))
-                        val password: String = OutlinedPasswordTextField("New Password")
-                        Spacer(modifier = Modifier.padding(10.dp))
-                        val retypedPassword = OutlinedPasswordTextField("Retype New Password")
-
-                        Spacer(modifier = Modifier.padding(20.dp))
-
-                        ButtonTonalFilled(label = "Confirm") {
-                            changePassword(currentPassword, password, retypedPassword, this@SettingsActivity)
+                            ButtonTonalFilled(label = "Confirm") {
+                                changePassword(currentPassword, password, retypedPassword, this@SettingsActivity)
+                            }
                         }
                     }
                 }
             }
         }
-        }
     }
 }
+
 /**
  * Function to check if the two passwords are the same
  * @param firstPassword: The first password

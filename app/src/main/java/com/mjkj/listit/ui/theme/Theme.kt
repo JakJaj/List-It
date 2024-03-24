@@ -1,5 +1,7 @@
 package com.mjkj.listit.ui.theme
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
@@ -9,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+
 
 
 private val LightColors = lightColorScheme(
@@ -80,14 +83,37 @@ private val DarkColors = darkColorScheme(
 fun AppTheme(
     content: @Composable () -> Unit
 ) {
-    val useDarkTheme = remember { mutableStateOf(AppSettings.darkMode) }
+
+    val darkMode by remember { mutableStateOf(AppSettings.darkMode) }
 
     MaterialTheme(
-        colorScheme = if (!useDarkTheme.value) LightColors else DarkColors,
+        colorScheme = if (!darkMode) LightColors else DarkColors,
         content = content
     )
 }
 
+
 object AppSettings {
-    var darkMode by mutableStateOf(true)
+    private const val PREFS_NAME = "AppSettingsPrefs"
+    private const val DARK_MODE_KEY = "darkMode"
+
+    private lateinit var prefs: SharedPreferences
+
+    fun init(context: Context) {
+        prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    }
+
+    var darkMode: Boolean
+        get() {
+            if (!::prefs.isInitialized) {
+                throw IllegalStateException("AppSettings.init() must be called before accessing preferences")
+            }
+            return prefs.getBoolean(DARK_MODE_KEY, true)
+        }
+        set(value) {
+            if (!::prefs.isInitialized) {
+                throw IllegalStateException("AppSettings.init() must be called before accessing preferences")
+            }
+            prefs.edit().putBoolean(DARK_MODE_KEY, value).apply()
+        }
 }
