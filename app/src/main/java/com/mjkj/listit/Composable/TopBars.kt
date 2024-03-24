@@ -135,6 +135,14 @@ fun ListAppBar(
                                         )
                                     )
                                 }
+                                if (activity == "EmptyTasksTaskActivity") {
+                                    parentActivity.startActivity(
+                                        Intent(
+                                            parentActivity,
+                                            FilledListsListActivity::class.java
+                                        )
+                                    )
+                                }
                             }
                         }
                     },
