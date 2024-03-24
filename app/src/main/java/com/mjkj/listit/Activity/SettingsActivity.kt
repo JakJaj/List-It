@@ -31,10 +31,11 @@ class SettingsActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        var darkMode by mutableStateOf(true)
+
         setContent {
-            AppTheme {
-
-
+            AppTheme(useDarkTheme = darkMode) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -77,11 +78,11 @@ class SettingsActivity : ComponentActivity() {
                                 color = MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.weight(1f)
                             )
-                            var checked by remember { mutableStateOf(true) }
+
                             Switch(
-                                checked = checked,
+                                checked = darkMode,
                                 onCheckedChange = {
-                                    checked = it
+                                    darkMode = !darkMode
                                 }
                             )
                         }
