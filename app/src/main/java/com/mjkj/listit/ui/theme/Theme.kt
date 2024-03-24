@@ -108,7 +108,7 @@ object AppSettings {
             if (!::prefs.isInitialized) {
                 throw IllegalStateException("AppSettings.init() must be called before accessing preferences")
             }
-            return prefs.getBoolean(DARK_MODE_KEY, true)
+            return prefs.getBoolean(DARK_MODE_KEY, false) //true - Dark as default, false - Light as default
         }
         set(value) {
             if (!::prefs.isInitialized) {

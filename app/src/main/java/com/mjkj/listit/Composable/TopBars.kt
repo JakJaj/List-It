@@ -111,7 +111,7 @@ fun ListAppBar(
         ) {
             IconButton(onClick = {
                 showNavDrawer.value = changeState(showNavDrawer)
-                appBarText = if (appBarText == defaultAppBarText) "List-it" else defaultAppBarText //Here is the "checked" name
+                appBarText = if (appBarText == defaultAppBarText) "List-it" else defaultAppBarText
             }) {
                 Icon(
                     imageVector = Icons.Filled.Menu,

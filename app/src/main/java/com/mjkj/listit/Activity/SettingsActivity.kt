@@ -84,6 +84,7 @@ class SettingsActivity : ComponentActivity() {
                                 Switch(
                                     checked = AppSettings.darkMode,
                                     onCheckedChange = { newDarkMode -> AppSettings.darkMode = newDarkMode
+                                        recreate()
                                     }
                                 )
                             }
