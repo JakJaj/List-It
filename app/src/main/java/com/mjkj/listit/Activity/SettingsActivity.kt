@@ -84,7 +84,7 @@ class SettingsActivity : ComponentActivity() {
                                 Switch(
                                     checked = AppSettings.darkMode,
                                     onCheckedChange = { newDarkMode -> AppSettings.darkMode = newDarkMode
-                                        recreate()
+                                        restartApp()
                                     }
                                 )
                             }
@@ -118,6 +118,15 @@ class SettingsActivity : ComponentActivity() {
                 }
             }
         }
+    }
+    /**
+     * Function to restart the application
+     */
+    private fun restartApp() {
+        val intent = Intent(applicationContext, LogInActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        finishAffinity()
+        startActivity(intent)
     }
 }
 
