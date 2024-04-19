@@ -123,10 +123,10 @@ class SettingsActivity : ComponentActivity() {
      * Function to restart the application
      */
     private fun restartApp() {
-        val intent = Intent(applicationContext, LogInActivity::class.java)
+        val intent = Intent(applicationContext, SettingsActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        finishAffinity()
-        startActivity(intent)
+        applicationContext.startActivity(intent)
+        finishActivity(0)
     }
 }
 
