@@ -53,23 +53,7 @@ class SettingsActivity : ComponentActivity() {
                         ) {
                             Spacer(modifier = Modifier.padding(40.dp))
 
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(16.dp)
-                            ) {
-                                Text(
-                                    text = "Push Notifications",
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                    modifier = Modifier.weight(1f)
-                                )
-                                var checked by remember { mutableStateOf(true) }
-                                Switch(
-                                    checked = checked,
-                                    onCheckedChange = {
-                                        checked = it
-                                    }
-                                )
-                            }
+                            Spacer(modifier = Modifier.padding(15.dp))
 
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -89,11 +73,11 @@ class SettingsActivity : ComponentActivity() {
                                 )
                             }
 
-                            Spacer(modifier = Modifier.padding(10.dp))
+                            Spacer(modifier = Modifier.padding(15.dp))
 
                             HorizontalDivider()
 
-                            Spacer(modifier = Modifier.padding(10.dp))
+                            Spacer(modifier = Modifier.padding(20.dp))
 
                             Text(
                                 text = "Reset Password",
