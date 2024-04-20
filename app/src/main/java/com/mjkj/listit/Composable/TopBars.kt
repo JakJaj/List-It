@@ -2,6 +2,7 @@ package com.mjkj.listit.Composable
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -29,8 +30,14 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.mjkj.listit.Activity.EmptyListsListActivity
+import com.mjkj.listit.Activity.EmptyTasksTaskActivity
 import com.mjkj.listit.Activity.FilledListsListActivity
+import com.mjkj.listit.Activity.FilledTasksTaskActivity
 
 @Composable
         /**
@@ -111,7 +118,7 @@ fun ListAppBar(
         ) {
             IconButton(onClick = {
                 showNavDrawer.value = changeState(showNavDrawer)
-                appBarText = if (appBarText == defaultAppBarText) "List-it" else defaultAppBarText //Here is the "checked" name
+                appBarText = if (appBarText == defaultAppBarText) "List-it" else defaultAppBarText
             }) {
                 Icon(
                     imageVector = Icons.Filled.Menu,
@@ -183,7 +190,50 @@ fun SettingsAppBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = {
+                val db = Firebase.firestore
+                val auth: FirebaseAuth = Firebase.auth
+                val currentUser = auth.currentUser
+
+                if(parentActivity.localClassName == "Activity.SettingsActivity") {
+
+                    val currentUserR = db.collection("users").document(auth.currentUser?.uid!!)
+                    currentUserR.get().addOnSuccessListener { documentSnapchot ->
+
+                        if (documentSnapchot.exists()) {
+                            Log.d(
+                                "LogInActivity",
+                                "DocumentSnapshot data: ${documentSnapchot.data}"
+                            )
+                            val lists = documentSnapchot.get("lists") as? MutableList<String>
+
+                            if (lists.isNullOrEmpty()) {
+                                Log.d("LogInActivity", "No lists go to empty lists activity")
+                                parentActivity.startActivity(
+                                    Intent(
+                                        parentActivity,
+                                        EmptyListsListActivity::class.java
+                                    )
+                                )
+
+                            } else {
+                                Log.d("LogInActivity", "Lists exist go to lists activity")
+                                parentActivity.startActivity(
+                                    Intent(
+                                        parentActivity,
+                                        FilledListsListActivity::class.java
+                                    )
+                                )
+                            }
+                        } else {
+                            Log.d("LogInActivity", "No such document")
+                        }
+                    }.addOnFailureListener { exception ->
+                        Log.d("LogInActivity", "get failed with ", exception)
+                    }
+                }
+
                 parentActivity.finish()
+                Log.d("SettingsAppBar", parentActivity.localClassName)
             }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,

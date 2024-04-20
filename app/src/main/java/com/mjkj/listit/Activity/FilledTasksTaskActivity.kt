@@ -27,6 +27,7 @@ import com.mjkj.listit.Composable.ListAppBar
 import com.mjkj.listit.Composable.ListItem
 import com.mjkj.listit.Composable.ListItemData
 import com.mjkj.listit.Composable.TaskItem
+import com.mjkj.listit.ui.theme.AppSettings
 import com.mjkj.listit.ui.theme.AppTheme
 import kotlinx.coroutines.launch
 
@@ -36,6 +37,7 @@ class FilledTasksTaskActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppSettings.init(applicationContext)
         setContent {
             val listCode: String = intent.getStringExtra("listCode").toString()
             val listColor: String = intent.getStringExtra("listColor").toString()

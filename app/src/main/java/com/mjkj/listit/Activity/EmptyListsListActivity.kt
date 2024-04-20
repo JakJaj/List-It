@@ -19,12 +19,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mjkj.listit.Composable.ListAppBar
+import com.mjkj.listit.ui.theme.AppSettings
 import com.mjkj.listit.ui.theme.AppTheme
 
 class EmptyListsListActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppSettings.init(applicationContext)
         setContent {
             val listOfLists = mutableStateListOf<MutableList<String>>()
             AppTheme {

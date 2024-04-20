@@ -27,6 +27,7 @@ import com.mjkj.listit.Composable.ButtonFilled
 import com.mjkj.listit.Composable.ButtonTonalFilled
 import com.mjkj.listit.Composable.OutlinedPasswordTextField
 import com.mjkj.listit.Composable.OutlinedTextField
+import com.mjkj.listit.ui.theme.AppSettings
 import com.mjkj.listit.ui.theme.AppTheme
 
 class LogInActivity : ComponentActivity() {
@@ -35,6 +36,7 @@ class LogInActivity : ComponentActivity() {
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppSettings.init(applicationContext)
         setContent {
             val db = Firebase.firestore
             val auth: FirebaseAuth = Firebase.auth

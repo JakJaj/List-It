@@ -1,10 +1,17 @@
 package com.mjkj.listit.ui.theme
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+
 
 
 private val LightColors = lightColorScheme(
@@ -74,17 +81,39 @@ private val DarkColors = darkColorScheme(
 
 @Composable
 fun AppTheme(
-    useDarkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable() () -> Unit
+    content: @Composable () -> Unit
 ) {
-    val colors = if (!useDarkTheme) {
-        LightColors
-    } else {
-        DarkColors
-    }
+
+    val darkMode by remember { mutableStateOf(AppSettings.darkMode) }
 
     MaterialTheme(
-        colorScheme = colors,
+        colorScheme = if (!darkMode) LightColors else DarkColors,
         content = content
     )
+}
+
+
+object AppSettings {
+    private const val PREFS_NAME = "AppSettingsPrefs"
+    private const val DARK_MODE_KEY = "darkMode"
+
+    private lateinit var prefs: SharedPreferences
+
+    fun init(context: Context) {
+        prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    }
+
+    var darkMode: Boolean
+        get() {
+            if (!::prefs.isInitialized) {
+                throw IllegalStateException("AppSettings.init() must be called before accessing preferences")
+            }
+            return prefs.getBoolean(DARK_MODE_KEY, false) //true - Dark as default, false - Light as default
+        }
+        set(value) {
+            if (!::prefs.isInitialized) {
+                throw IllegalStateException("AppSettings.init() must be called before accessing preferences")
+            }
+            prefs.edit().putBoolean(DARK_MODE_KEY, value).apply()
+        }
 }
